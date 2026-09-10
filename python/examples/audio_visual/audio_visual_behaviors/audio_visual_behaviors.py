@@ -99,9 +99,8 @@ def main():
         allowed_strings = {"blink", "pulse", "synced_blink", "solid", "animation"}
         if value in allowed_strings:
             return value
-        else:
-            raise argparse.ArgumentTypeError(
-                "LED sequence type must be blink, pulse, synced_blink, solid, or animation.")
+        raise argparse.ArgumentTypeError(
+            "LED sequence type must be blink, pulse, synced_blink, solid, or animation.")
 
     parser.add_argument(
         '-l', '--led-sequence-type', type=parse_led_sequence_type, default="normal",
@@ -112,7 +111,7 @@ def main():
         allowed_strings = {"normal", "warning", "danger"}
         if value in allowed_strings:
             return value
-        elif ',' in value:
+        if ',' in value:
             parts = value.split(',')
             if len(parts) != 3:
                 raise argparse.ArgumentTypeError(
@@ -224,12 +223,11 @@ def main():
             if isinstance(color, str):
                 if color == "normal":
                     return audio_visual_pb2.Color(preset=audio_visual_pb2.Color.PRESET_NORMAL)
-                elif color == "warning":
+                if color == "warning":
                     return audio_visual_pb2.Color(preset=audio_visual_pb2.Color.PRESET_WARNING)
-                elif color == "danger":
+                if color == "danger":
                     return audio_visual_pb2.Color(preset=audio_visual_pb2.Color.PRESET_DANGER)
-                else:
-                    raise Exception(f"Unknown color '{color}'.")
+                raise Exception(f"Unknown color '{color}'.")
             elif isinstance(color, tuple) and len(color) == 3:
                 return audio_visual_pb2.Color(
                     rgb=audio_visual_pb2.Color.RGB(r=color[0], g=color[1], b=color[2]))

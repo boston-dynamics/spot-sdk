@@ -32,7 +32,6 @@ def get_active_log_status(client):
 
 
 def continuous_experiment(client, options):
-
     def handle_keyboard_interruption(client, log_id):
         try:
             print(" Received keyboard interruption\n\n")

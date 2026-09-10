@@ -4,7 +4,7 @@
 # is subject to the terms and conditions of the Boston Dynamics Software
 # Development Kit License (20191101-BDSDK-SL).
 
-"""For clients to use the choreography service"""
+"""For clients to use the choreography service."""
 import collections
 import hashlib
 import logging
@@ -13,11 +13,21 @@ import os
 from google.protobuf import text_format
 from google.protobuf.wrappers_pb2 import StringValue
 
-from bosdyn.api.spot import (choreography_sequence_pb2, choreography_service_pb2,
-                             choreography_service_pb2_grpc)
-from bosdyn.client.common import (BaseClient, common_header_errors, common_lease_errors,
-                                  error_factory, error_pair, handle_common_header_errors,
-                                  handle_lease_use_result_errors, handle_unset_status_error)
+from bosdyn.api.spot import (
+    choreography_sequence_pb2,
+    choreography_service_pb2,
+    choreography_service_pb2_grpc,
+)
+from bosdyn.client.common import (
+    BaseClient,
+    common_header_errors,
+    common_lease_errors,
+    error_factory,
+    error_pair,
+    handle_common_header_errors,
+    handle_lease_use_result_errors,
+    handle_unset_status_error,
+)
 from bosdyn.client.exceptions import ResponseError, UnsetStatusError
 from bosdyn.client.lease import add_lease_wallet_processors
 from bosdyn.client.robot_command import NoTimeSyncError, _TimeConverter
@@ -175,7 +185,8 @@ class ChoreographyClient(BaseClient):
             **kwargs)
 
     def get_choreography_status(self, **kwargs):
-        """Get the dance related status information for a robot and the local time for which it was valid."""
+        """Get the dance related status information for a robot and the local time for which it was
+        valid."""
         request = choreography_sequence_pb2.ChoreographyStatusRequest()
         status = self.call(self._stub.ChoreographyStatus, request, value_from_response=None,
                            error_from_response=None, copy_request=False, **kwargs)
@@ -214,9 +225,8 @@ class ChoreographyClient(BaseClient):
         """
 
         def option_list(*argvs):
-            """Takes a list of options or a variable number of string arguments, or a mix of the two and returns a single list
-                containing all of the options to be included
-            """
+            """Takes a list of options or a variable number of string arguments, or a mix of the two
+            and returns a single list containing all of the options to be included."""
             x = []
             for i in argvs:
                 if 'list' in str(type(i)):
@@ -231,7 +241,8 @@ class ChoreographyClient(BaseClient):
             return format_str.format(*alist)
 
         def timestamp_to_seconds(timestamp):
-            """Helper function to turn a seconds quantity and nanoseconds quantity into one value of unit seconds."""
+            """Helper function to turn a seconds quantity and nanoseconds quantity into one value of
+            unit seconds."""
             return timestamp.seconds + 1e-9 * timestamp.nanos
 
         #get the choreography log for the recording
@@ -361,8 +372,8 @@ class ChoreographyClient(BaseClient):
     def choreography_time_adjust(self, override_client_start_time, time_difference=None,
                                  validity_time=None, **kwargs):
         """Provide a time to execute the choreography sequence instead the value passed in by
-        execute_choreography. Useful for when multiple robots are performing a synced
-        performance, and all robots should begin dancing at the same time.
+        execute_choreography. Useful for when multiple robots are performing a synced performance,
+        and all robots should begin dancing at the same time.
 
         Args:
             override_client_start_time (float): The time (in seconds) that the dance should start. This time
@@ -525,12 +536,12 @@ class ChoreographyClient(BaseClient):
             **kwargs)
 
     def leg_size_configuration_state(self, **kwargs):
-        """ Read the current leg size configuration from the robot. On a robot with the default leg size configuration the 
-        values for each leg's LegSize will be:
+        """Read the current leg size configuration from the robot. On a robot with the default leg
+        size configuration the values for each leg's LegSize will be:
 
             distance_inward = 0.02 m
             distance_outward = 0.02 m
-            distance_forward = 0.035 m                                          
+            distance_forward = 0.035 m
             distance_backward = 0.035 m
 
         Returns:
@@ -617,16 +628,15 @@ class ChoreographyClient(BaseClient):
             **kwargs)
 
     def get_choreography_sequence(self, seq_name, return_animation_names_only=False, **kwargs):
-        """Get a sequence currently known by the robot, response includes
-            the full ChoreographySequence with the given name and any
-            Animations used in the sequence.
+        """Get a sequence currently known by the robot, response includes the full
+        ChoreographySequence with the given name and any Animations used in the sequence.
 
             Args:
                 seq_name (string): the name of the sequence to return.
-                return_animation_names_only (bool): If True, skip returning a list of the complete 
+                return_animation_names_only (bool): If True, skip returning a list of the complete
                     Animation protos required by the sequence and leave the 'animated_moves' field of
-                    the response empty. (The repeated string field, 'animation_names' for the list 
-                    of the names of required animations will still be returned). 
+                    the response empty. (The repeated string field, 'animation_names' for the list
+                    of the names of required animations will still be returned).
 
         Returns:
             The full GetChoreographySequenceResponse proto.
@@ -658,8 +668,8 @@ class ChoreographyClient(BaseClient):
             **kwargs)
 
     def get_animation(self, name, **kwargs):
-        """Get an animation currently known by the robot, response includes
-            the full Animation proto with the given name.
+        """Get an animation currently known by the robot, response includes the full Animation proto
+        with the given name.
 
             Args:
                 name (string): the name of the animation to return.
@@ -692,11 +702,12 @@ class ChoreographyClient(BaseClient):
             **kwargs)
 
     def save_sequence(self, seq_name, labels=[], **kwargs):
-        """Save an uploaded sequence to the robot. Saved sequences are
-        automatically uploaded to the robot when it boots.
+        """Save an uploaded sequence to the robot. Saved sequences are automatically uploaded to the
+        robot when it boots.
 
         Returns:
-            The full SaveSequenceResponse proto."""
+            The full SaveSequenceResponse proto.
+        """
         request = self.build_save_sequence_request(seq_name, labels)
         return self.call(self._stub.SaveSequence, request, value_from_response=None,
                          error_from_response=common_header_errors, copy_request=False, **kwargs)
@@ -709,11 +720,12 @@ class ChoreographyClient(BaseClient):
                                **kwargs)
 
     def delete_sequence(self, seq_name, **kwargs):
-        """Delete a sequence from temporary robot memory and
-        delete any copies of the sequence saved to disk.
+        """Delete a sequence from temporary robot memory and delete any copies of the sequence saved
+        to disk.
 
         Returns:
-            The full DeleteSequenceResponse proto."""
+            The full DeleteSequenceResponse proto.
+        """
         request = choreography_sequence_pb2.DeleteSequenceRequest(sequence_name=seq_name)
         return self.call(self._stub.DeleteSequence, request, value_from_response=None,
                          error_from_response=common_header_errors, copy_request=False, **kwargs)
@@ -726,11 +738,12 @@ class ChoreographyClient(BaseClient):
                                **kwargs)
 
     def modify_choreography_info(self, seq_name, add_labels=[], remove_labels=[], **kwargs):
-        """Modifies a sequence's ChoreographyInfo field to remove or
-        add any labels attached to the sequence.
+        """Modifies a sequence's ChoreographyInfo field to remove or add any labels attached to the
+        sequence.
 
         Returns:
-            The full ModifyChoreographyInfoResponse proto."""
+            The full ModifyChoreographyInfoResponse proto.
+        """
         request = self.build_modify_choreography_info_request(seq_name, add_labels, remove_labels)
         return self.call(self._stub.ModifyChoreographyInfo, request, value_from_response=None,
                          error_from_response=common_header_errors, copy_request=False, **kwargs)
@@ -743,11 +756,12 @@ class ChoreographyClient(BaseClient):
                                **kwargs)
 
     def clear_all_sequence_files(self, **kwargs):
-        """Completely clears all choreography files that are saved on the robot,
-        including animation proto files.
+        """Completely clears all choreography files that are saved on the robot, including animation
+        proto files.
 
         Returns:
-            The full ClearAllSequenceFilesResponse proto."""
+            The full ClearAllSequenceFilesResponse proto.
+        """
         request = choreography_sequence_pb2.ClearAllSequenceFilesRequest()
         return self.call(self._stub.ClearAllSequenceFiles, request, value_from_response=None,
                          error_from_response=common_header_errors, copy_request=False, **kwargs)
@@ -801,7 +815,8 @@ class ChoreographyClient(BaseClient):
 
     def build_choreography_time_adjust_request(self, override_client_start_time, time_difference,
                                                validity_time):
-        """Generate the ChoreographyTimeAdjustRequest rpc with the timestamp converted into robot time."""
+        """Generate the ChoreographyTimeAdjustRequest rpc with the timestamp converted into robot
+        time."""
         # Note the client_start_time is a time expressed in the client's clock for when the choreography sequence should begin.
         request = choreography_sequence_pb2.ChoreographyTimeAdjustRequest()
         if override_client_start_time:
@@ -815,7 +830,8 @@ class ChoreographyClient(BaseClient):
 
     def build_execute_choreography_request(self, choreography_name, client_start_time,
                                            choreography_starting_slice, lease=None):
-        """Generate the ExecuteChoreographyRequest rpc with the timestamp converted into robot time."""
+        """Generate the ExecuteChoreographyRequest rpc with the timestamp converted into robot
+        time."""
         # Note the client_start_time is a time expressed in the client's clock for when the choreography sequence should begin.
         request = choreography_sequence_pb2.ExecuteChoreographyRequest(
             choreography_sequence_name=choreography_name,
@@ -856,10 +872,10 @@ class ChoreographyClient(BaseClient):
 
     def build_leg_size_configuration_request(self, front_left_size=None, front_right_size=None,
                                              hind_left_size=None, hind_right_size=None):
-        """Build a LegSizeConfigurationRequest. 
+        """Build a LegSizeConfigurationRequest.
 
-        Args: 
-            front_left_size: New leg configuration dimensions for the front left leg. Either 
+        Args:
+            front_left_size: New leg configuration dimensions for the front left leg. Either
                 a LegSize message or a list of 4 floats. If None, all config values are set to zero.
             front_right_size: Same as front_left_size, but for the front right leg.
             hind_left_size: Same as front_left_size, but for the hind left leg.
@@ -1013,11 +1029,18 @@ class RobotCommandIssuesError(ResponseError):
 
 
 class LeaseError(ResponseError):
-    """Incorrect or invalid leases for data acquisition. Check the lease use results."""
+    """Incorrect or invalid leases for data acquisition.
+
+    Check the lease use results.
+    """
 
 
 class AnimationValidationFailedError(ResponseError):
     """The uploaded animation file is invalid and cannot be used in choreography sequences."""
+
+
+class AnimationRejectedDanceActiveError(ResponseError):
+    """The animation being uploaded was rejected because the robot was actively dancing."""
 
 
 class NoRecordedInformation(ResponseError):
@@ -1064,6 +1087,8 @@ _UPLOAD_ANIMATED_MOVE_STATUS_TO_ERROR.update({
     choreography_sequence_pb2.UploadAnimatedMoveResponse.STATUS_OK: (None, None),
     choreography_sequence_pb2.UploadAnimatedMoveResponse.STATUS_ANIMATION_VALIDATION_FAILED:
         (AnimationValidationFailedError, AnimationValidationFailedError.__doc__),
+    choreography_sequence_pb2.UploadAnimatedMoveResponse.STATUS_REJECTED_DANCE_ACTIVE:
+        (AnimationRejectedDanceActiveError, AnimationRejectedDanceActiveError.__doc__),
 })
 
 
@@ -1100,7 +1125,8 @@ def _start_recording_state_errors(response):
 @handle_common_header_errors
 @handle_unset_status_error(unset='STATUS_UNKNOWN')
 def _download_robot_state_log_stream_errors(response):
-    """Return a custom exception based on download robot state log streaming response, None if no error."""
+    """Return a custom exception based on download robot state log streaming response, None if no
+    error."""
     # Iterate through the response since the download request responds with a stream.
     for resp in response:
         # Handle error statuses from the request.
@@ -1163,7 +1189,7 @@ def load_choreography_sequence_from_txt_file(file_path):
         raise IOError("File not found at: %s" % file_path)
 
     choreography_sequence = choreography_sequence_pb2.ChoreographySequence()
-    with open(file_path, "r") as f:
+    with open(file_path) as f:
         data = f.read()
         text_format.Merge(data, choreography_sequence)
 

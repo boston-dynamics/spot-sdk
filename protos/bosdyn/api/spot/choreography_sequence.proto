@@ -315,6 +315,8 @@ message UploadAnimatedMoveResponse {
         STATUS_ANIMATION_VALIDATION_FAILED = 2;
         // Treated this message as a ping.  Responding to demonstrate connectivity.
         STATUS_PING_RESPONSE = 3;
+        // Animations cannot be uploaded while the robot is dancing.
+        STATUS_REJECTED_DANCE_ACTIVE = 4;
     }
     Status status = 2;
 
@@ -755,7 +757,17 @@ message ChoreographySequence {
 
 // Describes metadata for the Choreography sequence that can be used for a number of different UIs
 message ChoreographyInfo {
-    // the list of user assigned categories that the sequence belongs to
+    // Description of sequence behavior.
+    string description = 1;
+
+    // Start position metadata (used for multi-robot dance visualization to display relative
+    // placement, does not affect robot playback).
+    bosdyn.api.SE2Pose start_position = 2;
+
+    // Color associated with a sequence (used for visual identification).
+    ChoreographerDisplayInfo.Color color = 3;
+
+    // The list of user assigned categories that the sequence belongs to.
     repeated string labels = 4;
 }
 
@@ -1012,15 +1024,27 @@ message ChoreographyStatusResponse {
     ResponseHeader header = 1;
 
     enum Status {
+        // Status unknown. Do not use.
         STATUS_UNKNOWN = 0;
+        // Robot is actively performing a choreography sequence.
         STATUS_DANCING = 1;
+        // Robot recently completely a choreography sequence and is no longer dancing.
         STATUS_COMPLETED_SEQUENCE = 2;
+        // Robot is getting ready to start a sequence by getting into the correct
+        // entrance state (sit, stand, ...) for the first move.
         STATUS_PREPPING = 3;
+        // Robot is ready to perform the requested choreography sequence and waiting
+        // for the requested start time.
         STATUS_WAITING_FOR_START_TIME = 4;
+        // The sequence has been recieved, but is still being processed and checked
+        // for validity.
         STATUS_VALIDATING = 5;
+        // An active choreography sequence was recently interrupted by another command.
         STATUS_INTERRUPTED = 6;
         STATUS_FALLEN = 7;
         STATUS_POWERED_OFF = 8;
+        // The robot is powered on but not actively preparing to perform, performing,
+        // or has recently completed a choreography sequence.
         STATUS_OTHER = 9;
     }
     Status status = 2;
@@ -1046,6 +1070,9 @@ message ChoreographyStatusResponse {
 
     // Name of the active sequence, None if the robot is not in a dance state.
     string sequence_name = 9;
+
+    // When the sequence was commanded to start, in robot time.
+    google.protobuf.Timestamp sequence_start_time = 10;
 }
 
 message ChoreographyTimeAdjustRequest {

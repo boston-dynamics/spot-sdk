@@ -564,18 +564,17 @@ class GraphNavInterface(object):
         if status.status == graph_nav_pb2.NavigationFeedbackResponse.STATUS_REACHED_GOAL:
             # Successfully completed the navigation commands!
             return True
-        elif status.status == graph_nav_pb2.NavigationFeedbackResponse.STATUS_LOST:
+        if status.status == graph_nav_pb2.NavigationFeedbackResponse.STATUS_LOST:
             print('Robot got lost when navigating the route, the robot will now sit down.')
             return True
-        elif status.status == graph_nav_pb2.NavigationFeedbackResponse.STATUS_STUCK:
+        if status.status == graph_nav_pb2.NavigationFeedbackResponse.STATUS_STUCK:
             print('Robot got stuck when navigating the route, the robot will now sit down.')
             return True
-        elif status.status == graph_nav_pb2.NavigationFeedbackResponse.STATUS_ROBOT_IMPAIRED:
+        if status.status == graph_nav_pb2.NavigationFeedbackResponse.STATUS_ROBOT_IMPAIRED:
             print('Robot is impaired.')
             return True
-        else:
-            # Navigation command is not complete yet.
-            return False
+        # Navigation command is not complete yet.
+        return False
 
     def _match_edge(self, current_edges, waypoint1, waypoint2):
         """Find an edge in the graph that is between two waypoint ids."""
@@ -585,7 +584,7 @@ class GraphNavInterface(object):
                 if (waypoint1 == edge_to_id) and (waypoint2 == edge_from_id):
                     # This edge matches the pair of waypoints! Add it the edge list and continue.
                     return map_pb2.Edge.Id(from_waypoint=waypoint2, to_waypoint=waypoint1)
-                elif (waypoint2 == edge_to_id) and (waypoint1 == edge_from_id):
+                if (waypoint2 == edge_to_id) and (waypoint1 == edge_from_id):
                     # This edge matches the pair of waypoints! Add it the edge list and continue.
                     return map_pb2.Edge.Id(from_waypoint=waypoint1, to_waypoint=waypoint2)
         return None

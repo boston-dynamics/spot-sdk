@@ -9,7 +9,7 @@ from bosdyn.client.common import BaseClient, handle_common_header_errors
 
 
 class RegistrationClient(BaseClient):
-    """ Client for the GPS Registration service. """
+    """Client for the GPS Registration service."""
     default_service_name = 'gps-registration'
     service_type = 'bosdyn.api.gps.RegistrationService'
 

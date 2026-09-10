@@ -141,8 +141,7 @@ class XboxJoystickLinux(XboxJoystick):
 
         if raw < 0:
             return (raw + deadzone) / (32768.0 - deadzone)
-        else:
-            return (raw - deadzone) / (32767.0 - deadzone)
+        return (raw - deadzone) / (32767.0 - deadzone)
 
     def dpad_up(self):
         self.refresh()

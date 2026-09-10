@@ -23,7 +23,7 @@ class InverseKinematicsClient(BaseClient):
         super(InverseKinematicsClient, self).__init__(InverseKinematicsServiceStub)
 
     def inverse_kinematics(self, request: InverseKinematicsRequest, **kwargs):
-        """ Request an IK solution.
+        """Request an IK solution.
 
         Args:
             request (InverseKinematicsRequest): Request to issue

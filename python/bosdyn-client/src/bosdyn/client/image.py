@@ -12,8 +12,14 @@ import warnings
 import numpy as np
 
 from bosdyn.api import image_pb2, image_service_pb2_grpc
-from bosdyn.client.common import (BaseClient, common_header_errors, custom_params_error,
-                                  error_factory, error_pair, handle_common_header_errors)
+from bosdyn.client.common import (
+    BaseClient,
+    common_header_errors,
+    custom_params_error,
+    error_factory,
+    error_pair,
+    handle_common_header_errors,
+)
 from bosdyn.client.exceptions import ResponseError, UnsetStatusError
 
 
@@ -92,7 +98,7 @@ class ImageClient(BaseClient):
         super(ImageClient, self).__init__(image_service_pb2_grpc.ImageServiceStub)
 
     def list_image_sources(self, **kwargs):
-        """ Obtain the list of ImageSources.
+        """Obtain the list of ImageSources.
 
         Returns:
             A list of the different image sources as strings.
@@ -353,8 +359,8 @@ def save_images_as_files(image_responses, filename="", filepath=".", include_pix
 
 
 def pixel_to_camera_space(image_proto, pixel_x, pixel_y, depth=1.0):
-    """Using the camera intrinsics, determine the (x,y,z) point in the camera frame for
-    the (u,v) pixel coordinates.
+    """Using the camera intrinsics, determine the (x,y,z) point in the camera frame for the (u,v)
+    pixel coordinates.
 
     Args:
         image_proto (image_pb2.ImageSource): The image source proto which the pixel coordinates are from.
@@ -433,10 +439,11 @@ def _depth_image_data_to_numpy(image_response):
 
 
 def depth_image_to_pointcloud(image_response, min_dist=0, max_dist=1000):
-    """Converts a depth image into a point cloud using the camera intrinsics. The point
-    cloud is represented as a numpy array of (x,y,z) values.  Requests can optionally filter
-    the results based on the points distance to the image plane. A depth image is represented
-    with an unsigned 16-bit integer and a scale factor to convert that distance to meters. In
+    """Converts a depth image into a point cloud using the camera intrinsics. The point cloud is
+    represented as a numpy array of (x,y,z) values.  Requests can optionally filter the results
+    based on the points distance to the image plane. A depth image is represented with an unsigned
+    16-bit integer and a scale factor to convert that distance to meters. In.
+
     addition, values of zero and 2^16 (uint 16 maximum) are used to represent invalid indices.
     A (min_dist * depth_scale) value that casts to an integer value <=0 will be assigned a
     value of 1 (the minimum representational distance). Similarly, a (max_dist * depth_scale)

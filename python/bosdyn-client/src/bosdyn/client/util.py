@@ -252,8 +252,8 @@ def add_common_arguments(parser, credentials_no_warn=False):
 
 
 def read_payload_credentials(filename):
-    """Read the guid and secret from a file that already exists.  The file should have the guid and secret
-    as the first and second lines in the file.
+    """Read the guid and secret from a file that already exists.  The file should have the guid and
+    secret as the first and second lines in the file.
 
     Args:
         filename: Name of the file to read.
@@ -265,7 +265,7 @@ def read_payload_credentials(filename):
          OSError if the credential file cannot be read.
          ValueError if the guid or secret are missing from the file.
     """
-    with open(filename, 'r') as credentials_file:
+    with open(filename) as credentials_file:
         guid = credentials_file.readline().strip()
         secret = credentials_file.readline().strip()
     if not guid or not secret:
@@ -274,9 +274,8 @@ def read_payload_credentials(filename):
 
 
 def read_or_create_payload_credentials(filename):
-    """
-    Only for use when attempting to register a payload. If simply trying to authenticate,
-    use get_guid_or_secret or read_payload_credentials instead.
+    """Only for use when attempting to register a payload. If simply trying to authenticate, use
+    get_guid_or_secret or read_payload_credentials instead.
 
     When registering, attempt to read the payload's guid and secret from the specified file.
     If this file exists, it should have the guid and secret as the first and second lines in the
@@ -308,8 +307,8 @@ def read_or_create_payload_credentials(filename):
 
 
 def get_guid_and_secret(parsed_options):
-    """Get the guid and secret for a payload, based on the options that were added
-    via add_payload_credentials_arguments().
+    """Get the guid and secret for a payload, based on the options that were added via
+    add_payload_credentials_arguments().
 
     Args:
         parsed_options: Namespace result of parser.parse_args()
@@ -333,10 +332,9 @@ def get_guid_and_secret(parsed_options):
 
 
 def add_payload_credentials_file_argument(parser):
-    """Add argument for payload_credentials_file to an ArgumentParser or argument group.
-       This file is where the payload's GUID and secret are stored. The GUID and secret can
-       be securely generated on a per-robot basis and written to this file with
-       read_or_create_payload_credentials(filename).
+    """Add argument for payload_credentials_file to an ArgumentParser or argument group. This file
+    is where the payload's GUID and secret are stored. The GUID and secret can be securely generated
+    on a per-robot basis and written to this file with read_or_create_payload_credentials(filename).
 
     Args:
         parser: Argument parser object
@@ -348,8 +346,8 @@ def add_payload_credentials_file_argument(parser):
 
 
 def add_payload_credentials_arguments(parser, required=True):
-    """Add arguments common to most payload related applications.
-    Use get_guid_and_secret() to get the guid and secret from the resulting parse.
+    """Add arguments common to most payload related applications. Use get_guid_and_secret() to get
+    the guid and secret from the resulting parse.
 
     Args:
         parser: Argument parser object.
@@ -386,8 +384,8 @@ def add_service_endpoint_arguments(parser):
 
 
 def safe_pb_enum_to_string(value, pb_enum_obj):
-    """Safe wrapper to convert a protobuf enum object to its string representation.
-    Avoids throwing an exception if the status is unknown by the enum object.
+    """Safe wrapper to convert a protobuf enum object to its string representation. Avoids throwing
+    an exception if the status is unknown by the enum object.
 
     Args:
         value: The enum value to convert

@@ -42,7 +42,7 @@ class AreaCallbackServiceConfig:
                                             required_lease_resources=self.required_lease_resources)
 
     def parse_params(self, params: DictParam):
-        """ Parse params and validate they agree with the spec stored in area_callback_information.
+        """Parse params and validate they agree with the spec stored in area_callback_information.
 
         Args:
             params (DictParam): The parameters being validated.

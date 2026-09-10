@@ -10,15 +10,15 @@ Development Kit License (20191101-BDSDK-SL).
 
 ## Introduction
 
-Imagine we want Spot to check for forklifts before deciding to cross the road. If this is part of a mission, we could add a [remote mission callback service](../../../python/examples/remote_mission_service/README.md) that makes the robot to look left and right before crossing the road, where the robot's vision is connected to an ML model that checks for the forklift on the road. However, this approach will only execute the callback when it is at that point in the mission. In cases where the robot reroutes across the crosswalk due to a blockage elsewhere, or the robot decides to return to a dock across the crosswalk when its battery is low, or if the map is used for navigation outside of that mission, the robot will _not_ execute that callback, but will instead walk directly out into the crosswalk, regardless of whether it is safe to do so.
+Imagine we want Spot to check for forklifts before deciding to cross the road. If this is part of a mission, we could add a [remote mission callback service](../../../python/examples/remote_mission_service/README.md) that makes the robot look left and right before crossing the road, where the robot's vision is connected to an ML model that checks for the forklift on the road. However, this approach will only execute the callback when it is at that point in the mission. In cases where the robot reroutes across the crosswalk due to a blockage elsewhere, or the robot decides to return to a dock across the crosswalk when its battery is low, or if the map is used for navigation outside of that mission, the robot will _not_ execute that callback, but will instead walk directly out into the crosswalk, regardless of whether it is safe to do so.
 
-We sometimes want the robot _to execute a sequence of actions anytime the robot is at the certain location in the map_. That is where we can use **Area Callbacks**. An Area Callback allows the user to associate certain areas with specified actions, such as safety checks at the crosswalks, opening doors, and signaling the environment using the lights and sounds.
+We sometimes want the robot _to execute a sequence of actions anytime the robot is at a certain location in the map_. That is where we can use **Area Callbacks**. An Area Callback allows the user to associate certain areas with specified actions, such as safety checks at the crosswalks, opening doors, and signaling the environment using the lights and sounds.
 
 ## How does an Area Callback work?
 
 ![Area Callback Figure](./images/area_callback_figure.png)
 
-GraphNav maps are composed of edges and waypoints. These edges are annotated with information that is necessary for the successful navigation of the robot. In addition to information such as detected stairs and different friction coefficient settings for slippery surfaces, annotations can include **Area Callback Regions** so that robot can complete assigned actions every time it visits these edges. These regions specify which **Area Callback Service** should be called to handle this region.
+GraphNav maps are composed of edges and waypoints. These edges are annotated with information that is necessary for the successful navigation of the robot. In addition to information such as detected stairs and different friction coefficient settings for slippery surfaces, annotations can include **Area Callback Regions** so that the robot can complete assigned actions every time it visits these edges. These regions specify which **Area Callback Service** should be called to handle this region.
 
 We may want the robot to do different things for each of the following cases:
 
@@ -26,7 +26,7 @@ We may want the robot to do different things for each of the following cases:
 - the robot is _crossing_ the Area Callback region
 - the robot gets to the _end_ of the Area Callback region
 
-The Area Callback service that is called can specify a _policy_ as to what should GraphNav should do at the start and end of the region. Options include continuing on, stopping and waiting for the callback to allow it to continue, or delegating control to the callback to perform an action with the robot.
+The Area Callback service that is called can specify a _policy_ as to what GraphNav should do at the start and end of the region. Options include continuing on, stopping and waiting for the callback to allow it to continue, or delegating control to the callback to perform an action with the robot.
 
 ## Area Callback Policies
 
@@ -60,7 +60,7 @@ An Area Callback is a gRPC service implementing the `AreaCallbackService` defini
 2. The callback service registers itself with the robot's directory.
 3. GraphNav calls the `AreaCallbackInformation` RPC to get information about this callback.
 
-At this point the callback is "live", meaning that it is running an GraphNav has successfully contacted it.
+At this point the callback is "live", meaning that it is running and GraphNav has successfully contacted it.
 
 ### Recording
 
@@ -92,7 +92,7 @@ The behavior of GraphNav during an Area Callback can be modified by setting vari
 
 #### Expected Blockages
 
-Certain callback regions may be expected to appear blocked to GraphNav (such as a callback that opens a door). In those cases, GraphNav should not pre-emptively consider them blocked until the callback has had a chance to run. This is specified by setting the `blockage` field to `BLOCKAGE_SKIP` or `BLOCKAGE_CHECK`.
+Certain callback regions may be expected to appear blocked to GraphNav (such as a callback that opens a door). In those cases, GraphNav should not preemptively consider them blocked until the callback has had a chance to run. This is specified by setting the `blockage` field to `BLOCKAGE_SKIP` or `BLOCKAGE_CHECK`.
 
 #### Impairment Check
 
@@ -116,7 +116,7 @@ The majority of work for an `AreaCallbackRegionHandlerBase` subclass will be don
 - `block_until_control()`
 - `safe_sleep()`
 
-These methods will return when their particular condition is met. If the navigation is aborted, they will raise an exception of a subclass of `bosdyn.client.area_callback_region_handler_base.HandlerError`. These exceptions do not need to be caught, and can be used to exit from `run()`. If you _do_ catch these exceptions for performing cleanup work, be sure to re-raise them after cleaning up, rather than continuing on in the `run()` method. It is expected that `run()` will complete quickly once navigation has stopped. If your use-case requires more time for cleanup operations you should create a thread to do that work and still return from `run()` quickly. Note that `safe_sleep()` works very similar to python's `time.sleep()` except that it will raise one of the above exceptions if the navigation through the region aborts during the sleep.
+These methods will return when their particular condition is met. If the navigation is aborted, they will raise an exception of a subclass of `bosdyn.client.area_callback_region_handler_base.HandlerError`. These exceptions do not need to be caught, and can be used to exit from `run()`. If you _do_ catch these exceptions for performing cleanup work, be sure to re-raise them after cleaning up, rather than continuing on in the `run()` method. It is expected that `run()` will complete quickly once navigation has stopped. If your use-case requires more time for cleanup operations you should create a thread to do that work and still return from `run()` quickly. Note that `safe_sleep()` works very similarly to Python's `time.sleep()` except that it will raise one of the above exceptions if the navigation through the region aborts during the sleep.
 
 In addition to these blocking methods, implementations can directly call `check()` which will immediately raise a `HandlerError` if the callback should abort. Also, the `stage()` and `has_control()` helpers can be used to check this information about current stage and control state in a non-blocking manner. `stage()` will return the [`bosdyn.api.UpdateCallbackRequest.Stage`](../../../protos/bosdyn/api/graph_nav/area_callback.proto#updatecallbackrequest-stage) enum describing the stage of crossing the region.
 
@@ -151,7 +151,7 @@ Returning from the `run()` method will signal to GraphNav that the callback is c
 
 ### Controlling the Robot
 
-Control can be given to the robot to perform an action at the start or end of the region. The common use case for this are to position the robot precisely and perform an action before giving control back to graph nav to cross the region, or to manage the traversal of the entire region itself. Control is acquired by setting the policy to **control**, and waiting for GraphNav to delegate control. After GraphNav delegates control, the `Robot` object for the callback will have its lease wallet updated and commands can be sent.
+Control can be given to the robot to perform an action at the start or end of the region. The common use cases for this are to position the robot precisely and perform an action before giving control back to graph nav to cross the region, or to manage the traversal of the entire region itself. Control is acquired by setting the policy to **control**, and waiting for GraphNav to delegate control. After GraphNav delegates control, the `Robot` object for the callback will have its lease wallet updated and commands can be sent.
 
 ```python
         self.control_at_start()     # Set region policy
@@ -175,7 +175,7 @@ If the area callback is traversing the region itself, when it reaches the end of
 
 ### Reporting Errors
 
-If an unrecoverable error occurs, the `run()` method should raise an exception. This will get translated into a response to GraphNav that the callback has failed. There are a few special errors that can re-raised with special meaning.
+If an unrecoverable error occurs, the `run()` method should raise an exception. This will get translated into a response to GraphNav that the callback has failed. There are a few special errors that can be re-raised with special meaning.
 
 - **LeaseError** - This will be raised when the callback has control if some other system takes over control of the robot. This will generally be raised by robot command RPCs sent by the callback service, and it is recommended to not catch the error, but to instead let it raise out of `run()`. If a callback needs to catch it to perform some cleanup, it should re-raise it after that cleanup is performed.
 - **PathBlocked** - This error should be raised if the callback determines that the region is blocked, and GraphNav should attempt to re-route around it. This should only be raised at the start of the region. If the callback service has been in control of the robot, it should attempt to return to the start of the region before raising this error, or GraphNav may not be able to successfully resume navigation. It should not be raised if the localization has already been updated to the end of the region.
@@ -189,7 +189,7 @@ There are two possibilities of what can happen when this occurs:
 
 1. The Area Callback is not restarted, but an additional RPC will be made to the callback informing it of the new route. This occurs when GraphNav reroutes during a navigation command.
 
-Most callbacks can ignore that RPC, but callbacks that want to react to it can override the `route_changed()` method. Be aware `route_changed()` method will be called from a different thread than the thread that is running the `run()` method. The return type for `route_changed()` currently only has a single option which lets the callback request that `run()` be restarted if it had previously finished. Note that if it restarts, it will already be past the start of the region, so `block_until_arrived_at_start()` will immediately return `False`.
+Most callbacks can ignore that RPC, but callbacks that want to react to it can override the `route_changed()` method. Be aware the `route_changed()` method will be called from a different thread than the thread that is running the `run()` method. The return type for `route_changed()` currently only has a single option which lets the callback request that `run()` be restarted if it had previously finished. Note that if it restarts, it will already be past the start of the region, so `block_until_arrived_at_start()` will immediately return `False`.
 
 2. The Area Callback is restarted. This occurs when GraphNav is stopped and then re-run with a new command (such as to ask the operator what to do, or because a mission was explicitly paused).
 

@@ -10,8 +10,8 @@ import enum
 class ErrorCallbackResult(enum.Enum):
     """Enum indicating error resolution for errors encountered on SDK background threads.
 
-    There are a few places in the SDK where errors can occur in background threads and it would
-    be useful to provide these errors to client code to resolve. Once the application's provided
+    There are a few places in the SDK where errors can occur in background threads and it would be
+    useful to provide these errors to client code to resolve. Once the application's provided
     callback performs its action, it returns one of these enum values to indicate what the
     background thread should do next.
     """

@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Hazard Avoidance &mdash; Spot 5.1.9 documentation</title>
+  <title>Hazard Avoidance &mdash; Spot 5.2.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
     <link rel="shortcut icon" href="../../../_static/bd-favicon.png"/>
@@ -38,7 +38,7 @@
               <img src="../../../_static/bd-official-white.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                5.1.9
+                5.2.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -205,7 +205,8 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/world_object_mutations/README.html">World Object Mutations</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/visualizer/README.html">Visualizer</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/gripper_camera_params/README.html">Gripper Camera Parameters</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_cam/README.html">Spot CAM</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_cam/README.html">Spot CAM Services</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_cam/README.html#spot-cam-video-core-io-extension-example">Spot Cam Video Core IO Extension Example</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/stitch_front_images/README.html">Stitch Front Images</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/get_depth_plus_visual_image/README.html">Project Depth Data on Visual Images</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/service_customization/custom_parameter_image_server/README.html">Custom Parameter Image Server</a></li>
@@ -249,6 +250,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/graph_nav_command_line/README.html">GraphNav and Recording Service Command Line Interfaces</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/graph_nav_command_line/README.html#example-programs">Example Programs</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/graph_nav_extract_point_cloud/README.html">Graph Nav Extract Point Cloud</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/graph_nav_map_to_usd/README.html">Graph Nav Map to USD</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/graph_nav_view_map/README.html">Graph Nav View Map</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/graph_nav_view_gps/README.html">Graph Nav View GPS Data</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/get_mission_state/README.html">Get Mission State</a></li>
@@ -269,7 +271,8 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/joint_control_examples.html">Joint Control API Examples</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/orbit.html">Orbit</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/hello_orbit/README.html">Hello Orbit</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/hello_orbit/README.html">Hello Orbit (v0, OrbitClient)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/orbit_v1_api/README.html">Orbit v1 API (v1, raw HTTP)</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/export_run_archives/README.html">Export Run Archives</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/export_site_walk_archives/README.html">Export Sitewalk Archives</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/anomalies/README.html">Anomalies</a></li>
@@ -324,6 +327,8 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/fault.html">Fault</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/frame_helpers.html">Frame Helpers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/graph_nav.html">Graph Nav</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/graph_nav_download.html">Graph Nav Download</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/graph_nav_upload.html">Graph Nav Upload</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/gripper_camera_param.html">Gripper Camera Params</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/gps/README.html">GPS</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/gps/aggregator_client.html">Aggregator Client</a></li>
@@ -527,24 +532,24 @@ is subject to the terms and conditions of the Boston Dynamics Software
 Development Kit License (20191101-BDSDK-SL).
 --><section id="hazard-avoidance">
 <h1>Hazard Avoidance<a class="headerlink" href="#hazard-avoidance" title="Permalink to this heading"></a></h1>
-<p>Spot provides the ability to specifiy “hazards” in Spot’s vicinity, which modify both where Spot can walk and where Spot will prefer to walk during autonomous navigation. This service is the same used by Spot’s <a class="reference external" href="https://bostondynamics.com/blog/put-it-in-context-with-visual-foundation-models/">hazard avoidance capabilities based on foundation models</a>, which were introduced in the 4.1 software release.</p>
+<p>Spot provides the ability to specify “hazards” in Spot’s vicinity, which modify both where Spot can walk and where Spot will prefer to walk during autonomous navigation. This service is the same one used by Spot’s <a class="reference external" href="https://bostondynamics.com/blog/put-it-in-context-with-visual-foundation-models/">hazard avoidance capabilities based on foundation models</a>, which were introduced in the 4.1 software release.</p>
 <p>Note that this service only provides the means to communicate to Spot the locations and properties of hazards. To take advantage of this service, the user needs to implement a separate application for detecting hazards from raw sensor data (or otherwise determining the existence of hazards).</p>
 <section id="what-are-hazards-in-this-context">
 <h2>What are “hazards” in this context?<a class="headerlink" href="#what-are-hazards-in-this-context" title="Permalink to this heading"></a></h2>
 <p>Conceptually, a “hazard” is an object or area that a user desires Spot to avoid. This could be due to a dangerous situation, like spilled liquid in Spot’s path or unstable terrain. It could also be an operational concern, such as preventing Spot from crossing certain boundaries. It is not a safety system and is not a way to report dangerous conditions to Spot’s operator.</p>
 <section id="when-might-a-user-want-to-add-hazards">
 <h3>When might a user want to add hazards?<a class="headerlink" href="#when-might-a-user-want-to-add-hazards" title="Permalink to this heading"></a></h3>
-<p>This API provides a flexible way to modify where Spot will or will not navigate, which can be used for many different reasons. There are three major cases why a user might want to though:</p>
+<p>This API provides a flexible way to modify where Spot will or will not navigate, which can be used for many different reasons. There are three major reasons a user might want to:</p>
 <ol class="simple">
 <li><p>To identify obstacles Spot may not otherwise see. For example, thin wires and glass walls might be missed by Spot’s ordinary obstacle detection system.</p></li>
 <li><p>To identify dangers to Spot that cannot be inferred from geometry alone. For example, the shape of a wheeled cart may resemble a stable platform Spot could traverse, when in reality it would be dangerous for Spot to attempt to do so.</p></li>
 <li><p>To identify objects or regions that are not directly dangerous to Spot but which should still be avoided. For example, preventing Spot from walking under a ladder or telling Spot not to step on specific pieces of equipment that could be damaged.</p></li>
 </ol>
-<p>Generally, this service can be used when a user desires Spot to avoid walking over something that it would otherwise.</p>
+<p>Generally, this service can be used when a user desires Spot to avoid walking over something that it would otherwise walk over.</p>
 </section>
 <section id="what-are-some-considerations-when-adding-hazards">
 <h3>What are some considerations when adding hazards?<a class="headerlink" href="#what-are-some-considerations-when-adding-hazards" title="Permalink to this heading"></a></h3>
-<p>The primary consideration will be the tradeoff between avoiding the hazard and sucessfully navigating to a location. If hazard observations are added too aggressively, it may become impossible for Spot to reach its destination, or perhaps even move at all. One aspect of this is the type associated to the hazard. Types that enforce strict avoidance (<code class="docutils literal notranslate"><span class="pre">TYPE_NEVER_STEP_ON</span></code>, <code class="docutils literal notranslate"><span class="pre">TYPE_NEVER_STEP_ACROSS</span></code>, and similar) will block potential paths for Spot; too many of these can lead to all paths being blocked. On the other hand, types that only encourage avoidance (<code class="docutils literal notranslate"><span class="pre">TYPE_PREFER_AVOID_WEAK</span></code> and <code class="docutils literal notranslate"><span class="pre">TYPE_PREFER_AVOID_STRONG</span></code>) will never prevent Spot from navigating to a location but also may not prevent Spot from avoiding the hazard. Another consideration is the size of the hazard. If the geometry specified in the hazard observation is large, Spot will need to avoid a wider region. This could lead to large deviations from the desired path or cause Spot to become stuck.</p>
+<p>The primary consideration will be the tradeoff between avoiding the hazard and successfully navigating to a location. If hazard observations are added too aggressively, it may become impossible for Spot to reach its destination, or perhaps even move at all. One aspect of this is the type associated with the hazard. Types that enforce strict avoidance (<code class="docutils literal notranslate"><span class="pre">TYPE_NEVER_STEP_ON</span></code>, <code class="docutils literal notranslate"><span class="pre">TYPE_NEVER_STEP_ACROSS</span></code>, and similar) will block potential paths for Spot; too many of these can lead to all paths being blocked. On the other hand, types that only encourage avoidance (<code class="docutils literal notranslate"><span class="pre">TYPE_PREFER_AVOID_WEAK</span></code> and <code class="docutils literal notranslate"><span class="pre">TYPE_PREFER_AVOID_STRONG</span></code>) will never prevent Spot from navigating to a location but also may not prevent Spot from avoiding the hazard. Another consideration is the size of the hazard. If the geometry specified in the hazard observation is large, Spot will need to avoid a wider region. This could lead to large deviations from the desired path or cause Spot to become stuck.</p>
 <p>It is important for a user to observe and assess Spot’s behavior after adding a hazard. If Spot appears to be behaving too cautiously and/or is unable to navigate to a desired location, the user may need to specify a smaller size for the hazard or a more permissive type. If Spot is too aggressive and fails to avoid the hazard, the user may need to specify a more restrictive type or increase the size of the hazard. Furthermore, always verify that the frames and associated transforms provided in a <code class="docutils literal notranslate"><span class="pre">HazardObservation</span></code> are correct, as otherwise Spot will believe the hazard to be at an incorrect location.</p>
 </section>
 </section>
@@ -554,7 +559,7 @@ Development Kit License (20191101-BDSDK-SL).
 </section>
 <section id="hazard-observations">
 <h2>Hazard Observations<a class="headerlink" href="#hazard-observations" title="Permalink to this heading"></a></h2>
-<p>An instance of a <code class="docutils literal notranslate"><span class="pre">AddHazardsRequest</span></code> contains a list of <code class="docutils literal notranslate"><span class="pre">HazardObservation</span></code>s. Each hazard observation specifies the geometry and location of a hazard, as well as how Spot should treat the region occupied by that geometry. The observation may also optionally specify a margin around the hazard. A <code class="docutils literal notranslate"><span class="pre">HazardObservation</span></code> will expire over time, causing Spot to “forget” about it unless a new observation is submitted. Therefore <code class="docutils literal notranslate"><span class="pre">AddHazardsRequest</span></code>s should continue to be submitted as long as the hazard remains present in the world. It is recommended to submit these requests at a rate of 2Hz to 10Hz.</p>
+<p>An instance of a <code class="docutils literal notranslate"><span class="pre">AddHazardsRequest</span></code> contains a list of <code class="docutils literal notranslate"><span class="pre">HazardObservation</span></code>s. Each hazard observation specifies the geometry and location of a hazard, as well as how Spot should treat the region occupied by that geometry. The observation may also optionally specify a margin around the hazard. A <code class="docutils literal notranslate"><span class="pre">HazardObservation</span></code> will expire over time, causing Spot to “forget” about it unless a new observation is submitted. Therefore, <code class="docutils literal notranslate"><span class="pre">AddHazardsRequest</span></code>s should continue to be submitted as long as the hazard remains present in the world. It is recommended to submit these requests at a rate of 2Hz to 10Hz.</p>
 <section id="how-to-specify-observation-data">
 <h3>How to specify observation data<a class="headerlink" href="#how-to-specify-observation-data" title="Permalink to this heading"></a></h3>
 <p>There are currently five ways to describe the geometry of a hazard:</p>
@@ -646,7 +651,7 @@ Development Kit License (20191101-BDSDK-SL).
 <p>In addition to the geometry and type of the hazard, an observation will also specify:</p>
 <ol class="simple">
 <li><p>The <code class="docutils literal notranslate"><span class="pre">likelihood</span></code> of the observation, a value from 0 to 1 representing the confidence that the hazard exists. This affects how strongly and for how long a hazard observation will influence Spot’s behavior, with larger values corresponding to stronger influence that persists for longer durations.</p></li>
-<li><p>A <code class="docutils literal notranslate"><span class="pre">semantic_label</span></code> that provides a human-interpetable label for the kind of hazard encountered (e.g., <code class="docutils literal notranslate"><span class="pre">wires</span></code>, <code class="docutils literal notranslate"><span class="pre">spill</span></code>). This is just for debugging convenience and has no impact on Spot’s behavior.</p></li>
+<li><p>A <code class="docutils literal notranslate"><span class="pre">semantic_label</span></code> that provides a human-interpretable label for the kind of hazard encountered (e.g., <code class="docutils literal notranslate"><span class="pre">wires</span></code>, <code class="docutils literal notranslate"><span class="pre">spill</span></code>). This is just for debugging convenience and has no impact on Spot’s behavior.</p></li>
 <li><p>A <code class="docutils literal notranslate"><span class="pre">margin</span></code> around the hazard, in meters. A positive margin will expand the region covered by the observation, with the region covered by the margin handled as described above. A negative margin will shrink the region covered by the observation.</p></li>
 </ol>
 </section>

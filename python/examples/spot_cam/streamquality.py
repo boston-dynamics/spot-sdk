@@ -17,19 +17,23 @@ from bosdyn.client.spot_cam.streamquality import StreamQualityClient
 
 
 class StreamQualityCommands(Subcommands):
-    """Commands related to the Spot CAM's StreamQuality service"""
+    """Commands related to the Spot CAM's StreamQuality service."""
 
     NAME = 'stream_quality'
 
     def __init__(self, subparsers, command_dict):
-        super(StreamQualityCommands, self).__init__(subparsers, command_dict, [
-            StreamQualityGetStreamParamsCommand, StreamQualitySetStreamParamsCommand,
-            StreamQualityCongestionControlCommand
-        ])
+        super(StreamQualityCommands, self).__init__(
+            subparsers,
+            command_dict,
+            [
+                StreamQualityGetStreamParamsCommand,
+                StreamQualitySetStreamParamsCommand,
+                StreamQualityCongestionControlCommand,
+            ])
 
 
 class StreamQualityGetStreamParamsCommand(Command):
-    """Get image quality and postprocessing settings"""
+    """Get image quality and postprocessing settings."""
 
     NAME = 'get'
 
@@ -43,7 +47,7 @@ class StreamQualityGetStreamParamsCommand(Command):
 
 
 class StreamQualitySetStreamParamsCommand(Command):
-    """Set image quality and postprocessing settings"""
+    """Set image quality and postprocessing settings."""
 
     NAME = 'set'
     AWB_MODE = [
@@ -98,7 +102,7 @@ class StreamQualitySetStreamParamsCommand(Command):
 
 
 class StreamQualityCongestionControlCommand(Command):
-    """Get image quality and postprocessing settings"""
+    """Get image quality and postprocessing settings."""
 
     NAME = 'congestion_control'
 
@@ -112,3 +116,5 @@ class StreamQualityCongestionControlCommand(Command):
                 options.congestion_control)
 
         return result
+
+

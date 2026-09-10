@@ -15,6 +15,7 @@ The following examples demonstrate how to use the mission service and the autono
 - [Graph Nav Anchoring Optimization](../graph_nav_anchoring_optimization/README.md)
 - [Graph Nav Command Line](../graph_nav_command_line/README.md)
 - [Graph Nav Extract Point Cloud](../graph_nav_extract_point_cloud/README.md)
+- [Graph Nav Map to USD](../graph_nav_map_to_usd/README.md)
 - [Graph Nav View Map](../graph_nav_view_map/README.md)
 - [Graph Nav View GPS Data](../graph_nav_view_gps/README.md)
 - [Get Mission State](../get_mission_state/README.md)

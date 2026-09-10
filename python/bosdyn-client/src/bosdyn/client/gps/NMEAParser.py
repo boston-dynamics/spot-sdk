@@ -81,9 +81,9 @@ class NMEAParser(object):
             elif data.sentence_type == 'GST':
                 if data.std_dev_latitude is not None:
                     # Horizontal Root Mean Squared. Note we are not using "twice distance rms" or "2drms".
-                    hrms = math.sqrt((
+                    hrms = math.sqrt(
                         (math.pow(data.std_dev_latitude, 2) + math.pow(data.std_dev_longitude, 2)) /
-                        2))
+                        2)
                     data_point.accuracy.horizontal = hrms
                     data_point.accuracy.vertical = data.std_dev_altitude
 

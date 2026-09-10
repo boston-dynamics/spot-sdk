@@ -242,7 +242,7 @@ def get_image_formats(image_source):
 
     if image_source.image_type == image_pb2.ImageSource.IMAGE_TYPE_VISUAL:
         return VISUAL_FORMATS
-    elif image_source.image_type == image_pb2.ImageSource.IMAGE_TYPE_DEPTH:
+    if image_source.image_type == image_pb2.ImageSource.IMAGE_TYPE_DEPTH:
         return DEPTH_FORMATS
     return (image_pb2.Image.FORMAT_UNKNOWN,)
 

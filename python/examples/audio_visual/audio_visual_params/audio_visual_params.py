@@ -22,6 +22,12 @@ def main():
                         help='Maximum brightness for the LEDs.')
     parser.add_argument('-mbv', '--max-buzzer-volume', type=float, required=False, default=None,
                         help='Maximum volume for the buzzer.')
+    parser.add_argument('-msv', '--max-speaker-volume', type=float, required=False, default=None,
+                        help='Maximum volume for the speaker.')
+    parser.add_argument('--disable-agc', action='store_true', default=None,
+                        help='Disable automatic gain control on the speaker.')
+    parser.add_argument('--disable-nr', action='store_true', default=None,
+                        help='Disable noise reduction on the speaker.')
     options = parser.parse_args()
 
     # Audio-visual parameters
@@ -30,6 +36,12 @@ def main():
         params['max_brightness'] = options.max_brightness
     if options.max_buzzer_volume is not None:
         params['buzzer_max_volume'] = options.max_buzzer_volume
+    if options.max_speaker_volume is not None:
+        params['speaker_max_volume'] = options.max_speaker_volume
+    if options.disable_agc is not None:
+        params['speaker_disable_agc'] = options.disable_agc
+    if options.disable_nr is not None:
+        params['speaker_disable_nr'] = options.disable_nr
 
     # Create robot object with an image client
     sdk = bosdyn.client.create_standard_sdk('AudioVisualBehaviorsClient')

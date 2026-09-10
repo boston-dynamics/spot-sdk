@@ -27,8 +27,8 @@ USER_TOKEN_RETRY_INTERVAL_START = datetime.timedelta(seconds=1)
 class TokenManager:
     """Refreshes the user token in the robot object.
 
-       The refresh policy assumes the token is minted and then the manager is
-       launched."""
+    The refresh policy assumes the token is minted and then the manager is launched.
+    """
 
     def __init__(self, robot, timestamp=None, refresh_interval=USER_TOKEN_REFRESH_TIME_DELTA,
                  initial_retry_interval=USER_TOKEN_RETRY_INTERVAL_START):

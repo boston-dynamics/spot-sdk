@@ -25,7 +25,8 @@ class OptimizationFailureError(MapProcessingServiceResponseError):
 
 
 class InvalidGraphError(MapProcessingServiceResponseError):
-    """The graph is invalid topologically, for example containing missing waypoints referenced by edges."""
+    """The graph is invalid topologically, for example containing missing waypoints referenced by
+    edges."""
 
 
 class InvalidParamsError(MapProcessingServiceResponseError):
@@ -41,11 +42,15 @@ class MaxTimeError(MapProcessingServiceResponseError):
 
 
 class InvalidHintsError(MapProcessingServiceResponseError):
-    """One or more of the hints passed in to the optimizer are invalid (do not correspond to real waypoints or objects)."""
+    """One or more of the hints passed in to the optimizer are invalid (do not correspond to real
+    waypoints or objects)."""
 
 
 class InvalidGravityAlignmentError(MapProcessingServiceResponseError):
-    """One or more anchoring hints disagrees with gravity. Ensure the orientation of any hints is correct."""
+    """One or more anchoring hints disagrees with gravity.
+
+    Ensure the orientation of any hints is correct.
+    """
 
 
 class ConstraintViolationError(MapProcessingServiceResponseError):
@@ -53,7 +58,10 @@ class ConstraintViolationError(MapProcessingServiceResponseError):
 
 
 class MapModifiedError(MapProcessingServiceResponseError):
-    """The map was modified on the server by another client during processing. Please try again."""
+    """The map was modified on the server by another client during processing.
+
+    Please try again.
+    """
 
 
 @handle_common_header_errors
@@ -62,11 +70,11 @@ def _process_topology_common_errors(response):
     # Handle error statuses from the request.
     if (response.status == map_processing_pb2.ProcessTopologyResponse.STATUS_INVALID_GRAPH):
         return InvalidGraphError(response=response, error_message=InvalidGraphError.__doc__)
-    elif (response.status ==
-          map_processing_pb2.ProcessTopologyResponse.STATUS_MISSING_WAYPOINT_SNAPSHOTS):
+    if (response.status ==
+            map_processing_pb2.ProcessTopologyResponse.STATUS_MISSING_WAYPOINT_SNAPSHOTS):
         return MissingSnapshotsError(response=response, error_message=MissingSnapshotsError.__doc__)
-    elif (response.status ==
-          map_processing_pb2.ProcessTopologyResponse.STATUS_MAP_MODIFIED_DURING_PROCESSING):
+    if (response.status ==
+            map_processing_pb2.ProcessTopologyResponse.STATUS_MAP_MODIFIED_DURING_PROCESSING):
         return MapModifiedError(response=response, error_message=MapModifiedError.__doc__)
     return None
 
@@ -171,8 +179,8 @@ class MapProcessingServiceClient(BaseClient):
             apply_gps_result_to_waypoints_on_server=apply_gps_results)
 
     def process_topology(self, params, modify_map_on_server, **kwargs):
-        """Process the topology of the map on the server, closing loops and producing a
-         consistent topology.
+        """Process the topology of the map on the server, closing loops and producing a consistent
+        topology.
 
         Args:
             params: a ProcessTopologyRequest.Params object
@@ -194,7 +202,8 @@ class MapProcessingServiceClient(BaseClient):
 
     def process_anchoring(self, params, modify_anchoring_on_server, stream_intermediate_results,
                           initial_hint=None, apply_gps_results=False, **kwargs):
-        """Process the anchoring of the map on the server, producing a metrically consistent anchoring.
+        """Process the anchoring of the map on the server, producing a metrically consistent
+        anchoring.
 
         Args:
             params: a ProcessAnchoringRequest.Params object

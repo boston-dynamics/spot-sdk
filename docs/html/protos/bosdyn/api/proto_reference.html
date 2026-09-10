@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Protocol Documentation &mdash; Spot 5.1.9 documentation</title>
+  <title>Protocol Documentation &mdash; Spot 5.2.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
     <link rel="shortcut icon" href="../../../_static/bd-favicon.png"/>
@@ -38,7 +38,7 @@
               <img src="../../../_static/bd-official-white.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                5.1.9
+                5.2.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -205,7 +205,8 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/world_object_mutations/README.html">World Object Mutations</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/visualizer/README.html">Visualizer</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/gripper_camera_params/README.html">Gripper Camera Parameters</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_cam/README.html">Spot CAM</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_cam/README.html">Spot CAM Services</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_cam/README.html#spot-cam-video-core-io-extension-example">Spot Cam Video Core IO Extension Example</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/stitch_front_images/README.html">Stitch Front Images</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/get_depth_plus_visual_image/README.html">Project Depth Data on Visual Images</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/service_customization/custom_parameter_image_server/README.html">Custom Parameter Image Server</a></li>
@@ -249,6 +250,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/graph_nav_command_line/README.html">GraphNav and Recording Service Command Line Interfaces</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/graph_nav_command_line/README.html#example-programs">Example Programs</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/graph_nav_extract_point_cloud/README.html">Graph Nav Extract Point Cloud</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/graph_nav_map_to_usd/README.html">Graph Nav Map to USD</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/graph_nav_view_map/README.html">Graph Nav View Map</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/graph_nav_view_gps/README.html">Graph Nav View GPS Data</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/get_mission_state/README.html">Get Mission State</a></li>
@@ -269,7 +271,8 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/joint_control_examples.html">Joint Control API Examples</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/orbit.html">Orbit</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/hello_orbit/README.html">Hello Orbit</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/hello_orbit/README.html">Hello Orbit (v0, OrbitClient)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/orbit_v1_api/README.html">Orbit v1 API (v1, raw HTTP)</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/export_run_archives/README.html">Export Run Archives</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/export_site_walk_archives/README.html">Export Sitewalk Archives</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/anomalies/README.html">Anomalies</a></li>
@@ -324,6 +327,8 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/fault.html">Fault</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/frame_helpers.html">Frame Helpers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/graph_nav.html">Graph Nav</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/graph_nav_download.html">Graph Nav Download</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/graph_nav_upload.html">Graph Nav Upload</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/gripper_camera_param.html">Gripper Camera Params</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/gps/README.html">GPS</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/gps/aggregator_client.html">Aggregator Client</a></li>
@@ -572,6 +577,7 @@
 <li><p><a class="reference external" href="#bosdyn-api-GazeCommand-Feedback-Status">GazeCommand.Feedback.Status</a></p></li>
 <li><p><a class="reference external" href="#bosdyn-api-NamedArmPositionsCommand-Feedback-Status">NamedArmPositionsCommand.Feedback.Status</a></p></li>
 <li><p><a class="reference external" href="#bosdyn-api-NamedArmPositionsCommand-Positions">NamedArmPositionsCommand.Positions</a></p></li>
+<li><p><a class="reference external" href="#bosdyn-api-TrackingMode">TrackingMode</a></p></li>
 </ul>
 </li>
 <li><p><a class="reference external" href="#bosdyn_api_arm_surface_contact-proto">bosdyn/api/arm_surface_contact.proto</a></p>
@@ -1578,6 +1584,8 @@
 <li><p><a class="reference external" href="#bosdyn-api-keepalive-ActionAfter">ActionAfter</a></p></li>
 <li><p><a class="reference external" href="#bosdyn-api-keepalive-ActionAfter-AutoReturn">ActionAfter.AutoReturn</a></p></li>
 <li><p><a class="reference external" href="#bosdyn-api-keepalive-ActionAfter-ControlledMotorsOff">ActionAfter.ControlledMotorsOff</a></p></li>
+<li><p><a class="reference external" href="#bosdyn-api-keepalive-ActionAfter-HaltRobot">ActionAfter.HaltRobot</a></p></li>
+<li><p><a class="reference external" href="#bosdyn-api-keepalive-ActionAfter-ImmediateMotorsOff">ActionAfter.ImmediateMotorsOff</a></p></li>
 <li><p><a class="reference external" href="#bosdyn-api-keepalive-ActionAfter-ImmediateRobotOff">ActionAfter.ImmediateRobotOff</a></p></li>
 <li><p><a class="reference external" href="#bosdyn-api-keepalive-ActionAfter-LeaseStale">ActionAfter.LeaseStale</a></p></li>
 <li><p><a class="reference external" href="#bosdyn-api-keepalive-ActionAfter-RecordEvent">ActionAfter.RecordEvent</a></p></li>
@@ -1813,6 +1821,19 @@
 <li><p><a class="reference external" href="#bosdyn-api-mission-BosdynQueryStoredCaptures-CaptureActionIdFormat">BosdynQueryStoredCaptures.CaptureActionIdFormat</a></p></li>
 <li><p><a class="reference external" href="#bosdyn-api-mission-BosdynRecordEvent">BosdynRecordEvent</a></p></li>
 <li><p><a class="reference external" href="#bosdyn-api-mission-BosdynRecordEvent-AdditionalParametersEntry">BosdynRecordEvent.AdditionalParametersEntry</a></p></li>
+<li><p><a class="reference external" href="#bosdyn-api-mission-BosdynRecordEventOnInterruption">BosdynRecordEventOnInterruption</a></p></li>
+<li><p><a class="reference external" href="#bosdyn-api-mission-BosdynRecordEventOnInterruption-ChildNodeErrorParametersEntry">BosdynRecordEventOnInterruption.ChildNodeErrorParametersEntry</a></p></li>
+<li><p><a class="reference external" href="#bosdyn-api-mission-BosdynRecordEventOnInterruption-ChildNodeExceptionParametersEntry">BosdynRecordEventOnInterruption.ChildNodeExceptionParametersEntry</a></p></li>
+<li><p><a class="reference external" href="#bosdyn-api-mission-BosdynRecordEventOnInterruption-ChildNodeFailureParametersEntry">BosdynRecordEventOnInterruption.ChildNodeFailureParametersEntry</a></p></li>
+<li><p><a class="reference external" href="#bosdyn-api-mission-BosdynRecordEventOnInterruption-DefaultParametersEntry">BosdynRecordEventOnInterruption.DefaultParametersEntry</a></p></li>
+<li><p><a class="reference external" href="#bosdyn-api-mission-BosdynRecordEventOnInterruption-ExecutorSetupFailureParametersEntry">BosdynRecordEventOnInterruption.ExecutorSetupFailureParametersEntry</a></p></li>
+<li><p><a class="reference external" href="#bosdyn-api-mission-BosdynRecordEventOnInterruption-LeaseUseErrorParametersEntry">BosdynRecordEventOnInterruption.LeaseUseErrorParametersEntry</a></p></li>
+<li><p><a class="reference external" href="#bosdyn-api-mission-BosdynRecordEventOnInterruption-LoadMissionParametersEntry">BosdynRecordEventOnInterruption.LoadMissionParametersEntry</a></p></li>
+<li><p><a class="reference external" href="#bosdyn-api-mission-BosdynRecordEventOnInterruption-PauseMissionParametersEntry">BosdynRecordEventOnInterruption.PauseMissionParametersEntry</a></p></li>
+<li><p><a class="reference external" href="#bosdyn-api-mission-BosdynRecordEventOnInterruption-PlayMissionTimeoutParametersEntry">BosdynRecordEventOnInterruption.PlayMissionTimeoutParametersEntry</a></p></li>
+<li><p><a class="reference external" href="#bosdyn-api-mission-BosdynRecordEventOnInterruption-RestartMissionParametersEntry">BosdynRecordEventOnInterruption.RestartMissionParametersEntry</a></p></li>
+<li><p><a class="reference external" href="#bosdyn-api-mission-BosdynRecordEventOnInterruption-StopMissionParametersEntry">BosdynRecordEventOnInterruption.StopMissionParametersEntry</a></p></li>
+<li><p><a class="reference external" href="#bosdyn-api-mission-BosdynRecordEventOnInterruption-SystemShutdownParametersEntry">BosdynRecordEventOnInterruption.SystemShutdownParametersEntry</a></p></li>
 <li><p><a class="reference external" href="#bosdyn-api-mission-BosdynRobotCommand">BosdynRobotCommand</a></p></li>
 <li><p><a class="reference external" href="#bosdyn-api-mission-BosdynRobotState">BosdynRobotState</a></p></li>
 <li><p><a class="reference external" href="#bosdyn-api-mission-ClearBehaviorFaults">ClearBehaviorFaults</a></p></li>
@@ -3490,6 +3511,12 @@ along a specified trajectory</p>
 <td></td>
 <td>Note: Sending a single point empty trajectory will cause the arm to freeze in place. This<br>is an easy way to lock the arm in its current configuration.</td>
 </tr>
+<tr>
+<td>tracking_mode</td>
+<td><a href="#bosdyn-api-TrackingMode">TrackingMode</a></td>
+<td></td>
+<td>Optional mode for joint trajectory tracking.</td>
+</tr>
 </tbody>
 </table><p><a name="bosdyn-api-ArmJointPosition"></a></p>
 </section>
@@ -4293,6 +4320,36 @@ the same task_frame as the trajectories.</p>
 <td>Stow the arm, safely. If the robot is holding something, it will freeze the arm instead<br>of stowing. Overriding the carry_state to CARRY_STATE_CARRIABLE_AND_STOWABLE, will allow<br>the robot to stow the arm while grasping an item.</td>
 </tr>
 </tbody>
+</table><p><a name="bosdyn-api-TrackingMode"></a></p>
+</section>
+<section id="trackingmode">
+<h3>TrackingMode<a class="headerlink" href="#trackingmode" title="Permalink to this heading"></a></h3>
+<p>Optional mode for command tracking.</p>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Name</th>
+<th>Number</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>TRACKING_MODE_UNKNOWN</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td>TRACKING_MODE_DEFAULT</td>
+<td>1</td>
+<td></td>
+</tr>
+<tr>
+<td>TRACKING_MODE_SLOW_PRECISE</td>
+<td>2</td>
+<td>Uses an integral gain to help reduce steady state error.<br>Note: This should be used with caution as it can lead to instability.<br>This is designed for slow trajectories that require very high precision.</td>
+</tr>
+</tbody>
 </table> <!-- end enums --> <!-- end HasExtensions --> <!-- end services --><p><a name="bosdyn_api_arm_surface_contact-proto"></a></p>
 <p align="right"><a href="#top">Top</a></p></section>
 </section>
@@ -4831,6 +4888,12 @@ it on for too long with certain RGB values.</p>
 <td>The buzzer's current max volume [0, 1].</td>
 </tr>
 <tr>
+<td>speaker_max_volume</td>
+<td><a href="#float">float</a></td>
+<td></td>
+<td>The speaker's current max volume [0, 1].</td>
+</tr>
+<tr>
 <td>normal_color_association</td>
 <td><a href="#bosdyn-api-PresetColorAssociation">PresetColorAssociation</a></td>
 <td></td>
@@ -4847,6 +4910,18 @@ it on for too long with certain RGB values.</p>
 <td><a href="#bosdyn-api-PresetColorAssociation">PresetColorAssociation</a></td>
 <td></td>
 <td></td>
+</tr>
+<tr>
+<td>speaker_disable_agc</td>
+<td><a href="#bool">bool</a></td>
+<td></td>
+<td>Disable automatic gain control applied to incoming speaker audio. AGC is on<br>by default; set true to turn it off.</td>
+</tr>
+<tr>
+<td>speaker_disable_nr</td>
+<td><a href="#bool">bool</a></td>
+<td></td>
+<td>Disable noise reduction applied to incoming speaker audio. Noise reduction is<br>on by default; set true to turn it off.</td>
 </tr>
 </tbody>
 </table><p><a name="bosdyn-api-Color"></a></p>
@@ -5832,6 +5907,12 @@ be set between [0.0, 1.0], where 0 is off and 1 is full brightness.</p>
 <td>The new buzzer max volume value [0, 1].</td>
 </tr>
 <tr>
+<td>speaker_max_volume</td>
+<td><a href="#google-protobuf-FloatValue">google.protobuf.FloatValue</a></td>
+<td></td>
+<td>The new speaker max volume value [0, 1].</td>
+</tr>
+<tr>
 <td>normal_color_association</td>
 <td><a href="#bosdyn-api-PresetColorAssociation">PresetColorAssociation</a></td>
 <td></td>
@@ -5848,6 +5929,18 @@ be set between [0.0, 1.0], where 0 is off and 1 is full brightness.</p>
 <td><a href="#bosdyn-api-PresetColorAssociation">PresetColorAssociation</a></td>
 <td></td>
 <td></td>
+</tr>
+<tr>
+<td>speaker_disable_agc</td>
+<td><a href="#google-protobuf-BoolValue">google.protobuf.BoolValue</a></td>
+<td></td>
+<td>Disable automatic gain control applied to incoming speaker audio. AGC is on<br>by default; set true to turn it off. Unset leaves the current setting unchanged.</td>
+</tr>
+<tr>
+<td>speaker_disable_nr</td>
+<td><a href="#google-protobuf-BoolValue">google.protobuf.BoolValue</a></td>
+<td></td>
+<td>Disable noise reduction applied to incoming speaker audio. Noise reduction is<br>on by default; set true to turn it off. Unset leaves the current setting unchanged.</td>
 </tr>
 </tbody>
 </table><p><a name="bosdyn-api-SetSystemParamsResponse"></a></p>
@@ -7798,13 +7891,13 @@ when this behavior happens.</p>
 <td>battery_start_threshold</td>
 <td><a href="#float">float</a></td>
 <td></td>
-<td>Once charging, the robot will continue to charge until the battery<br>level is greater than or equal to this threshold, at which point in<br>time, the mission will start.</td>
+<td>Resume mission once battery reaches or exceeds this percent.</td>
 </tr>
 <tr>
 <td>battery_stop_threshold</td>
 <td><a href="#float">float</a></td>
 <td></td>
-<td>If the battery level is less than or equal to this threshold, the<br>robot will stop what it is currently doing and return to the dock.<br>Once the battery level is greater than or equal to the battery start<br>threshold, the mission will resume.</td>
+<td>Return to dock when battery drops to or below this percent.</td>
 </tr>
 </tbody>
 </table><p><a name="bosdyn-api-autowalk-ChoreographyItems"></a></p>
@@ -11147,6 +11240,12 @@ metadata that is associated with previously stored data.</p>
 <td><a href="#bosdyn-api-Metadata">Metadata</a></td>
 <td></td>
 <td>Metadata message to be stored.</td>
+</tr>
+<tr>
+<td>is_autowalk_report_entry</td>
+<td><a href="#bool">bool</a></td>
+<td></td>
+<td>True if this metadata has an AutowalkReportEntry embedded in metadata.data at the top-level<br>key "autowalk_report" (see AutowalkReportEntry in autowalk.proto). This field is populated<br>by the DataAcquisitionStoreService when the metadata is returned from a query -- it is<br>ignored if set on a StoreMetadataRequest.</td>
 </tr>
 </tbody>
 </table><p><a name="bosdyn-api-CancelAcquisitionRequest"></a></p>
@@ -26946,7 +27045,7 @@ desired.</p>
 <td>max_time_seconds</td>
 <td><a href="#google-protobuf-DoubleValue">google.protobuf.DoubleValue</a></td>
 <td></td>
-<td>Maximum time the optimizer is allowed to run before giving up.</td>
+<td>Maximum time the optimizer is allowed to run before giving up. If not set, the RPC<br>time-out (with some buffer) will be used. If the value specified here is longer<br>than the RPC time-out, it will be ignored and the RPC time-out (with some buffer)<br>will be used instead. On timeout, ProcessAnchoringResponse.status will be set to<br>STATUS_MAX_TIME with whatever anchoring was found so far.</td>
 </tr>
 </tbody>
 </table><p><a name="bosdyn-api-graph_nav-ProcessAnchoringRequest-Params-Weights"></a></p>
@@ -27436,7 +27535,7 @@ will be replaced by reasonable defaults.</p>
 <td>timeout_seconds</td>
 <td><a href="#double">double</a></td>
 <td></td>
-<td>Causes the processing to time out after this many seconds. If not set, a default of 45<br>seconds will be used. If this timeout occurs before the overall RPC timeout, a partial<br>result will be returned with ProcessTopologyResponse.timed_out set to true. Processing<br>can be continued by calling ProcessTopology again.</td>
+<td>Causes the processing to time out after this many seconds. If not set, the RPC time-out<br>(with some buffer) will be used. If the timeout specified here is longer than the RPC<br>time-out, it will be ignored and the RPC time-out (with some buffer) will be used<br>On timeout, a partial result will be returned with ProcessTopologyResponse.timed_out<br>set to true. Processing an be continued by calling ProcessTopology again.</td>
 </tr>
 <tr>
 <td>feature_matching_params</td>
@@ -27867,7 +27966,7 @@ to a particular waypoint on the graph nav map.</p>
 <td>seed_tform_body</td>
 <td><a href="#bosdyn-api-SE3Pose">bosdyn.api.SE3Pose</a></td>
 <td></td>
-<td>Pose of body in a common reference frame. The common reference frame defaults to the starting<br>fiducial frame, but can be changed. See Anchoring for more info.</td>
+<td>Pose of body in a common reference frame. The common reference frame defaults to the starting<br>fiducial frame, but can be changed. See Anchoring for more info.<br><br>This frame is guaranteed to be consistent across time (runs). So if you're localized to the<br>same map, and physically in the same location, this frame will be the same.<br><br>This frame is not guaranteed to be geometrically consistent, but often is.</td>
 </tr>
 <tr>
 <td>timestamp</td>
@@ -31454,6 +31553,12 @@ supports requesting a latest given image by source name.</p>
 <td></td>
 </tr>
 <tr>
+<td>immediate_motors_off</td>
+<td><a href="#bosdyn-api-keepalive-ActionAfter-ImmediateMotorsOff">ActionAfter.ImmediateMotorsOff</a></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
 <td>immediate_robot_off</td>
 <td><a href="#bosdyn-api-keepalive-ActionAfter-ImmediateRobotOff">ActionAfter.ImmediateRobotOff</a></td>
 <td></td>
@@ -31462,6 +31567,12 @@ supports requesting a latest given image by source name.</p>
 <tr>
 <td>lease_stale</td>
 <td><a href="#bosdyn-api-keepalive-ActionAfter-LeaseStale">ActionAfter.LeaseStale</a></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>halt_robot</td>
+<td><a href="#bosdyn-api-keepalive-ActionAfter-HaltRobot">ActionAfter.HaltRobot</a></td>
 <td></td>
 <td></td>
 </tr>
@@ -31506,6 +31617,17 @@ supports requesting a latest given image by source name.</p>
 <h3>ActionAfter.ControlledMotorsOff<a class="headerlink" href="#actionafter-controlledmotorsoff" title="Permalink to this heading"></a></h3>
 <p>After coming to a halt, robot sits and powers off its motors.
 Takes priority over AutoReturn and HaltRobot actions.</p>
+<p><a name="bosdyn-api-keepalive-ActionAfter-HaltRobot"></a></p>
+</section>
+<section id="actionafter-haltrobot">
+<h3>ActionAfter.HaltRobot<a class="headerlink" href="#actionafter-haltrobot" title="Permalink to this heading"></a></h3>
+<p>Robot comes to a halt, then maintains its position.</p>
+<p><a name="bosdyn-api-keepalive-ActionAfter-ImmediateMotorsOff"></a></p>
+</section>
+<section id="actionafter-immediatemotorsoff">
+<h3>ActionAfter.ImmediateMotorsOff<a class="headerlink" href="#actionafter-immediatemotorsoff" title="Permalink to this heading"></a></h3>
+<p>Robot powers off its motors immediately.
+WARNING: If the robot is not prone, this may cause damage to the robot or its payloads.</p>
 <p><a name="bosdyn-api-keepalive-ActionAfter-ImmediateRobotOff"></a></p>
 </section>
 <section id="actionafter-immediaterobotoff">
@@ -31880,8 +32002,18 @@ See the LeaseResource message for details.</p>
 <td></td>
 </tr>
 <tr>
+<td>POLICY_CONTROL_ACTION_IMMEDIATE_MOTORS_OFF</td>
+<td>5</td>
+<td></td>
+</tr>
+<tr>
 <td>POLICY_CONTROL_ACTION_ROBOT_OFF</td>
 <td>3</td>
+<td></td>
+</tr>
+<tr>
+<td>POLICY_CONTROL_ACTION_HALT</td>
+<td>4</td>
 <td></td>
 </tr>
 </tbody>
@@ -33619,6 +33751,12 @@ and supports requesting a set of the latest local grids by map type name.</p>
 <td></td>
 <td>Current duration of an experiment log, in robot time. This is not the total runtime, but<br>rather how long it has run as of now.</td>
 </tr>
+<tr>
+<td>event_key</td>
+<td><a href="#string">string</a></td>
+<td></td>
+<td>Associated event, if any. Will be an empty string for retro logs.</td>
+</tr>
 </tbody>
 </table><p><a name="bosdyn-api-log_status-StartConcurrentLogRequest"></a></p>
 </section>
@@ -34055,6 +34193,11 @@ that if a status &gt;= DONE, it can be concluded that the request is no longer a
 <td>STATUS_SYNCING</td>
 <td>3</td>
 <td>Log end_time has passed, server post processing taking place.</td>
+</tr>
+<tr>
+<td>STATUS_STOPPING</td>
+<td>4</td>
+<td>Log stop requested, stopping in progress.</td>
 </tr>
 <tr>
 <td>STATUS_DONE</td>
@@ -37577,6 +37720,449 @@ a CaptureActionId.</p>
 <td></td>
 </tr>
 </tbody>
+</table><p><a name="bosdyn-api-mission-BosdynRecordEventOnInterruption"></a></p>
+</section>
+<section id="bosdynrecordeventoninterruption">
+<h3>BosdynRecordEventOnInterruption<a class="headerlink" href="#bosdynrecordeventoninterruption" title="Permalink to this heading"></a></h3>
+<p>Record an event when the mission is interrupted.
+Interruptions are anything that causes the mission to stop ticking automatically.</p>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Label</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>service_name</td>
+<td><a href="#string">string</a></td>
+<td></td>
+<td>Name of the service to use.</td>
+</tr>
+<tr>
+<td>host</td>
+<td><a href="#string">string</a></td>
+<td></td>
+<td>Host machine the service is running on.</td>
+</tr>
+<tr>
+<td>child</td>
+<td><a href="#bosdyn-api-mission-Node">Node</a></td>
+<td></td>
+<td>Child to run when node starts. If mission is interrupted while the child is still running,<br>the mission service will record the event described by the fields below. The child will<br>resume when the mission resumes. The BosdynRecordEventOnInterruption node will always<br>return the status of this child node.</td>
+</tr>
+<tr>
+<td>event</td>
+<td><a href="#bosdyn-api-Event">bosdyn.api.Event</a></td>
+<td></td>
+<td>The event to be logged if the mission is interrupted. Note that everything should be<br>populated except the id, start_time, and end_time, and severity. These will be populated<br>by the mission, using the time of the interruption and the type of interruption.</td>
+</tr>
+<tr>
+<td>pause_mission_parameters</td>
+<td><a href="#bosdyn-api-mission-BosdynRecordEventOnInterruption-PauseMissionParametersEntry">BosdynRecordEventOnInterruption.PauseMissionParametersEntry</a></td>
+<td>repeated</td>
+<td>Interruption reason: PauseMission RPC called.</td>
+</tr>
+<tr>
+<td>restart_mission_parameters</td>
+<td><a href="#bosdyn-api-mission-BosdynRecordEventOnInterruption-RestartMissionParametersEntry">BosdynRecordEventOnInterruption.RestartMissionParametersEntry</a></td>
+<td>repeated</td>
+<td>Interruption reason: RestartMission RPC called.</td>
+</tr>
+<tr>
+<td>load_mission_parameters</td>
+<td><a href="#bosdyn-api-mission-BosdynRecordEventOnInterruption-LoadMissionParametersEntry">BosdynRecordEventOnInterruption.LoadMissionParametersEntry</a></td>
+<td>repeated</td>
+<td>Interruption reason: LoadMission RPC called.</td>
+</tr>
+<tr>
+<td>stop_mission_parameters</td>
+<td><a href="#bosdyn-api-mission-BosdynRecordEventOnInterruption-StopMissionParametersEntry">BosdynRecordEventOnInterruption.StopMissionParametersEntry</a></td>
+<td>repeated</td>
+<td>Interruption reason: StopMission RPC called.</td>
+</tr>
+<tr>
+<td>lease_use_error_parameters</td>
+<td><a href="#bosdyn-api-mission-BosdynRecordEventOnInterruption-LeaseUseErrorParametersEntry">BosdynRecordEventOnInterruption.LeaseUseErrorParametersEntry</a></td>
+<td>repeated</td>
+<td>Interruption reason: Lease use error occurred.</td>
+</tr>
+<tr>
+<td>play_mission_timeout_parameters</td>
+<td><a href="#bosdyn-api-mission-BosdynRecordEventOnInterruption-PlayMissionTimeoutParametersEntry">BosdynRecordEventOnInterruption.PlayMissionTimeoutParametersEntry</a></td>
+<td>repeated</td>
+<td>Interruption reason: Play mission timeout exceeded.</td>
+</tr>
+<tr>
+<td>child_node_error_parameters</td>
+<td><a href="#bosdyn-api-mission-BosdynRecordEventOnInterruption-ChildNodeErrorParametersEntry">BosdynRecordEventOnInterruption.ChildNodeErrorParametersEntry</a></td>
+<td>repeated</td>
+<td>Interruption reason: Child node returned an error result.</td>
+</tr>
+<tr>
+<td>child_node_exception_parameters</td>
+<td><a href="#bosdyn-api-mission-BosdynRecordEventOnInterruption-ChildNodeExceptionParametersEntry">BosdynRecordEventOnInterruption.ChildNodeExceptionParametersEntry</a></td>
+<td>repeated</td>
+<td>Interruption reason: Child node threw an exception.</td>
+</tr>
+<tr>
+<td>default_parameters</td>
+<td><a href="#bosdyn-api-mission-BosdynRecordEventOnInterruption-DefaultParametersEntry">BosdynRecordEventOnInterruption.DefaultParametersEntry</a></td>
+<td>repeated</td>
+<td>This is used if any of the above are empty or if an unexpected interruption occurs.</td>
+</tr>
+<tr>
+<td>executor_setup_failure_parameters</td>
+<td><a href="#bosdyn-api-mission-BosdynRecordEventOnInterruption-ExecutorSetupFailureParametersEntry">BosdynRecordEventOnInterruption.ExecutorSetupFailureParametersEntry</a></td>
+<td>repeated</td>
+<td>Interruption reason: the mission executor failed to set up.</td>
+</tr>
+<tr>
+<td>system_shutdown_parameters</td>
+<td><a href="#bosdyn-api-mission-BosdynRecordEventOnInterruption-SystemShutdownParametersEntry">BosdynRecordEventOnInterruption.SystemShutdownParametersEntry</a></td>
+<td>repeated</td>
+<td>Interruption reason: the mission service is shutting down.</td>
+</tr>
+<tr>
+<td>keys_for_lease_use_error_message</td>
+<td><a href="#string">string</a></td>
+<td>repeated</td>
+<td>If key(s) are specified, the additional information about the lease use error will be<br>stored as an event parameter. All given key(s) must be used in order to access the error<br>message reason from the JSON metadata. The last key holds error message.</td>
+</tr>
+<tr>
+<td>child_node_failure_parameters</td>
+<td><a href="#bosdyn-api-mission-BosdynRecordEventOnInterruption-ChildNodeFailureParametersEntry">BosdynRecordEventOnInterruption.ChildNodeFailureParametersEntry</a></td>
+<td>repeated</td>
+<td>If populated, the child returning Result.FAILURE (a normal, non-exceptional failure) will<br>also be treated as an interruption, using these parameters. By default, only Result.ERROR /<br>exceptions from the child count as interruptions.</td>
+</tr>
+</tbody>
+</table><p><a name="bosdyn-api-mission-BosdynRecordEventOnInterruption-ChildNodeErrorParametersEntry"></a></p>
+</section>
+<section id="bosdynrecordeventoninterruption-childnodeerrorparametersentry">
+<h3>BosdynRecordEventOnInterruption.ChildNodeErrorParametersEntry<a class="headerlink" href="#bosdynrecordeventoninterruption-childnodeerrorparametersentry" title="Permalink to this heading"></a></h3>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Label</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>key</td>
+<td><a href="#string">string</a></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>value</td>
+<td><a href="#bosdyn-api-mission-Value">Value</a></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table><p><a name="bosdyn-api-mission-BosdynRecordEventOnInterruption-ChildNodeExceptionParametersEntry"></a></p>
+</section>
+<section id="bosdynrecordeventoninterruption-childnodeexceptionparametersentry">
+<h3>BosdynRecordEventOnInterruption.ChildNodeExceptionParametersEntry<a class="headerlink" href="#bosdynrecordeventoninterruption-childnodeexceptionparametersentry" title="Permalink to this heading"></a></h3>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Label</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>key</td>
+<td><a href="#string">string</a></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>value</td>
+<td><a href="#bosdyn-api-mission-Value">Value</a></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table><p><a name="bosdyn-api-mission-BosdynRecordEventOnInterruption-ChildNodeFailureParametersEntry"></a></p>
+</section>
+<section id="bosdynrecordeventoninterruption-childnodefailureparametersentry">
+<h3>BosdynRecordEventOnInterruption.ChildNodeFailureParametersEntry<a class="headerlink" href="#bosdynrecordeventoninterruption-childnodefailureparametersentry" title="Permalink to this heading"></a></h3>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Label</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>key</td>
+<td><a href="#string">string</a></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>value</td>
+<td><a href="#bosdyn-api-mission-Value">Value</a></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table><p><a name="bosdyn-api-mission-BosdynRecordEventOnInterruption-DefaultParametersEntry"></a></p>
+</section>
+<section id="bosdynrecordeventoninterruption-defaultparametersentry">
+<h3>BosdynRecordEventOnInterruption.DefaultParametersEntry<a class="headerlink" href="#bosdynrecordeventoninterruption-defaultparametersentry" title="Permalink to this heading"></a></h3>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Label</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>key</td>
+<td><a href="#string">string</a></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>value</td>
+<td><a href="#bosdyn-api-mission-Value">Value</a></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table><p><a name="bosdyn-api-mission-BosdynRecordEventOnInterruption-ExecutorSetupFailureParametersEntry"></a></p>
+</section>
+<section id="bosdynrecordeventoninterruption-executorsetupfailureparametersentry">
+<h3>BosdynRecordEventOnInterruption.ExecutorSetupFailureParametersEntry<a class="headerlink" href="#bosdynrecordeventoninterruption-executorsetupfailureparametersentry" title="Permalink to this heading"></a></h3>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Label</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>key</td>
+<td><a href="#string">string</a></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>value</td>
+<td><a href="#bosdyn-api-mission-Value">Value</a></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table><p><a name="bosdyn-api-mission-BosdynRecordEventOnInterruption-LeaseUseErrorParametersEntry"></a></p>
+</section>
+<section id="bosdynrecordeventoninterruption-leaseuseerrorparametersentry">
+<h3>BosdynRecordEventOnInterruption.LeaseUseErrorParametersEntry<a class="headerlink" href="#bosdynrecordeventoninterruption-leaseuseerrorparametersentry" title="Permalink to this heading"></a></h3>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Label</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>key</td>
+<td><a href="#string">string</a></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>value</td>
+<td><a href="#bosdyn-api-mission-Value">Value</a></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table><p><a name="bosdyn-api-mission-BosdynRecordEventOnInterruption-LoadMissionParametersEntry"></a></p>
+</section>
+<section id="bosdynrecordeventoninterruption-loadmissionparametersentry">
+<h3>BosdynRecordEventOnInterruption.LoadMissionParametersEntry<a class="headerlink" href="#bosdynrecordeventoninterruption-loadmissionparametersentry" title="Permalink to this heading"></a></h3>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Label</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>key</td>
+<td><a href="#string">string</a></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>value</td>
+<td><a href="#bosdyn-api-mission-Value">Value</a></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table><p><a name="bosdyn-api-mission-BosdynRecordEventOnInterruption-PauseMissionParametersEntry"></a></p>
+</section>
+<section id="bosdynrecordeventoninterruption-pausemissionparametersentry">
+<h3>BosdynRecordEventOnInterruption.PauseMissionParametersEntry<a class="headerlink" href="#bosdynrecordeventoninterruption-pausemissionparametersentry" title="Permalink to this heading"></a></h3>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Label</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>key</td>
+<td><a href="#string">string</a></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>value</td>
+<td><a href="#bosdyn-api-mission-Value">Value</a></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table><p><a name="bosdyn-api-mission-BosdynRecordEventOnInterruption-PlayMissionTimeoutParametersEntry"></a></p>
+</section>
+<section id="bosdynrecordeventoninterruption-playmissiontimeoutparametersentry">
+<h3>BosdynRecordEventOnInterruption.PlayMissionTimeoutParametersEntry<a class="headerlink" href="#bosdynrecordeventoninterruption-playmissiontimeoutparametersentry" title="Permalink to this heading"></a></h3>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Label</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>key</td>
+<td><a href="#string">string</a></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>value</td>
+<td><a href="#bosdyn-api-mission-Value">Value</a></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table><p><a name="bosdyn-api-mission-BosdynRecordEventOnInterruption-RestartMissionParametersEntry"></a></p>
+</section>
+<section id="bosdynrecordeventoninterruption-restartmissionparametersentry">
+<h3>BosdynRecordEventOnInterruption.RestartMissionParametersEntry<a class="headerlink" href="#bosdynrecordeventoninterruption-restartmissionparametersentry" title="Permalink to this heading"></a></h3>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Label</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>key</td>
+<td><a href="#string">string</a></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>value</td>
+<td><a href="#bosdyn-api-mission-Value">Value</a></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table><p><a name="bosdyn-api-mission-BosdynRecordEventOnInterruption-StopMissionParametersEntry"></a></p>
+</section>
+<section id="bosdynrecordeventoninterruption-stopmissionparametersentry">
+<h3>BosdynRecordEventOnInterruption.StopMissionParametersEntry<a class="headerlink" href="#bosdynrecordeventoninterruption-stopmissionparametersentry" title="Permalink to this heading"></a></h3>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Label</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>key</td>
+<td><a href="#string">string</a></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>value</td>
+<td><a href="#bosdyn-api-mission-Value">Value</a></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table><p><a name="bosdyn-api-mission-BosdynRecordEventOnInterruption-SystemShutdownParametersEntry"></a></p>
+</section>
+<section id="bosdynrecordeventoninterruption-systemshutdownparametersentry">
+<h3>BosdynRecordEventOnInterruption.SystemShutdownParametersEntry<a class="headerlink" href="#bosdynrecordeventoninterruption-systemshutdownparametersentry" title="Permalink to this heading"></a></h3>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Label</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>key</td>
+<td><a href="#string">string</a></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>value</td>
+<td><a href="#bosdyn-api-mission-Value">Value</a></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
 </table><p><a name="bosdyn-api-mission-BosdynRobotCommand"></a></p>
 </section>
 <section id="bosdynrobotcommand">
@@ -38066,6 +38652,12 @@ Interruptions are anything that causes the mission to stop ticking automatically
 <td>repeated</td>
 <td>If key(s) are specified, the additional information about the lease use error will be stored<br>in the AcquireDataRequest metadata. All given key(s) must be used in order to access the<br>error message reason from the JSON metadata. The last key holds error message.</td>
 </tr>
+<tr>
+<td>child_node_failure_metadata</td>
+<td><a href="#bosdyn-api-Metadata">bosdyn.api.Metadata</a></td>
+<td></td>
+<td>If populated, the child returning Result.FAILURE (a normal, non-exceptional failure) will<br>also be treated as an interruption, using this metadata. By default, only Result.ERROR /<br>exceptions from the child count as interruptions.</td>
+</tr>
 </tbody>
 </table><p><a name="bosdyn-api-mission-DateToBlackboard"></a></p>
 </section>
@@ -38087,6 +38679,12 @@ Interruptions are anything that causes the mission to stop ticking automatically
 <td><a href="#string">string</a></td>
 <td></td>
 <td>The key of the variable that will be written.</td>
+</tr>
+<tr>
+<td>write_as_timestamp</td>
+<td><a href="#bool">bool</a></td>
+<td></td>
+<td>If true, write the current time as a google.protobuf.Timestamp instead of a formatted<br>date/time string.</td>
 </tr>
 </tbody>
 </table><p><a name="bosdyn-api-mission-DefineBlackboard"></a></p>
@@ -38687,6 +39285,12 @@ Specifics of what the node does are contained in the “impl” field.</p>
 <td></td>
 </tr>
 <tr>
+<td>bosdyn_record_event_on_interruption</td>
+<td><a href="#bosdyn-api-mission-BosdynRecordEventOnInterruption">BosdynRecordEventOnInterruption</a></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
 <td>parameter_values</td>
 <td><a href="#bosdyn-api-mission-KeyValue">KeyValue</a></td>
 <td>repeated</td>
@@ -39254,6 +39858,12 @@ been retained, and FAILURE if any one lease cannot be retained.</p>
 <td><a href="#bool">bool</a></td>
 <td></td>
 <td>By default, if the secondary node finishes before the primary node, the secondary node<br>will be restarted. If this flag is set to true, and the secondary node completes before<br>the primary node, it will never be restarted.</td>
+</tr>
+<tr>
+<td>tick_secondary_node_first</td>
+<td><a href="#bool">bool</a></td>
+<td></td>
+<td>By default, the primary will be ticked first, then the secondary.<br>Use this flag to tick the secondary node first.</td>
 </tr>
 </tbody>
 </table><p><a name="bosdyn-api-mission-Sleep"></a></p>
@@ -40450,6 +41060,12 @@ to this service type, calling out to this service when loaded, ticked, or unload
 <td></td>
 <td></td>
 </tr>
+<tr>
+<td>timestamp_value</td>
+<td><a href="#google-protobuf-Timestamp">google.protobuf.Timestamp</a></td>
+<td></td>
+<td></td>
+</tr>
 </tbody>
 </table><p><a name="bosdyn-api-mission-ConstantValue-DictValue"></a></p>
 </section>
@@ -40805,6 +41421,11 @@ that collection</p>
 <tr>
 <td>TYPE_DICT</td>
 <td>7</td>
+<td></td>
+</tr>
+<tr>
+<td>TYPE_TIMESTAMP</td>
+<td>8</td>
 <td></td>
 </tr>
 </tbody>
@@ -47665,6 +48286,11 @@ Historical faults are useful to diagnose robot behavior subject to intermittent 
 <td>3</td>
 <td>A lease has timed out</td>
 </tr>
+<tr>
+<td>CAUSE_COMMAND_FAILURE</td>
+<td>4</td>
+<td>A command failed in a way that it cannot autonomously recover from.</td>
+</tr>
 </tbody>
 </table><p><a name="bosdyn-api-BehaviorFault-Status"></a></p>
 </section>
@@ -54378,10 +55004,28 @@ the API</p>
 </thead>
 <tbody>
 <tr>
+<td>description</td>
+<td><a href="#string">string</a></td>
+<td></td>
+<td>Description of sequence behavior.</td>
+</tr>
+<tr>
+<td>start_position</td>
+<td><a href="#bosdyn-api-SE2Pose">bosdyn.api.SE2Pose</a></td>
+<td></td>
+<td>Start position metadata (used for multi-robot dance visualization to display relative<br>placement, does not affect robot playback).</td>
+</tr>
+<tr>
+<td>color</td>
+<td><a href="#bosdyn-api-spot-ChoreographerDisplayInfo-Color">ChoreographerDisplayInfo.Color</a></td>
+<td></td>
+<td>Color associated with a sequence (used for visual identification).</td>
+</tr>
+<tr>
 <td>labels</td>
 <td><a href="#string">string</a></td>
 <td>repeated</td>
-<td>the list of user assigned categories that the sequence belongs to</td>
+<td>The list of user assigned categories that the sequence belongs to.</td>
 </tr>
 </tbody>
 </table><p><a name="bosdyn-api-spot-ChoreographySequence"></a></p>
@@ -54539,6 +55183,12 @@ the API</p>
 <td><a href="#string">string</a></td>
 <td></td>
 <td>Name of the active sequence, None if the robot is not in a dance state.</td>
+</tr>
+<tr>
+<td>sequence_start_time</td>
+<td><a href="#google-protobuf-Timestamp">google.protobuf.Timestamp</a></td>
+<td></td>
+<td>When the sequence was commanded to start, in robot time.</td>
 </tr>
 </tbody>
 </table><p><a name="bosdyn-api-spot-ChoreographyTimeAdjustRequest"></a></p>
@@ -56488,37 +57138,37 @@ displayed with.</p>
 <tr>
 <td>STATUS_UNKNOWN</td>
 <td>0</td>
-<td></td>
+<td>Status unknown. Do not use.</td>
 </tr>
 <tr>
 <td>STATUS_DANCING</td>
 <td>1</td>
-<td></td>
+<td>Robot is actively performing a choreography sequence.</td>
 </tr>
 <tr>
 <td>STATUS_COMPLETED_SEQUENCE</td>
 <td>2</td>
-<td></td>
+<td>Robot recently completely a choreography sequence and is no longer dancing.</td>
 </tr>
 <tr>
 <td>STATUS_PREPPING</td>
 <td>3</td>
-<td></td>
+<td>Robot is getting ready to start a sequence by getting into the correct<br>entrance state (sit, stand, ...) for the first move.</td>
 </tr>
 <tr>
 <td>STATUS_WAITING_FOR_START_TIME</td>
 <td>4</td>
-<td></td>
+<td>Robot is ready to perform the requested choreography sequence and waiting<br>for the requested start time.</td>
 </tr>
 <tr>
 <td>STATUS_VALIDATING</td>
 <td>5</td>
-<td></td>
+<td>The sequence has been recieved, but is still being processed and checked<br>for validity.</td>
 </tr>
 <tr>
 <td>STATUS_INTERRUPTED</td>
 <td>6</td>
-<td></td>
+<td>An active choreography sequence was recently interrupted by another command.</td>
 </tr>
 <tr>
 <td>STATUS_FALLEN</td>
@@ -56533,7 +57183,7 @@ displayed with.</p>
 <tr>
 <td>STATUS_OTHER</td>
 <td>9</td>
-<td></td>
+<td>The robot is powered on but not actively preparing to perform, performing,<br>or has recently completed a choreography sequence.</td>
 </tr>
 </tbody>
 </table><p><a name="bosdyn-api-spot-ChoreographyTimeAdjustResponse-Status"></a></p>
@@ -57056,6 +57706,11 @@ displayed with.</p>
 <td>STATUS_PING_RESPONSE</td>
 <td>3</td>
 <td>Treated this message as a ping. Responding to demonstrate connectivity.</td>
+</tr>
+<tr>
+<td>STATUS_REJECTED_DANCE_ACTIVE</td>
+<td>4</td>
+<td>Animations cannot be uploaded while the robot is dancing.</td>
 </tr>
 </tbody>
 </table> <!-- end enums --> <!-- end HasExtensions --> <!-- end services --><p><a name="bosdyn_api_spot_choreography_service-proto"></a></p>
@@ -66479,6 +67134,18 @@ a reference time.</p>
 <td><a href="#bosdyn-api-FiducialPurpose">FiducialPurpose</a></td>
 <td></td>
 <td>Purpose of the fiducial.</td>
+</tr>
+<tr>
+<td>hamming_distance</td>
+<td><a href="#int32">int32</a></td>
+<td></td>
+<td>Hamming distance of the detected tag.</td>
+</tr>
+<tr>
+<td>num_observations</td>
+<td><a href="#int32">int32</a></td>
+<td></td>
+<td>Number of times this tag has been observed.</td>
 </tr>
 </tbody>
 </table><p><a name="bosdyn-api-BoundingBoxProperties"></a></p>

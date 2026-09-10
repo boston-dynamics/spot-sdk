@@ -13,9 +13,11 @@ import datetime
 
 from google.protobuf import timestamp_pb2
 
-from bosdyn.api.payload_software_update_pb2 import (GetAvailableSoftwareUpdatesRequest,
-                                                    SendCurrentVersionInfoRequest,
-                                                    SendSoftwareUpdateStatusRequest)
+from bosdyn.api.payload_software_update_pb2 import (
+    GetAvailableSoftwareUpdatesRequest,
+    SendCurrentVersionInfoRequest,
+    SendSoftwareUpdateStatusRequest,
+)
 from bosdyn.api.payload_software_update_service_pb2_grpc import PayloadSoftwareUpdateServiceStub
 from bosdyn.api.robot_id_pb2 import SoftwareVersion
 from bosdyn.api.software_package_pb2 import SoftwarePackageVersion, SoftwareUpdateStatus

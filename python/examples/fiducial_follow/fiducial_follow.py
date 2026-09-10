@@ -262,9 +262,8 @@ class FollowFiducial(object):
             if bboxes:
                 print(f'Found bounding box for {source_name}')
                 return bboxes, source_name
-            else:
-                self._tag_not_located = True
-                print(f'Failed to find bounding box for {source_name}')
+            self._tag_not_located = True
+            print(f'Failed to find bounding box for {source_name}')
         return [], None
 
     def detect_fiducial_in_image(self, image, dim, source_name):

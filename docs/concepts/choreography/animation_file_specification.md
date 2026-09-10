@@ -16,23 +16,7 @@ Animation files are human-readable/editable text files with a `*.cha` extension.
 - Parameters
 - Body
 
-There are three methods for parsing an animation cha file into an `Animation` protobuf message:
-
-1. Create an animations directory in the same directory as the Choreographer executable. All \*.cha animation files within this directory will be automatically parsed and uploaded to robot when Choreographer is opened.
-
-The directory structure looks like this:
-
-```
-dance_directory/
-	choreographer.exe
-	animations/
-		bourree_arm.cha
-		my_animation.cha
-```
-
-2. In Choreographer, select **Load Animated Move** from the File menu to upload a single animation file after the application is already opened.
-
-3. The python script `animation_file_to_proto.py` in the bosdyn-choreography-client package parses the text file and can be used to output a protobuf message, which can be uploaded to the robot using the UploadAnimation RPC without using Choreographer.
+After creating an Animation `.cha` with the desired data, see [Animations in Choreographer](animations_in_choreographer.md#parsing-and-loading-animations-with-choreographer) for details on uploading Animations to Spot.
 
 ## File specification
 
@@ -56,7 +40,7 @@ All units are in:
 
 - Distance: meters
 - Angles: radians
-- Time: seconds. Sometimes time is measured in slices (¼ beat). The duration is dependent on the sequence's BPM (beats per minute).
+- Time: seconds. Sometimes time is measured in slices (¼ beat). The duration is dependent on the sequence's beats per minute (BPM).
 
 ### Commenting
 

@@ -48,7 +48,7 @@ Choreographer has specific, user-configurable settings and checkpoints it looks 
 
 Note: Timecode functionality in Choreographer depends on a local PortAudio (https://www.portaudio.com/docs/) installation. If timecode functionality is disabled in Choreographer, you will likely need to install this package before moving forward. See [Installing Optional Choreographer Dependencies](choreographer_setup.md#installing-optional-choreographer-dependencies) in the Choreographer setup guide for details.
 
-1. **Open the "Playback and Music Settings" menu under "Settings".** Find the "Use Timecode for Start" checkbox option and enable it.
+1. **Open the **Choreography Playback** section of the **Settings**->**Preferences** menu.** Find the "Use Timecode for Start" checkbox option and enable it.
 
    <img src="timecode_images/timecode_playback_settings.png" style="max-width:600px;">
 
@@ -61,6 +61,6 @@ Note: Timecode functionality in Choreographer depends on a local PortAudio (http
 
 5. **Set and queue the timecode trigger.** After timecode is being read, Choreographer will still wait for the user to queue a dance before using timecode to execute any sequences. To queue a dance, look to the left of the Robot Control bar for the start timecode entry box. When "Use Timecode for Start" is enabled, it will appear in the same location that the "Start Choreography" button usually occupies. Set the desired timecode value for when the dance should begin, and then check the check box next to the start value to queue the dance. No dance will start until the checkbox has been enabled. The checkbox includes a 1-second "grace" window. Enabling it within this window after the start time has passed will start the dance immediately; after that, enabling it will have no effect. When Choreographer uses timecode to execute the dance, this box will automatically be unchecked.
 
-   Note: While timecode is in use, the "Start Choreography" button can still be used to launch dances, and will continue to use the separate "Sequence Start Delay" value set in the "Playback and Music Settings" menu when executing sequences.
+   Note: While timecode is in use, the "Start Choreography" button can still be used to launch dances, and will continue to use the separate "Sequence Start Delay" value set in the **Choreography Playback** section of the **Settings**->**Preferences** menu when executing sequences.
 
    <img src="timecode_images/timecode_widget.png" style="max-width:800px;">

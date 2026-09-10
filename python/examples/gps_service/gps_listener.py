@@ -606,7 +606,7 @@ def main():
 
     # Print the build info first, if it exists.
     if os.path.isfile(BUILD_DATA_FILE):
-        with open(BUILD_DATA_FILE, 'r') as f:
+        with open(BUILD_DATA_FILE) as f:
             logger.info(f.read())
 
     # Get the command line options.

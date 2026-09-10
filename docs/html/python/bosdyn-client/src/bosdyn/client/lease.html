@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Lease &mdash; Spot 5.1.9 documentation</title>
+  <title>Lease &mdash; Spot 5.2.0 documentation</title>
       <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../../../_static/style.css" type="text/css" />
     <link rel="shortcut icon" href="../../../../../_static/bd-favicon.png"/>
@@ -38,7 +38,7 @@
               <img src="../../../../../_static/bd-official-white.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                5.1.9
+                5.2.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
@@ -205,7 +205,8 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/world_object_mutations/README.html">World Object Mutations</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/visualizer/README.html">Visualizer</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/gripper_camera_params/README.html">Gripper Camera Parameters</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../../examples/spot_cam/README.html">Spot CAM</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/spot_cam/README.html">Spot CAM Services</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/spot_cam/README.html#spot-cam-video-core-io-extension-example">Spot Cam Video Core IO Extension Example</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/stitch_front_images/README.html">Stitch Front Images</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/get_depth_plus_visual_image/README.html">Project Depth Data on Visual Images</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/service_customization/custom_parameter_image_server/README.html">Custom Parameter Image Server</a></li>
@@ -249,6 +250,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/graph_nav_command_line/README.html">GraphNav and Recording Service Command Line Interfaces</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/graph_nav_command_line/README.html#example-programs">Example Programs</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/graph_nav_extract_point_cloud/README.html">Graph Nav Extract Point Cloud</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/graph_nav_map_to_usd/README.html">Graph Nav Map to USD</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/graph_nav_view_map/README.html">Graph Nav View Map</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/graph_nav_view_gps/README.html">Graph Nav View GPS Data</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/get_mission_state/README.html">Get Mission State</a></li>
@@ -269,7 +271,8 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../examples/docs/joint_control_examples.html">Joint Control API Examples</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../examples/docs/orbit.html">Orbit</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../../../examples/orbit/hello_orbit/README.html">Hello Orbit</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/orbit/hello_orbit/README.html">Hello Orbit (v0, OrbitClient)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/orbit/orbit_v1_api/README.html">Orbit v1 API (v1, raw HTTP)</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/orbit/export_run_archives/README.html">Export Run Archives</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/orbit/export_site_walk_archives/README.html">Export Sitewalk Archives</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/orbit/anomalies/README.html">Anomalies</a></li>
@@ -324,6 +327,8 @@
 <li class="toctree-l4"><a class="reference internal" href="fault.html">Fault</a></li>
 <li class="toctree-l4"><a class="reference internal" href="frame_helpers.html">Frame Helpers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="graph_nav.html">Graph Nav</a></li>
+<li class="toctree-l4"><a class="reference internal" href="graph_nav_download.html">Graph Nav Download</a></li>
+<li class="toctree-l4"><a class="reference internal" href="graph_nav_upload.html">Graph Nav Upload</a></li>
 <li class="toctree-l4"><a class="reference internal" href="gripper_camera_param.html">Gripper Camera Params</a></li>
 <li class="toctree-l4"><a class="reference internal" href="gps/README.html">GPS</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="gps/aggregator_client.html">Aggregator Client</a></li>
@@ -522,7 +527,7 @@
              
   <section id="module-bosdyn.client.lease">
 <span id="lease"></span><h1>Lease<a class="headerlink" href="#module-bosdyn.client.lease" title="Permalink to this heading"></a></h1>
-<p>Lease clients</p>
+<p>Lease clients.</p>
 <dl class="py exception">
 <dt class="sig sig-object py" id="bosdyn.client.lease.LeaseResponseError">
 <em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bosdyn.client.lease.</span></span><span class="sig-name descname"><span class="pre">LeaseResponseError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">response</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">error_message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/lease.html#LeaseResponseError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.lease.LeaseResponseError" title="Permalink to this definition"></a></dt>
@@ -632,7 +637,7 @@ monotonically increasing numbers, similar to a Lamport logical clock.</p>
 </dl>
 <dl class="py class">
 <dt class="sig sig-object py" id="bosdyn.client.lease.Lease.CompareResult">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">CompareResult</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/lease.html#Lease.CompareResult"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.lease.Lease.CompareResult" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">CompareResult</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">names=&lt;not</span> <span class="pre">given&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">*values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">module=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qualname=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start=1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">boundary=None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/lease.html#Lease.CompareResult"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.lease.Lease.CompareResult" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></p>
 <p>Enum for comparison results between two leases.</p>
 <dl class="py attribute">
@@ -747,7 +752,8 @@ the new lease’s set of clients which have used it.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="bosdyn.client.lease.Lease.compare_result_to_lease_use_result_status">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">compare_result_to_lease_use_result_status</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">compare_result</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allow_super_leases</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/lease.html#Lease.compare_result_to_lease_use_result_status"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.lease.Lease.compare_result_to_lease_use_result_status" title="Permalink to this definition"></a></dt>
-<dd><p>Determines the comparable LeaseUseResult.Status enum value based on the CompareResult enum.</p>
+<dd><p>Determines the comparable LeaseUseResult.Status enum value based on the CompareResult
+enum.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>allow_super_leases</strong> (<em>boolean</em>) – If true, a super lease will still be considered as “ok”/
@@ -784,9 +790,8 @@ incremented from the original lease).</p></li>
 </dl>
 <dl class="py class">
 <dt class="sig sig-object py" id="bosdyn.client.lease.LeaseState.Status">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Status</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/lease.html#LeaseState.Status"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.lease.LeaseState.Status" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Status</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">names=&lt;not</span> <span class="pre">given&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">*values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">module=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qualname=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start=1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">boundary=None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/lease.html#LeaseState.Status"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.lease.LeaseState.Status" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></p>
-<p>An enumeration.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="bosdyn.client.lease.LeaseState.Status.UNOWNED">
 <span class="sig-name descname"><span class="pre">UNOWNED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#bosdyn.client.lease.LeaseState.Status.UNOWNED" title="Permalink to this definition"></a></dt>
@@ -1260,8 +1265,8 @@ failures during the keepalive from the RetainLease RPC.</p></li>
 <dt class="sig sig-object py" id="bosdyn.client.lease.LeaseKeepAlive.shutdown">
 <span class="sig-name descname"><span class="pre">shutdown</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/lease.html#LeaseKeepAlive.shutdown"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.lease.LeaseKeepAlive.shutdown" title="Permalink to this definition"></a></dt>
 <dd><p>Shut the background thread down and stop the liveness checks.</p>
-<p>Can be called multiple times, but subsequent calls are no-ops.
-Blocks until the background thread completes.</p>
+<p>Can be called multiple times, but subsequent calls are no-ops. Blocks until the background
+thread completes.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -1278,8 +1283,8 @@ Blocks until the background thread completes.</p>
 <dt class="sig sig-object py" id="bosdyn.client.lease.LeaseKeepAlive.wait_until_done">
 <span class="sig-name descname"><span class="pre">wait_until_done</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/lease.html#LeaseKeepAlive.wait_until_done"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.lease.LeaseKeepAlive.wait_until_done" title="Permalink to this definition"></a></dt>
 <dd><p>Waits until the background thread exits.</p>
-<p>Most client code should exit the background thread by using shutdown
-or by passing in a keep_running_cb callback in the constructor.</p>
+<p>Most client code should exit the background thread by using shutdown or by passing in a
+keep_running_cb callback in the constructor.</p>
 <p>However, this can be useful in unit tests for ensuring exits.</p>
 </dd></dl>
 

@@ -52,15 +52,73 @@ Note that to see the help for the individual communication protocols, placeholde
 python3 gps_listener.py --name "" "" udp --help
 ```
 
-## Building the Core IO extensions
+## Building the CORE I/O extensions
 
-The Trimble SPS986 and Leica GA03 examples are intended to be run as ARM architecture Core IO extensions. To build these extensions on an x86/AMD development environment, first run the commands in the section about "creating docker images on a development environment for a different architecture" [here](https://dev.bostondynamics.com/docs/payload/docker_containers.html#build-docker-images). After this one-time setup, you can use the `build_extension.py` script to create the Docker image via the command below, with further instructions [here](../extensions/README.md).
+The Trimble SPS986 and Leica GA03 examples are intended to be run as ARM architecture CORE I/O extensions. To build these extensions on an x86/AMD development environment, first run the commands in the section about "creating docker images on a development environment for a different architecture" [here](../../../docs/payload/docker_containers.md#build-docker-images). After this one-time setup, you can use the `build_extension.py` script to create the Docker image via the command below, with further instructions [here](../extensions/README.md).
 
 ```sh
-python3 build_extension.py --dockerfile-paths ../gps_service/Dockerfile --build-image-tags gps_listener_image_arm64:latest --image-archive gps_listener_image_arm64.tgz --package-dir ../gps_service/extensions/trimble_sps986/ --spx trimble_listener.spx
+python3 ../extensions/build_extension.py --dockerfile-paths Dockerfile --build-image-tags gps_listener_image_arm64:latest --image-archive gps_listener_image_arm64.tgz --package-dir extensions/trimble_sps986/ --spx trimble_listener.spx
 ```
 
-The trimble_listener.spx file can then be uploaded to the Core IO through its webpage.
+The trimble_listener.spx file can then be uploaded to the CORE I/O through the Extensions tab on the CORE I/O webpage.
+
+```sh
+python3 ../extensions/build_extension.py --dockerfile-paths Dockerfile --build-image-tags gps_listener_image_arm64:latest --image-archive gps_listener_image_arm64.tgz --package-dir extensions/leica_ga03/ --udev-rule extensions/leica_ga03/99-leica_gps_rules.rules --spx ~/Downloads/leica_listener.spx
+```
+
+The leica_listener.spx file can then be uploaded to the CORE I/O through the Extensions tab on the CORE I/O webpage.
+**Known Issues** The Leica extension will have to be restarted each time the robot reboots so the USB port mounts correctly.
+
+## Configuring the Sensors
+
+### Configuring Trimble SPS986
+
+To configure the Trimble SPS986 Sensor to use with the CORE I/O extension.
+
+1. Connect to the Trimble's WiFi
+2. Go to http://192.168.142.1 and log in
+3. Enable the NMEA message output
+   - Navigate to `I/O Configuration`.
+   - In the row for port `5018`, click on `TCP/IP`.
+   - Change the output type to `NMEA` and configure the following settings:
+     - GGA: 2 Hz
+     - GST: 2 Hz
+     - ZDA: 2 Hz
+   - Press `OK` to apply changes
+4. Disable the logging
+   - Navigate to Data Logging Menu
+   - Navigate to Summary
+   - Uncheck the Enable box
+5. Set `Positioning Mode` to `Least Squares`
+6. Enable all satellites
+7. Configure the MSS Service to `Auto/RTXNA`
+   - Note: if the GPS is located in a different continent than North America it will be set to a different MSS Service but will still start with `Auto`
+
+### Configuring Leica GA03 Sensor
+
+To configure the Leica GA03 Sensor to use with the CORE I/O extension.
+
+1. Download the Novatel configuration application from Novatel's website.
+2. Plug the leica sensor into a computer
+3. Start the Novatel application
+4. Add a new mounting device as USB 0
+5. Set the positioning to `Receive (Rover)`
+6. Set the ports
+   - Set USB1
+     - Input: `Novatel`
+     - Output: `Novatel`
+   - Set USB2
+     - Input: `None`
+     - Output: `NMEA`
+     - Logging: `GGA` `GST` `ZDA`
+       - Select the gear symbol
+       - Set trigger to `ONTIME` and Period to `.5` for `GGA` `GST` `ZDA`
+7. (OPTIONAL) Add a correction service subscription
+   - Get an authorization code from Leica that matches the serial of your device
+   - Navigate to Device
+   - Navigate to Details
+   - Paste the authorization code under Apply Auth Code
+   - Press `apply`
 
 ## Understanding the Example
 

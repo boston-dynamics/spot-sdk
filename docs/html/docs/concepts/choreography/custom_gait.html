@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Custom Gait &mdash; Spot 5.1.9 documentation</title>
+  <title>Custom Gait &mdash; Spot 5.2.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
     <link rel="shortcut icon" href="../../../_static/bd-favicon.png"/>
@@ -38,7 +38,7 @@
               <img src="../../../_static/bd-official-white.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                5.1.9
+                5.2.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -205,7 +205,8 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/world_object_mutations/README.html">World Object Mutations</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/visualizer/README.html">Visualizer</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/gripper_camera_params/README.html">Gripper Camera Parameters</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_cam/README.html">Spot CAM</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_cam/README.html">Spot CAM Services</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_cam/README.html#spot-cam-video-core-io-extension-example">Spot Cam Video Core IO Extension Example</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/stitch_front_images/README.html">Stitch Front Images</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/get_depth_plus_visual_image/README.html">Project Depth Data on Visual Images</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/service_customization/custom_parameter_image_server/README.html">Custom Parameter Image Server</a></li>
@@ -249,6 +250,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/graph_nav_command_line/README.html">GraphNav and Recording Service Command Line Interfaces</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/graph_nav_command_line/README.html#example-programs">Example Programs</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/graph_nav_extract_point_cloud/README.html">Graph Nav Extract Point Cloud</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/graph_nav_map_to_usd/README.html">Graph Nav Map to USD</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/graph_nav_view_map/README.html">Graph Nav View Map</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/graph_nav_view_gps/README.html">Graph Nav View GPS Data</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/get_mission_state/README.html">Get Mission State</a></li>
@@ -269,7 +271,8 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/joint_control_examples.html">Joint Control API Examples</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/orbit.html">Orbit</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/hello_orbit/README.html">Hello Orbit</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/hello_orbit/README.html">Hello Orbit (v0, OrbitClient)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/orbit_v1_api/README.html">Orbit v1 API (v1, raw HTTP)</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/export_run_archives/README.html">Export Run Archives</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/export_site_walk_archives/README.html">Export Sitewalk Archives</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/anomalies/README.html">Anomalies</a></li>
@@ -324,6 +327,8 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/fault.html">Fault</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/frame_helpers.html">Frame Helpers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/graph_nav.html">Graph Nav</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/graph_nav_download.html">Graph Nav Download</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/graph_nav_upload.html">Graph Nav Upload</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/gripper_camera_param.html">Gripper Camera Params</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/gps/README.html">GPS</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/gps/aggregator_client.html">Aggregator Client</a></li>
@@ -535,7 +540,7 @@ Development Kit License (20191101-BDSDK-SL).
 </section>
 <section id="driving-custom-gait">
 <h2>Driving Custom Gait<a class="headerlink" href="#driving-custom-gait" title="Permalink to this heading"></a></h2>
-<p>Custom Gait responds to the <a class="reference internal" href="choreography_service.html"><span class="doc">ChoreographyCommand</span></a> RPC. When operating through Choreographer with an attached XBox controller, steering commands will be sent based on joystick position (left joystick for translation, right for turning), and the d-pad down button will command Custom Gait to stop, allowing the sequence to proceed. WASD input can also be used in place of Xbox input to drive Custom Gait moves when the “Accept Interactive WASD Input” option in the “Settings”-&gt;”Playback and Music Settings” menu is enabled (use shift+s instead of d-pad down to stop). Steering commands will be scaled by the <code class="docutils literal notranslate"><span class="pre">CustomGaitCommandLimits</span></code> message returned as part of the <a class="reference internal" href="choreography_service.html"><span class="doc">ChoreographyStatus</span></a> RPC. Those will generally be the values specified for <code class="docutils literal notranslate"><span class="pre">max_velocity</span></code> and <code class="docutils literal notranslate"><span class="pre">max_yaw_rate</span></code> in the parameters, but may be limited based on a determination of what that gait pattern is capable of.</p>
+<p>Custom Gait responds to the <a class="reference internal" href="choreography_service.html"><span class="doc">ChoreographyCommand</span></a> RPC. When operating through Choreographer with an attached XBox controller, steering commands will be sent based on joystick position (left joystick for translation, right for turning), and the d-pad down button will command Custom Gait to stop, allowing the sequence to proceed. WASD input can also be used in place of Xbox input to drive Custom Gait moves when the “Accept Interactive WASD Input” option in the <strong>Robot Operation</strong> section of the <strong>Settings</strong>-&gt;<strong>Preferences</strong> menu is enabled (use shift+s instead of d-pad down to stop). Steering commands will be scaled by the <code class="docutils literal notranslate"><span class="pre">CustomGaitCommandLimits</span></code> message returned as part of the <a class="reference internal" href="choreography_service.html"><span class="doc">ChoreographyStatus</span></a> RPC. Those will generally be the values specified for <code class="docutils literal notranslate"><span class="pre">max_velocity</span></code> and <code class="docutils literal notranslate"><span class="pre">max_yaw_rate</span></code> in the parameters, but may be limited based on a determination of what that gait pattern is capable of.</p>
 <p>The custom gait move can also be driven through the tablet’s choreography drive screen using the tablet’s joysticks. See <a class="reference internal" href="choreography_in_tablet.html"><span class="doc">Tablet Choreography Mode</span></a> for further details on playing choreography sequences through the tablet.</p>
 </section>
 <section id="gait-diagram">

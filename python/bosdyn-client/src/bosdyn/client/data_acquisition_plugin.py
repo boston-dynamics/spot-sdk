@@ -10,19 +10,31 @@ import sys
 
 from bosdyn.api import data_acquisition_pb2 as data_acquisition
 from bosdyn.api import data_acquisition_plugin_service_pb2_grpc as data_acquisition_plugin_service
-from bosdyn.client.common import (BaseClient, error_factory, error_pair,
-                                  handle_common_header_errors, handle_custom_params_errors,
-                                  handle_unset_status_error)
-from bosdyn.client.data_acquisition import (DataAcquisitionClient, DataAcquisitionResponseError,
-                                            UnknownCaptureTypeError, _get_live_data_error,
-                                            acquire_data_error, metadata_to_proto)
+from bosdyn.client.common import (
+    BaseClient,
+    error_factory,
+    error_pair,
+    handle_common_header_errors,
+    handle_custom_params_errors,
+    handle_unset_status_error,
+)
+from bosdyn.client.data_acquisition import (
+    DataAcquisitionClient,
+    DataAcquisitionResponseError,
+    UnknownCaptureTypeError,
+    _get_live_data_error,
+    acquire_data_error,
+    metadata_to_proto,
+)
 
 
 class DataAcquisitionPluginClient(BaseClient):
-    """A client for triggering data acquisition plugin and logging. This client is not intended for
-    use directly by users or applications. All acquisition requests should go to the data
-    acquisition service first, which is responsible for forwarding the requests to the right data
-    acquisition plugin services through this client."""
+    """A client for triggering data acquisition plugin and logging.
+
+    This client is not intended for use directly by users or applications. All acquisition requests
+    should go to the data acquisition service first, which is responsible for forwarding the
+    requests to the right data acquisition plugin services through this client.
+    """
 
     default_service_name = None
     service_type = 'bosdyn.api.DataAcquisitionPluginService'
@@ -36,7 +48,8 @@ class DataAcquisitionPluginClient(BaseClient):
 
     def acquire_plugin_data(self, acquisition_requests, action_id, data_identifiers=None,
                             metadata=None, **kwargs):
-        """Trigger a data acquisition to save data and metadata to the data acquisition store service.
+        """Trigger a data acquisition to save data and metadata to the data acquisition store
+        service.
 
         Args:
           acquisition_requests (bosdyn.api.AcquisitionRequestList): The different image sources and

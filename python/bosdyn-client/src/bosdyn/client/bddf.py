@@ -13,12 +13,27 @@ from bosdyn.bddf.block_writer import BlockWriter
 from bosdyn.bddf.bosdyn import MessageChannel
 # pylint: disable=unused-import
 # from bosdyn.bddf import (
-from bosdyn.bddf.common import (BLOCK_HEADER_SIZE_MASK, BLOCK_HEADER_TYPE_MASK, DATA_BLOCK_TYPE,
-                                DESCRIPTOR_BLOCK_TYPE, END_BLOCK_TYPE, END_MAGIC,
-                                INDEX_OFFSET_OFFSET, LOGGER, MAGIC, POD_TYPE_TO_NUM_BYTES,
-                                POD_TYPE_TO_STRUCT, PROTOBUF_CONTENT_TYPE, SHA1_DIGEST_NBYTES,
-                                AddSeriesError, ChecksumError, DataError, DataFormatError,
-                                ParseError, SeriesNotUniqueError)
+from bosdyn.bddf.common import (
+    BLOCK_HEADER_SIZE_MASK,
+    BLOCK_HEADER_TYPE_MASK,
+    DATA_BLOCK_TYPE,
+    DESCRIPTOR_BLOCK_TYPE,
+    END_BLOCK_TYPE,
+    END_MAGIC,
+    INDEX_OFFSET_OFFSET,
+    LOGGER,
+    MAGIC,
+    POD_TYPE_TO_NUM_BYTES,
+    POD_TYPE_TO_STRUCT,
+    PROTOBUF_CONTENT_TYPE,
+    SHA1_DIGEST_NBYTES,
+    AddSeriesError,
+    ChecksumError,
+    DataError,
+    DataFormatError,
+    ParseError,
+    SeriesNotUniqueError,
+)
 from bosdyn.bddf.data_reader import DataReader
 from bosdyn.bddf.data_writer import DataWriter
 from bosdyn.bddf.file_indexer import FileIndexer

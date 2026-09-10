@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Compositor &mdash; Spot 5.1.9 documentation</title>
+  <title>Compositor &mdash; Spot 5.2.0 documentation</title>
       <link rel="stylesheet" href="../../../../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../../../../_static/style.css" type="text/css" />
     <link rel="shortcut icon" href="../../../../../../_static/bd-favicon.png"/>
@@ -38,7 +38,7 @@
               <img src="../../../../../../_static/bd-official-white.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                5.1.9
+                5.2.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../../../../search.html" method="get">
@@ -205,7 +205,8 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../../examples/world_object_mutations/README.html">World Object Mutations</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../../examples/visualizer/README.html">Visualizer</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../../examples/gripper_camera_params/README.html">Gripper Camera Parameters</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../../../examples/spot_cam/README.html">Spot CAM</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../examples/spot_cam/README.html">Spot CAM Services</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../examples/spot_cam/README.html#spot-cam-video-core-io-extension-example">Spot Cam Video Core IO Extension Example</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../../examples/stitch_front_images/README.html">Stitch Front Images</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../../examples/get_depth_plus_visual_image/README.html">Project Depth Data on Visual Images</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../../examples/service_customization/custom_parameter_image_server/README.html">Custom Parameter Image Server</a></li>
@@ -249,6 +250,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../../examples/graph_nav_command_line/README.html">GraphNav and Recording Service Command Line Interfaces</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../../examples/graph_nav_command_line/README.html#example-programs">Example Programs</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../../examples/graph_nav_extract_point_cloud/README.html">Graph Nav Extract Point Cloud</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../examples/graph_nav_map_to_usd/README.html">Graph Nav Map to USD</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../../examples/graph_nav_view_map/README.html">Graph Nav View Map</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../../examples/graph_nav_view_gps/README.html">Graph Nav View GPS Data</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../../examples/get_mission_state/README.html">Get Mission State</a></li>
@@ -269,7 +271,8 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../examples/docs/joint_control_examples.html">Joint Control API Examples</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../examples/docs/orbit.html">Orbit</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../../../../examples/orbit/hello_orbit/README.html">Hello Orbit</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../examples/orbit/hello_orbit/README.html">Hello Orbit (v0, OrbitClient)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../examples/orbit/orbit_v1_api/README.html">Orbit v1 API (v1, raw HTTP)</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../../examples/orbit/export_run_archives/README.html">Export Run Archives</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../../examples/orbit/export_site_walk_archives/README.html">Export Sitewalk Archives</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../../examples/orbit/anomalies/README.html">Anomalies</a></li>
@@ -324,6 +327,8 @@
 <li class="toctree-l4"><a class="reference internal" href="../fault.html">Fault</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../frame_helpers.html">Frame Helpers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../graph_nav.html">Graph Nav</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../graph_nav_download.html">Graph Nav Download</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../graph_nav_upload.html">Graph Nav Upload</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../gripper_camera_param.html">Gripper Camera Params</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../gps/README.html">GPS</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="../gps/aggregator_client.html">Aggregator Client</a></li>
@@ -542,7 +547,7 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="bosdyn.client.spot_cam.compositor.CompositorClient.set_screen">
 <span class="sig-name descname"><span class="pre">set_screen</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../../_modules/bosdyn/client/spot_cam/compositor.html#CompositorClient.set_screen"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.spot_cam.compositor.CompositorClient.set_screen" title="Permalink to this definition"></a></dt>
-<dd><p>Change the current view that is being streamed over the network</p>
+<dd><p>Change the current view that is being streamed over the network.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -554,7 +559,7 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="bosdyn.client.spot_cam.compositor.CompositorClient.get_screen">
 <span class="sig-name descname"><span class="pre">get_screen</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../../_modules/bosdyn/client/spot_cam/compositor.html#CompositorClient.get_screen"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.spot_cam.compositor.CompositorClient.get_screen" title="Permalink to this definition"></a></dt>
-<dd><p>Get the currently selected screen</p>
+<dd><p>Get the currently selected screen.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -566,7 +571,7 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="bosdyn.client.spot_cam.compositor.CompositorClient.list_screens">
 <span class="sig-name descname"><span class="pre">list_screens</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../../_modules/bosdyn/client/spot_cam/compositor.html#CompositorClient.list_screens"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.spot_cam.compositor.CompositorClient.list_screens" title="Permalink to this definition"></a></dt>
-<dd><p>List available screens</p>
+<dd><p>List available screens.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -578,7 +583,7 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="bosdyn.client.spot_cam.compositor.CompositorClient.get_visible_cameras">
 <span class="sig-name descname"><span class="pre">get_visible_cameras</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../../_modules/bosdyn/client/spot_cam/compositor.html#CompositorClient.get_visible_cameras"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.spot_cam.compositor.CompositorClient.get_visible_cameras" title="Permalink to this definition"></a></dt>
-<dd><p>List cameras on Spot CAM</p>
+<dd><p>List cameras on Spot CAM.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -590,7 +595,7 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="bosdyn.client.spot_cam.compositor.CompositorClient.set_ir_colormap">
 <span class="sig-name descname"><span class="pre">set_ir_colormap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">colormap</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_temp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_temp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">auto_scale</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../../_modules/bosdyn/client/spot_cam/compositor.html#CompositorClient.set_ir_colormap"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.spot_cam.compositor.CompositorClient.set_ir_colormap" title="Permalink to this definition"></a></dt>
-<dd><p>Set IR colormap to use on Spot CAM</p>
+<dd><p>Set IR colormap to use on Spot CAM.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -614,7 +619,7 @@ option. min_temp and max_temp are ignored if this is set to True</p></li>
 <dl class="py method">
 <dt class="sig sig-object py" id="bosdyn.client.spot_cam.compositor.CompositorClient.get_ir_colormap">
 <span class="sig-name descname"><span class="pre">get_ir_colormap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../../_modules/bosdyn/client/spot_cam/compositor.html#CompositorClient.get_ir_colormap"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.spot_cam.compositor.CompositorClient.get_ir_colormap" title="Permalink to this definition"></a></dt>
-<dd><p>Get currently selected IR colormap on Spot CAM</p>
+<dd><p>Get currently selected IR colormap on Spot CAM.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -626,7 +631,7 @@ option. min_temp and max_temp are ignored if this is set to True</p></li>
 <dl class="py method">
 <dt class="sig sig-object py" id="bosdyn.client.spot_cam.compositor.CompositorClient.set_ir_meter_overlay">
 <span class="sig-name descname"><span class="pre">set_ir_meter_overlay</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unit</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../../_modules/bosdyn/client/spot_cam/compositor.html#CompositorClient.set_ir_meter_overlay"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.spot_cam.compositor.CompositorClient.set_ir_meter_overlay" title="Permalink to this definition"></a></dt>
-<dd><p>Set IR reticle position to use on Spot CAM IR</p>
+<dd><p>Set IR reticle position to use on Spot CAM IR.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -649,7 +654,7 @@ option. min_temp and max_temp are ignored if this is set to True</p></li>
 <dl class="py method">
 <dt class="sig sig-object py" id="bosdyn.client.spot_cam.compositor.CompositorClient.set_multi_ir_meter_overlay">
 <span class="sig-name descname"><span class="pre">set_multi_ir_meter_overlay</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">coords</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unit</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../../_modules/bosdyn/client/spot_cam/compositor.html#CompositorClient.set_multi_ir_meter_overlay"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.spot_cam.compositor.CompositorClient.set_multi_ir_meter_overlay" title="Permalink to this definition"></a></dt>
-<dd><p>Set multiple IR reticle positions to use on Spot CAM IR</p>
+<dd><p>Set multiple IR reticle positions to use on Spot CAM IR.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -672,7 +677,7 @@ e.g. [(0.1, 0.2), (0.2, 0.4), (0.7, 0.7)]</p></li>
 <dl class="py method">
 <dt class="sig sig-object py" id="bosdyn.client.spot_cam.compositor.CompositorClient.get_ir_meter_overlay">
 <span class="sig-name descname"><span class="pre">get_ir_meter_overlay</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../../_modules/bosdyn/client/spot_cam/compositor.html#CompositorClient.get_ir_meter_overlay"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.spot_cam.compositor.CompositorClient.get_ir_meter_overlay" title="Permalink to this definition"></a></dt>
-<dd><p>Get current IR reticle positions</p>
+<dd><p>Get current IR reticle positions.</p>
 </dd></dl>
 
 <dl class="py method">

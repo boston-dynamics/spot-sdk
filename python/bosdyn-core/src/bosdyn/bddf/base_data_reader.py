@@ -9,17 +9,26 @@ import struct
 
 import bosdyn.api.bddf_pb2 as bddf
 
-from .common import (BLOCK_HEADER_SIZE_MASK, BLOCK_HEADER_TYPE_MASK, DATA_BLOCK_TYPE,
-                     DESCRIPTOR_BLOCK_TYPE, END_BLOCK_TYPE, LOGGER, MAGIC, SHA1_DIGEST_NBYTES,
-                     ChecksumError, DataFormatError, ParseError)
+from .common import (
+    BLOCK_HEADER_SIZE_MASK,
+    BLOCK_HEADER_TYPE_MASK,
+    DATA_BLOCK_TYPE,
+    DESCRIPTOR_BLOCK_TYPE,
+    END_BLOCK_TYPE,
+    LOGGER,
+    MAGIC,
+    SHA1_DIGEST_NBYTES,
+    ChecksumError,
+    DataFormatError,
+    ParseError,
+)
 
 
 class BaseDataReader:  # pylint: disable=too-many-instance-attributes
     """Shared parent class for DataReader and StreamedDataReader."""
 
     def __init__(self, infile=None, filename=None):
-        """
-        At least one of the following arguments must be specified.
+        """At least one of the following arguments must be specified.
 
         Args:
          infile:      binary file-like object for reading (e.g., from open(fname, "rb")).
@@ -75,7 +84,7 @@ class BaseDataReader:  # pylint: disable=too-many-instance-attributes
         """Override to compute checksum on reading, in stream-readers."""
         return self._read_checksum
 
-    def _computed_checksum(self):  # pylint: disable=no-self-use
+    def _computed_checksum(self):
         """Override to compute checksum on reading, in stream-readers."""
         return None
 

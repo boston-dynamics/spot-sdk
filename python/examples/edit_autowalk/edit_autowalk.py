@@ -4,17 +4,20 @@
 # is subject to the terms and conditions of the Boston Dynamics Software
 # Development Kit License (20191101-BDSDK-SL).
 
-"""
-Autowalk Replay Script.  Command-line utility to edit and replay stored Autowalk missions.
+"""Autowalk Replay Script.
+
+Command-line utility to edit and replay stored Autowalk missions.
 """
 
 import argparse
 import os
 import sys
 import time
+import warnings
 
-import PyQt5.QtCore as QtCore
-import PyQt5.QtWidgets as QtWidgets
+import qtpy.QtCore as QtCore
+import qtpy.QtWidgets as QtWidgets
+from qtpy import API_NAME
 
 import bosdyn.api.mission
 import bosdyn.client
@@ -32,7 +35,13 @@ from bosdyn.client.robot_state import RobotStateClient
 
 
 def main():
-    """Edit and replay stored autowalks with command-line interface"""
+    """Edit and replay stored autowalks with command-line interface."""
+
+    if API_NAME != "PyQt6":
+        warnings.warn(
+            f"RuntimeWarning: Running on {API_NAME}. Backwards compatibility is expected, but "
+            f"this script is optimized for PyQt6. "
+            f"Please run 'export QT_API=pyqt6' to configure qtpy to PyQt6.", stacklevel=2)
 
     body_lease = None
 
@@ -130,7 +139,7 @@ def main():
 
 
 def init_robot(hostname):
-    """Initialize robot object"""
+    """Initialize robot object."""
 
     # Initialize SDK
     sdk = bosdyn.client.create_standard_sdk('AutowalkReplay', [bosdyn.mission.client.MissionClient])
@@ -148,7 +157,7 @@ def init_robot(hostname):
 
 
 def init_clients(robot, walk_directory):
-    """Initialize clients"""
+    """Initialize clients."""
 
     # Initialize power client
     robot.logger.info('Starting power client...')
@@ -186,7 +195,7 @@ def init_clients(robot, walk_directory):
 
 
 def countdown(length):
-    """Print sleep countdown"""
+    """Print sleep countdown."""
 
     for i in range(length, 0, -1):
         print(i, end=' ', flush=True)
@@ -195,7 +204,7 @@ def countdown(length):
 
 
 def create_and_edit_autowalk(filename, logger):
-    """Creates autowalk from file and opens GUI for editing"""
+    """Creates autowalk from file and opens GUI for editing."""
 
     walk = walks_pb2.Walk()
 
@@ -205,10 +214,10 @@ def create_and_edit_autowalk(filename, logger):
 
     app = QtWidgets.QApplication(sys.argv)
     gui = AutowalkGUI(walk)
-    gui.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
+    gui.setWindowFlags(QtCore.Qt.WindowType.WindowStaysOnTopHint)
     gui.show()
     gui.resize(540, 320)
-    app.exec_()
+    app.exec()
 
     if not walk.elements:
         logger.fatal('Autowalk cancelled due to empty walk or user input')
@@ -218,7 +227,7 @@ def create_and_edit_autowalk(filename, logger):
 
 
 def upload_graph_and_snapshots(logger, client, path):
-    """Upload the graph and snapshots to the robot"""
+    """Upload the graph and snapshots to the robot."""
 
     # Load the graph from disk.
     graph_filename = os.path.join(path, 'graph')
@@ -276,7 +285,7 @@ def upload_graph_and_snapshots(logger, client, path):
 
 
 def upload_autowalk(logger, autowalk_client, walk):
-    """Upload the autowalk mission to the robot"""
+    """Upload the autowalk mission to the robot."""
 
     logger.info('Uploading the autowalk to the robot...')
     autowalk_result = autowalk_client.load_autowalk(walk)
@@ -286,7 +295,7 @@ def upload_autowalk(logger, autowalk_client, walk):
 
 
 def run_autowalk(logger, mission_client, fail_on_question, mission_timeout, path_following_mode):
-    """Run autowalk"""
+    """Run autowalk."""
 
     logger.info('Running autowalk')
 
@@ -318,7 +327,7 @@ def run_autowalk(logger, mission_client, fail_on_question, mission_timeout, path
 
 
 class ListWidget(QtWidgets.QListWidget):
-    """List object for GUI"""
+    """List object for GUI."""
 
     def __init__(self, type, parent=None, isMutable=False):
         super(ListWidget, self).__init__(parent)
@@ -354,7 +363,7 @@ class ListWidget(QtWidgets.QListWidget):
 
 
 class AutowalkGUI(QtWidgets.QMainWindow):
-    """GUI for editing autowalk"""
+    """GUI for editing autowalk."""
 
     def __init__(self, walk):
         super(QtWidgets.QMainWindow, self).__init__()
@@ -374,7 +383,7 @@ class AutowalkGUI(QtWidgets.QMainWindow):
         # List widget with available autowalk actions
         self.sourceLabelWidget = QtWidgets.QLabel(self)
         self.sourceLabelWidget.setText('Available Actions')
-        self.sourceLabelWidget.setAlignment(QtCore.Qt.AlignCenter)
+        self.sourceLabelWidget.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
         self.sourceListWidget = ListWidget(self)
 
         self.copyAllButton = QtWidgets.QPushButton('Copy All', self)
@@ -395,7 +404,7 @@ class AutowalkGUI(QtWidgets.QMainWindow):
         # List widget with modified autowalk
         self.actionLabelWidget = QtWidgets.QLabel(self)
         self.actionLabelWidget.setText('Current Autowalk')
-        self.actionLabelWidget.setAlignment(QtCore.Qt.AlignCenter)
+        self.actionLabelWidget.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
         self.actionListWidget = ListWidget(self, isMutable=True)
 
         actionWidget = QtWidgets.QWidget()
@@ -411,11 +420,11 @@ class AutowalkGUI(QtWidgets.QMainWindow):
         self.settingsWidget = QtWidgets.QWidget()
         self.settingsBoxLayout = QtWidgets.QVBoxLayout()
         self.settingsWidget.setLayout(self.settingsBoxLayout)
-        self.settingsBoxLayout.setAlignment(QtCore.Qt.AlignTop)
+        self.settingsBoxLayout.setAlignment(QtCore.Qt.AlignmentFlag.AlignTop)
 
         self.settingsLabelWidget = QtWidgets.QLabel(self)
         self.settingsLabelWidget.setText('Play Autowalk')
-        self.settingsLabelWidget.setAlignment(QtCore.Qt.AlignCenter)
+        self.settingsLabelWidget.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
         self.repeatsComboBox = QtWidgets.QComboBox(self)
         self.repeatsComboBox.addItems(['Once', 'Periodically', 'Continuously'])
         self.skipDockingBox = QtWidgets.QCheckBox('Skip docking')
@@ -452,25 +461,25 @@ class AutowalkGUI(QtWidgets.QMainWindow):
         self.setWindowTitle('Drag and Drop Autowalk')
 
     def cancel_application(self):
-        """Clears walk by modifying protocol buffer object"""
+        """Clears walk by modifying protocol buffer object."""
         del self.walk.elements[:]
         self.close()
 
     def copy_all(self):
-        """Copies all actions to current autowalk list"""
+        """Copies all actions to current autowalk list."""
         self.actionListWidget.clear()
         for element in self.walk.elements:
             QtWidgets.QListWidgetItem(element.name, self.actionListWidget)
 
     def delete_action(self):
-        """Removes selected action from current autowalk list"""
+        """Removes selected action from current autowalk list."""
         selectedItems = self.actionListWidget.selectedItems()
         for item in selectedItems:
             row = self.actionListWidget.row(item)
             self.actionListWidget.takeItem(row)
 
     def apply_changes(self):
-        """Modifies walk according to final autowalk list"""
+        """Modifies walk according to final autowalk list."""
 
         # Clear current walk's elements
         del self.walk.elements[:]
@@ -501,7 +510,7 @@ class AutowalkGUI(QtWidgets.QMainWindow):
         self.close()
 
     def change_play_window(self, index):
-        """Changes the panel for repetitions of autowalk"""
+        """Changes the panel for repetitions of autowalk."""
         # 'Once' is selected
         if index == 0:
             # Clears interval GUI options

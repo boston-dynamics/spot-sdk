@@ -32,17 +32,15 @@ The Dance Previews interface consists of the following components:
 5. **Preview Button** - Start 2D and 3D visualization. Music in the timeline will also play.
 6. **2D Model** - 2D model representation of the sequences position (x, y, yaw) in space.
 7. **2D Model Label** - Label for a 2D model with the represented sequence and current position.
-8. **Frame Calculator** - Quick-access tool for converting a position in the world frame to the current open tab's dance frame.
+8. **2D Tools Menu** - Contains tools for the Graph View, including the [Frame Calculator](#frame-calculator-tool) and [Stage Planner](#stage-planner).
 
 _Note: To hide the Dance Previews view and revert to the previous Choreographer layout, select **Legacy Mode** from the "Workspaces" menu._
 
 ## Scrubbing
 
-Use the Red Slider to scrub through a sequence. If a sequence's move(s) are updated, you will need to either preview the sequence or move the slider to see updates.
+The Red Slider's position in the timeline controls the timestamp displayed in the Preview window. Drag it or use the `<` `>` keyboard shortcuts to move it across the open sequence.
 
-<img src="previews_images/scrub_slider.png" style="max-width:300px">
-
-_Note: Make sure to remember that when executing sequences on connected robots, the red slider position will be used for the robots' start time._
+<img src="previews_images/scrubbing.gif" style="max-width:480px">
 
 ## Preview Tools
 
@@ -57,6 +55,17 @@ To support this each choreography sequence can be given a start position, which 
 <img src="previews_images/start_position_widget.png" style="max-width:300px;">
 
 _Start Position data does not affect a sequence's behavior when executed on Spot, but it is a useful documentation tool to help the user remember where to place each robot before it starts a sequence._
+
+### Stage Planner
+
+<img src="previews_images/stage_planner.gif" style="max-width:640px;">
+
+The stage planner tool can be used to visualize stage dimensions relative to Spot(s) expected motion. To create a new stage diagram:
+
+1. Start by going to the Graph View previews tab. Right-click to place vertices for the stage polygon.
+2. After creating a closed region, save the new stage using the **Save Stage** button in the 2D tools menu under **Edit Stage**.
+
+Loaded stage data will persist through Choreographer sessions. Stages can also be loaded from a saved .stg file using the **Load Stage** button, and cleared using the **Clear Stage** button. Stage planner regions are for visualization only and will not affect sequence(s) behavior when executed on Spot.
 
 ### Frame Calculator tool
 
@@ -87,7 +96,7 @@ Ex. Imagine you've created a sequence you like that's part of a set, but now one
 
 The replace start position tool addresses this issue by automatically updating your sequence to the new start position, and going through your sequence to adjust each absolute parameter to a new value that maintains the original world position in the new dance frame. When everything works correctly, it will look like your sequence has a new start position, but nothing else has changed after the first translation.
 
-_Since the Replace Start Position tool only modifies absolute moves, it only works to address the above case when absolute moves are used for at least one large position change at the beginning of the sequence, and has no affect on sequences that don't use absolute parameters._
+_Since the Replace Start Position tool only modifies absolute moves, it only works to address the above case when absolute moves are used for at least one large position change at the beginning of the sequence, and has no effect on sequences that don't use absolute parameters._
 
 Note: If you just want to change a sequence's start position without changing anything about the sequence, you do not need to use the replace start position tool, you can simply enter the new start position into the Timeline Toolbar.
 
@@ -97,7 +106,7 @@ Note: If you just want to change a sequence's start position without changing an
 
 _Note: Using the replace start position tool has the potential to make many edits to your sequence. It's highly recommended to save (or save a version) of your sequence prior to this action._
 
-1. Start by making sure the sequence you want to modify is the current open tab displayed in the timeline. Then open the Replace Start Position tool menu from "Tools"->"Replace Start Position".
+1. Start by making sure the sequence you want to modify is the current open tab displayed in the timeline. Then open the Replace Start Position tool menu from **Tools**->**Replace Start Position**.
 2. Enter the new start position.
 3. Verify that the motion looks correct by previewing the sequence.
 
@@ -105,9 +114,9 @@ _Note: Using the replace start position tool has the potential to make many edit
 
 Choreographer provides a way to export the joint data from the 3D Dance Previews model as a cha file, which provides a human-readable list of the joint values for the data (see: [Animation File Format](animation_file_specification.md)). Preview cache data is exported at 30 FPS.
 
-To export preview data, select the tab you wish to export data from, then go to "Tools"->"Export Preview Cache". Data will be exported to a "previews" directory in the same location as your Choreographer application.
+To export preview data, select the tab you wish to export data from, then go to **Tools**->**Export Preview Cache**. Data will be exported to the `preview_exports` directory in the currently set Project Folder (or the `/Documents/Choreographer/Projects/` directory if no project folder is set).
 
-**Warning**: Exported preview cache data is not meant for direct playback on a robot. It is exported as a .cha to provide a human-readable format so the joint data can more easily be used for additional processing by the user. It is not exported in this format to try to facilitate direct playback on the robot. Trying to load and play exported preview cache data as an animation directly may either fail immeditiately or result in falls.
+**Warning**: Exported preview cache data is not meant for direct playback on a robot. It is exported as a .cha to provide a human-readable format so the joint data can more easily be used for additional processing by the user. It is not exported in this format to try to facilitate direct playback on the robot. Trying to load and play exported preview cache data as an animation directly may either fail immediately or result in falls.
 
 ## Known Limitations
 
@@ -140,7 +149,7 @@ _See the [Move Reference Guide](move_reference.md) to correlate limitations with
 #### Body motion/moves
 
 - The robot will likely limit, or be slower to react to, different body position values which results in smoother and/or more muted motion during real playback.
-- When performing legs moves with wider stances, Spot will often lower it's body to better perform these movements. This behavior may not be fully captured, or will not be represented as smoothly, in Preview playback.
+- When performing legs moves with wider stances, Spot will often lower its body to better perform these movements. This behavior may not be fully captured, or will not be represented as smoothly, in Preview playback.
 
 #### Arm motion/moves
 

@@ -694,12 +694,11 @@ class CommsMapImageRenderer():
         def db_color(db):
             if db is None:
                 return WHITE_COLOR
-            elif db < POOR_RSSI_THRESH:
+            if db < POOR_RSSI_THRESH:
                 return RED_COLOR
-            elif db < WARN_RSSI_THRESH:
+            if db < WARN_RSSI_THRESH:
                 return YELLOW_COLOR
-            else:
-                return GREEN_COLOR
+            return GREEN_COLOR
 
         # Update the frame
         self.frame = np.zeros(IMG_SHAPE, dtype=np.uint8)

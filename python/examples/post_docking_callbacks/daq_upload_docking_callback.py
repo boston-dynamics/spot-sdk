@@ -157,7 +157,7 @@ class DaqDockingUploadServicer(remote_service_pb2_grpc.RemoteMissionServiceServi
         upload = None
         if self.options.destination == 'local':
             return
-        elif self.options.destination == 'aws':
+        if self.options.destination == 'aws':
             upload = self.upload_to_aws
         else:
             upload = self.upload_to_gcp

@@ -10,11 +10,11 @@ Development Kit License (20191101-BDSDK-SL).
 
 Orbit is a collection of web services for site awareness, fleet management and data centralization deployed to an on-premise or cloud server. Learn more about the product and deployment [here](https://www.bostondynamics.com/products/orbit).
 
-Orbit collects, organizes, and stores data from every mission and teleoperation session executed by a Spot fleet - this information is served to users through a programmatic Application Programming Interface (API) called the [Orbit API](orbit_api.md).
+Orbit collects, organizes, and stores data from every mission and teleoperation session executed by a Spot fleet. This information is served to users through a programmatic Application Programming Interface (API) called the [Orbit REST API (v0 and v1)](orbit_api.md). As of Orbit v5.2, the API is offered in two tiers: the original `v0` API (beta/experimental) and the new service-oriented `v1` API (stable, recommended for new integrations).
 
 ## Contents
 
-- [Orbit API](orbit_api.md)
+- [Orbit REST API (v0 and v1)](orbit_api.md)
 - [WebViews](#webviews)
 - [Webhooks](#webhooks)
 - [Scheduling Missions](#scheduling-missions)

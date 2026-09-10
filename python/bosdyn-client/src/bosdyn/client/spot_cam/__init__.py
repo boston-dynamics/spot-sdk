@@ -4,8 +4,18 @@
 # is subject to the terms and conditions of the Boston Dynamics Software
 # Development Kit License (20191101-BDSDK-SL).
 
-from . import (audio, compositor, health, lighting, media_log, network, power, ptz, streamquality,
-               version)
+from . import (
+    audio,
+    compositor,
+    health,
+    lighting,
+    media_log,
+    network,
+    power,
+    ptz,
+    streamquality,
+    version,
+)
 
 
 IMAGE_SERVICE_NAME = 'spot-cam-image'

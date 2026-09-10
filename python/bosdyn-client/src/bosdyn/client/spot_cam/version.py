@@ -15,8 +15,7 @@ from bosdyn.client.common import BaseClient, handle_common_header_errors
 
 
 class VersionClient(BaseClient):
-    """A client calling Spot CAM Version service.
-    """
+    """A client calling Spot CAM Version service."""
     default_service_name = 'spot-cam-version'
     service_type = 'bosdyn.api.spot_cam.VersionService'
 

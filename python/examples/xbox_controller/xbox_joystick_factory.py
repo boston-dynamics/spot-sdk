@@ -34,11 +34,10 @@ class XboxJoystickFactory:
             if info[0] != 'ubuntu':
                 print('WARNING, this Linux distribution has not been tested. Use at your own risk')
             return XboxJoystickLinux()
-        elif op_system == 'Windows':
+        if op_system == 'Windows':
             return XboxJoystickWindows()
-        elif op_system == 'MacOS':
+        if op_system == 'MacOS':
             print('ERROR, MacOS is not currently supported')
             return None
-        else:
-            print('ERROR, OS is not supported')
-            return None
+        print('ERROR, OS is not supported')
+        return None

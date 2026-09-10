@@ -14,8 +14,12 @@ import logging
 
 import bosdyn.api.point_cloud_pb2 as point_cloud_protos
 import bosdyn.api.point_cloud_service_pb2_grpc as point_cloud_service
-from bosdyn.client.common import (common_header_errors, error_factory, error_pair,
-                                  handle_common_header_errors)
+from bosdyn.client.common import (
+    common_header_errors,
+    error_factory,
+    error_pair,
+    handle_common_header_errors,
+)
 from bosdyn.client.exceptions import ResponseError, UnsetStatusError
 
 from .common import BaseClient
@@ -61,7 +65,8 @@ _STATUS_TO_ERROR.update({
 
 @handle_common_header_errors
 def _error_from_response(response):
-    """Return a custom exception based on the first invalid point_cloud response, None if no error."""
+    """Return a custom exception based on the first invalid point_cloud response, None if no
+    error."""
     for point_cloud_response in response.point_cloud_responses:
 
         result = error_factory(response, point_cloud_response.status,
@@ -84,7 +89,7 @@ class PointCloudClient(BaseClient):
         super(PointCloudClient, self).__init__(point_cloud_service.PointCloudServiceStub)
 
     def list_point_cloud_sources(self, **kwargs):
-        """ Obtain the list of PointCloudSources.
+        """Obtain the list of PointCloudSources.
 
         Returns:
             A list of the different point cloud sources as strings.
@@ -129,7 +134,7 @@ class PointCloudClient(BaseClient):
                                           **kwargs)
 
     def get_point_cloud(self, point_cloud_requests, **kw_args):
-        """Get the most recent point cloud
+        """Get the most recent point cloud.
 
         Args:
             point_cloud_requests (list of PointCloudRequest): A list of PointCloudRequest protobuf
@@ -153,7 +158,7 @@ class PointCloudClient(BaseClient):
                          error_from_response=_error_from_response, **kw_args)
 
     def get_point_cloud_async(self, point_cloud_requests, **kw_args):
-        """Get the most recent point cloud
+        """Get the most recent point cloud.
 
         Args:
             point_cloud_requests (list of PointCloudRequest): A list of PointCloudRequest protobuf

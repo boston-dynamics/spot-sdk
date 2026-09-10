@@ -23,8 +23,7 @@ _LOGGER = logging.getLogger(__name__)
 
 
 class InterfaceNameNotFound(Exception):
-    """Raised when a specified network interface is not present on the
-    system."""
+    """Raised when a specified network interface is not present on the system."""
 
     def __init__(self, name: str):
         super().__init__(f"Interface '{name}' is not found on system.")
@@ -33,8 +32,8 @@ class InterfaceNameNotFound(Exception):
 
 
 class BindAdapter(requests.adapters.HTTPAdapter):
-    """Allows binding to a specific network interface and enforcing a custom
-    Host header for HTTP."""
+    """Allows binding to a specific network interface and enforcing a custom Host header for
+    HTTP."""
 
     def __init__(self, is_robot=True, interface=None, resolved_ip=None, assert_hostname=None,
                  force_host=None, *args, **kwargs):
@@ -46,8 +45,7 @@ class BindAdapter(requests.adapters.HTTPAdapter):
         super().__init__(*args, **kwargs)
 
     def send(self, request, **kwargs):
-        """Override the send method to enforce a custom Host header for
-        HTTP."""
+        """Override the send method to enforce a custom Host header for HTTP."""
         if self.force_host:
             request.headers["Host"] = self.force_host
         return super().send(request, **kwargs)
@@ -85,8 +83,7 @@ class BindAdapter(requests.adapters.HTTPAdapter):
 @contextmanager
 def create_bound_session(is_robot=True, interface=None, resolved_ip=None, sni_hostname=None,
                          force_host=None):
-    """Creates a session bound to optional interface with optional SNI
-    hostname."""
+    """Creates a session bound to optional interface with optional SNI hostname."""
     session = requests.Session()
     adapter = BindAdapter(is_robot, interface=interface, resolved_ip=resolved_ip,
                           assert_hostname=sni_hostname, force_host=force_host)
@@ -102,8 +99,8 @@ def create_bound_session(is_robot=True, interface=None, resolved_ip=None, sni_ho
 
 
 def validate_url(url):
-    """Checks if any IP address resolved from a URL is in the blacklist. First
-    checks if the hostname is already a valid IP address.
+    """Checks if any IP address resolved from a URL is in the blacklist. First checks if the
+    hostname is already a valid IP address.
 
     Args:
         url: The URL to check.
@@ -142,8 +139,8 @@ def validate_url(url):
 
 def safe_api_call(method, url, sni_hostname, timeout, is_robot=True, interface=None,
                   **request_data):
-    """Make an API call to a URL, validating the URL and checking for
-    redirects. Will attempt to bind the provided network interface.
+    """Make an API call to a URL, validating the URL and checking for redirects. Will attempt to
+    bind the provided network interface.
 
     Args:
         method (str): method for HTTP request to use

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>bosdyn.client.lease &mdash; Spot 5.1.9 documentation</title>
+  <title>bosdyn.client.lease &mdash; Spot 5.2.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
     <link rel="shortcut icon" href="../../../_static/bd-favicon.png"/>
@@ -35,7 +35,7 @@
               <img src="../../../_static/bd-official-white.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                5.1.9
+                5.2.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -202,7 +202,8 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/world_object_mutations/README.html">World Object Mutations</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/visualizer/README.html">Visualizer</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/gripper_camera_params/README.html">Gripper Camera Parameters</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_cam/README.html">Spot CAM</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_cam/README.html">Spot CAM Services</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_cam/README.html#spot-cam-video-core-io-extension-example">Spot Cam Video Core IO Extension Example</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/stitch_front_images/README.html">Stitch Front Images</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/get_depth_plus_visual_image/README.html">Project Depth Data on Visual Images</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/service_customization/custom_parameter_image_server/README.html">Custom Parameter Image Server</a></li>
@@ -246,6 +247,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/graph_nav_command_line/README.html">GraphNav and Recording Service Command Line Interfaces</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/graph_nav_command_line/README.html#example-programs">Example Programs</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/graph_nav_extract_point_cloud/README.html">Graph Nav Extract Point Cloud</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/graph_nav_map_to_usd/README.html">Graph Nav Map to USD</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/graph_nav_view_map/README.html">Graph Nav View Map</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/graph_nav_view_gps/README.html">Graph Nav View GPS Data</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/get_mission_state/README.html">Get Mission State</a></li>
@@ -266,7 +268,8 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/joint_control_examples.html">Joint Control API Examples</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/orbit.html">Orbit</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/hello_orbit/README.html">Hello Orbit</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/hello_orbit/README.html">Hello Orbit (v0, OrbitClient)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/orbit_v1_api/README.html">Orbit v1 API (v1, raw HTTP)</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/export_run_archives/README.html">Export Run Archives</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/export_site_walk_archives/README.html">Export Sitewalk Archives</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/anomalies/README.html">Anomalies</a></li>
@@ -321,6 +324,8 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/fault.html">Fault</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/frame_helpers.html">Frame Helpers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/graph_nav.html">Graph Nav</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/graph_nav_download.html">Graph Nav Download</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/graph_nav_upload.html">Graph Nav Upload</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/gripper_camera_param.html">Gripper Camera Params</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/gps/README.html">GPS</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/gps/aggregator_client.html">Aggregator Client</a></li>
@@ -522,7 +527,7 @@
 <span class="c1"># is subject to the terms and conditions of the Boston Dynamics Software</span>
 <span class="c1"># Development Kit License (20191101-BDSDK-SL).</span>
 
-<span class="sd">&quot;&quot;&quot;Lease clients&quot;&quot;&quot;</span>
+<span class="sd">&quot;&quot;&quot;Lease clients.&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">collections</span>
 <span class="kn">import</span> <span class="nn">enum</span>
@@ -533,9 +538,15 @@
 <span class="kn">from</span> <span class="nn">bosdyn.api</span> <span class="kn">import</span> <span class="n">lease_pb2</span>
 <span class="kn">from</span> <span class="nn">bosdyn.api.lease_pb2</span> <span class="kn">import</span> <span class="n">AcquireLeaseRequest</span><span class="p">,</span> <span class="n">AcquireLeaseResponse</span>
 <span class="kn">from</span> <span class="nn">bosdyn.api.lease_pb2</span> <span class="kn">import</span> <span class="n">Lease</span> <span class="k">as</span> <span class="n">LeaseProto</span>
-<span class="kn">from</span> <span class="nn">bosdyn.api.lease_pb2</span> <span class="kn">import</span> <span class="p">(</span><span class="n">LeaseUseResult</span><span class="p">,</span> <span class="n">ListLeasesRequest</span><span class="p">,</span> <span class="n">RetainLeaseRequest</span><span class="p">,</span>
-                                  <span class="n">ReturnLeaseRequest</span><span class="p">,</span> <span class="n">ReturnLeaseResponse</span><span class="p">,</span> <span class="n">TakeLeaseRequest</span><span class="p">,</span>
-                                  <span class="n">TakeLeaseResponse</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">bosdyn.api.lease_pb2</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">LeaseUseResult</span><span class="p">,</span>
+    <span class="n">ListLeasesRequest</span><span class="p">,</span>
+    <span class="n">RetainLeaseRequest</span><span class="p">,</span>
+    <span class="n">ReturnLeaseRequest</span><span class="p">,</span>
+    <span class="n">ReturnLeaseResponse</span><span class="p">,</span>
+    <span class="n">TakeLeaseRequest</span><span class="p">,</span>
+    <span class="n">TakeLeaseResponse</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">from</span> <span class="nn">bosdyn.api.lease_service_pb2_grpc</span> <span class="kn">import</span> <span class="n">LeaseServiceStub</span>
 <span class="kn">from</span> <span class="nn">bosdyn.util</span> <span class="kn">import</span> <span class="n">now_sec</span>
 
@@ -712,7 +723,7 @@
             <span class="n">other_sequence_num</span> <span class="o">=</span> <span class="n">other_lease</span><span class="o">.</span><span class="n">lease_proto</span><span class="o">.</span><span class="n">sequence</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
             <span class="k">if</span> <span class="n">sequence_num</span> <span class="o">&lt;</span> <span class="n">other_sequence_num</span><span class="p">:</span>
                 <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">CompareResult</span><span class="o">.</span><span class="n">OLDER</span>
-            <span class="k">elif</span> <span class="n">sequence_num</span> <span class="o">&gt;</span> <span class="n">other_sequence_num</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">sequence_num</span> <span class="o">&gt;</span> <span class="n">other_sequence_num</span><span class="p">:</span>
                 <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">CompareResult</span><span class="o">.</span><span class="n">NEWER</span>
 
         <span class="c1"># At this point, the sequence numbers are different within the common subset. If one Lease has</span>
@@ -720,7 +731,7 @@
         <span class="c1"># newer.</span>
         <span class="k">if</span> <span class="n">sequence_size</span> <span class="o">&lt;</span> <span class="n">other_sequence_size</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">CompareResult</span><span class="o">.</span><span class="n">SUPER_LEASE</span>
-        <span class="k">elif</span> <span class="n">sequence_size</span> <span class="o">&gt;</span> <span class="n">other_sequence_size</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">sequence_size</span> <span class="o">&gt;</span> <span class="n">other_sequence_size</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">CompareResult</span><span class="o">.</span><span class="n">SUB_LEASE</span>
 
         <span class="c1"># Lease are the same</span>
@@ -768,7 +779,8 @@
 
 <div class="viewcode-block" id="Lease.compare_result_to_lease_use_result_status"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/lease.html#bosdyn.client.lease.Lease.compare_result_to_lease_use_result_status">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">compare_result_to_lease_use_result_status</span><span class="p">(</span><span class="n">compare_result</span><span class="p">,</span> <span class="n">allow_super_leases</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Determines the comparable LeaseUseResult.Status enum value based on the CompareResult enum.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Determines the comparable LeaseUseResult.Status enum value based on the CompareResult</span>
+<span class="sd">        enum.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            allow_super_leases(boolean): If true, a super lease will still be considered as &quot;ok&quot;/</span>
@@ -782,26 +794,25 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">compare_result</span> <span class="o">==</span> <span class="n">Lease</span><span class="o">.</span><span class="n">CompareResult</span><span class="o">.</span><span class="n">DIFFERENT_EPOCHS</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">LeaseUseResult</span><span class="o">.</span><span class="n">STATUS_WRONG_EPOCH</span>
-        <span class="k">elif</span> <span class="n">compare_result</span> <span class="o">==</span> <span class="n">Lease</span><span class="o">.</span><span class="n">CompareResult</span><span class="o">.</span><span class="n">DIFFERENT_RESOURCES</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">compare_result</span> <span class="o">==</span> <span class="n">Lease</span><span class="o">.</span><span class="n">CompareResult</span><span class="o">.</span><span class="n">DIFFERENT_RESOURCES</span><span class="p">:</span>
             <span class="c1"># if the incoming lease&#39;s resource doesn&#39;t match the active lease resource,</span>
             <span class="c1"># then mark it as unmanaged.</span>
             <span class="k">return</span> <span class="n">LeaseUseResult</span><span class="o">.</span><span class="n">STATUS_UNMANAGED</span>
-        <span class="k">elif</span> <span class="n">compare_result</span> <span class="o">==</span> <span class="n">Lease</span><span class="o">.</span><span class="n">CompareResult</span><span class="o">.</span><span class="n">SUPER_LEASE</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">compare_result</span> <span class="o">==</span> <span class="n">Lease</span><span class="o">.</span><span class="n">CompareResult</span><span class="o">.</span><span class="n">SUPER_LEASE</span><span class="p">:</span>
             <span class="c1"># In some cases we may want to allow a super lease, so check an optional boolean</span>
             <span class="c1"># to see if that is the case.</span>
             <span class="k">if</span> <span class="n">allow_super_leases</span><span class="p">:</span>
                 <span class="k">return</span> <span class="n">LeaseUseResult</span><span class="o">.</span><span class="n">STATUS_OK</span>
             <span class="c1"># In the normal case, a super lease is considered older.</span>
             <span class="k">return</span> <span class="n">LeaseUseResult</span><span class="o">.</span><span class="n">STATUS_OLDER</span>
-        <span class="k">elif</span> <span class="n">compare_result</span> <span class="o">==</span> <span class="n">Lease</span><span class="o">.</span><span class="n">CompareResult</span><span class="o">.</span><span class="n">OLDER</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">compare_result</span> <span class="o">==</span> <span class="n">Lease</span><span class="o">.</span><span class="n">CompareResult</span><span class="o">.</span><span class="n">OLDER</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">LeaseUseResult</span><span class="o">.</span><span class="n">STATUS_OLDER</span>
-        <span class="k">elif</span> <span class="p">(</span><span class="n">compare_result</span> <span class="o">==</span> <span class="n">Lease</span><span class="o">.</span><span class="n">CompareResult</span><span class="o">.</span><span class="n">SAME</span> <span class="ow">or</span>
-              <span class="n">compare_result</span> <span class="o">==</span> <span class="n">Lease</span><span class="o">.</span><span class="n">CompareResult</span><span class="o">.</span><span class="n">SUB_LEASE</span> <span class="ow">or</span>
-              <span class="n">compare_result</span> <span class="o">==</span> <span class="n">Lease</span><span class="o">.</span><span class="n">CompareResult</span><span class="o">.</span><span class="n">NEWER</span><span class="p">):</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">compare_result</span> <span class="o">==</span> <span class="n">Lease</span><span class="o">.</span><span class="n">CompareResult</span><span class="o">.</span><span class="n">SAME</span> <span class="ow">or</span>
+                <span class="n">compare_result</span> <span class="o">==</span> <span class="n">Lease</span><span class="o">.</span><span class="n">CompareResult</span><span class="o">.</span><span class="n">SUB_LEASE</span> <span class="ow">or</span>
+                <span class="n">compare_result</span> <span class="o">==</span> <span class="n">Lease</span><span class="o">.</span><span class="n">CompareResult</span><span class="o">.</span><span class="n">NEWER</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">LeaseUseResult</span><span class="o">.</span><span class="n">STATUS_OK</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="c1"># Shouldn&#39;t hit here. The above set of checks should be exhaustive.</span>
-            <span class="k">raise</span> <span class="n">Error</span><span class="p">(</span><span class="s2">&quot;The comparison result of the leases is unknown/unaccounted for.&quot;</span><span class="p">)</span></div></div>
+        <span class="c1"># Shouldn&#39;t hit here. The above set of checks should be exhaustive.</span>
+        <span class="k">raise</span> <span class="n">Error</span><span class="p">(</span><span class="s2">&quot;The comparison result of the leases is unknown/unaccounted for.&quot;</span><span class="p">)</span></div></div>
 
 
 <div class="viewcode-block" id="LeaseState"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/lease.html#bosdyn.client.lease.LeaseState">[docs]</a><span class="k">class</span> <span class="nc">LeaseState</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -971,8 +982,8 @@
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_lease_state_locked</span><span class="p">(</span><span class="n">resource</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="nf">_get_lease_state_locked</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resource</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the lease state for a specific resource or raise an NoSuchLease exception if lease</span>
-<span class="sd">        is not found.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the lease state for a specific resource or raise an NoSuchLease exception if lease is</span>
+<span class="sd">        not found.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            resource: The resource that the Lease is for.</span>
@@ -1447,8 +1458,8 @@
 <div class="viewcode-block" id="LeaseKeepAlive.shutdown"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/lease.html#bosdyn.client.lease.LeaseKeepAlive.shutdown">[docs]</a>    <span class="k">def</span> <span class="nf">shutdown</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Shut the background thread down and stop the liveness checks.</span>
 
-<span class="sd">        Can be called multiple times, but subsequent calls are no-ops.</span>
-<span class="sd">        Blocks until the background thread completes.</span>
+<span class="sd">        Can be called multiple times, but subsequent calls are no-ops. Blocks until the background</span>
+<span class="sd">        thread completes.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Shutting down&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_end_periodic_check_in</span><span class="p">()</span>
@@ -1472,8 +1483,8 @@
 <div class="viewcode-block" id="LeaseKeepAlive.wait_until_done"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/lease.html#bosdyn.client.lease.LeaseKeepAlive.wait_until_done">[docs]</a>    <span class="k">def</span> <span class="nf">wait_until_done</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Waits until the background thread exits.</span>
 
-<span class="sd">        Most client code should exit the background thread by using shutdown</span>
-<span class="sd">        or by passing in a keep_running_cb callback in the constructor.</span>
+<span class="sd">        Most client code should exit the background thread by using shutdown or by passing in a</span>
+<span class="sd">        keep_running_cb callback in the constructor.</span>
 
 <span class="sd">        However, this can be useful in unit tests for ensuring exits.</span>
 <span class="sd">        &quot;&quot;&quot;</span>

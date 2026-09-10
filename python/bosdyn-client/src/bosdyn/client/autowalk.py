@@ -20,13 +20,12 @@ class AutowalkResponseError(ResponseError):
 
 
 class CompilationError(AutowalkResponseError):
-    """Provided Walk could not be compiled because the Walk was malformed.
-    """
+    """Provided Walk could not be compiled because the Walk was malformed."""
 
 
 class ValidationError(AutowalkResponseError):
-    """Provided Walk could not be validated because some part of the Walk was unable to initialize.
-    """
+    """Provided Walk could not be validated because some part of the Walk was unable to
+    initialize."""
 
 
 class AutowalkClient(BaseClient):
@@ -67,8 +66,8 @@ class AutowalkClient(BaseClient):
                          **kwargs)
 
     def load_autowalk(self, walk, leases=[], data_chunk_byte_size=1000 * 1000, **kwargs):
-        """Send the input walk file to the autowalk service for compilation and
-        load resulting mission to the Mission Service on the robot.
+        """Send the input walk file to the autowalk service for compilation and load resulting
+        mission to the Mission Service on the robot.
 
         Args:
             walk: a walks_pb2.Walk input to be loaded onto the robot by the autowalk service

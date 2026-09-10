@@ -22,7 +22,7 @@ PRESSURE_NAMES = {
 
 
 def units_to_string(units: units_pb2.Units):
-    """Gets the units in string form to use for display. Ex: TEMPERATURE_KELVIN = "K"
+    """Gets the units in string form to use for display. Ex: TEMPERATURE_KELVIN = "K".
 
     Args:
         units(Units): Populate units message.

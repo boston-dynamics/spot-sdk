@@ -5,7 +5,7 @@
 # Development Kit License (20191101-BDSDK-SL).
 
 # Boston Dynamics, Inc. Confidential Information.
-# Copyright 2025. All Rights Reserved.
+# Copyright 2025-2026. All Rights Reserved.
 """Command-line utility code for interacting with robot services."""
 
 from __future__ import division
@@ -31,6 +31,7 @@ from bosdyn.api.data_buffer_pb2 import Event, TextMessage
 from bosdyn.api.data_index_pb2 import EventsCommentsSpec
 from bosdyn.api.header_pb2 import CommonError
 from bosdyn.api.keepalive import keepalive_pb2
+from bosdyn.api.log_status import log_status_pb2 as log_status
 from bosdyn.api.robot_state_pb2 import BehaviorFault
 from bosdyn.util import duration_str, now_sec, timestamp_to_datetime
 
@@ -44,8 +45,13 @@ from .directory import DirectoryClient, NonexistentServiceError
 from .directory_registration import DirectoryRegistrationClient, DirectoryRegistrationResponseError
 from .estop import EstopClient, EstopEndpoint, EstopKeepAlive
 from .exceptions import Error, InvalidRequestError, ProxyConnectionError
-from .image import (ImageClient, ImageResponseError, UnknownImageSourceError, build_image_request,
-                    save_images_as_files)
+from .image import (
+    ImageClient,
+    ImageResponseError,
+    UnknownImageSourceError,
+    build_image_request,
+    save_images_as_files,
+)
 from .keepalive import KeepaliveClient
 from .lease import LeaseClient
 from .license import LicenseClient
@@ -53,8 +59,15 @@ from .local_grid import LocalGridClient
 from .log_status import InactiveLogError, LogStatusClient
 from .payload import PayloadClient
 from .payload_registration import PayloadAlreadyExistsError, PayloadRegistrationClient
-from .power import (PowerClient, power_cycle_robot, power_off_payload_ports, power_off_robot,
-                    power_off_wifi_radio, power_on_payload_ports, power_on_wifi_radio)
+from .power import (
+    PowerClient,
+    power_cycle_robot,
+    power_off_payload_ports,
+    power_off_robot,
+    power_off_wifi_radio,
+    power_on_payload_ports,
+    power_on_wifi_radio,
+)
 from .robot_id import RobotIdClient
 from .robot_state import RobotStateClient
 from .time_sync import TimeSyncClient, TimeSyncEndpoint, TimeSyncError, timespec_to_robot_timespan
@@ -1388,8 +1401,14 @@ class RobotStateCommands(Subcommands):
             command_dict: Dictionary of command names which take parsed options.
         """
         super(RobotStateCommands, self).__init__(
-            subparsers, command_dict,
-            [FullStateCommand, HardwareConfigurationCommand, MetricsCommand, RobotModel])
+            subparsers,
+            command_dict,
+            [
+                FullStateCommand,
+                HardwareConfigurationCommand,
+                MetricsCommand,
+                RobotModel
+            ])
 
 
 class FullStateCommand(Command):
@@ -1443,6 +1462,8 @@ class HardwareConfigurationCommand(Command):
             RobotStateClient.default_service_name).get_robot_hardware_configuration()
         print(proto)
         return True
+
+
 
 
 class RobotModel(Command):
@@ -1616,15 +1637,14 @@ class MetricsCommand(Command):
         # Special case formatting
         if field == 'duration':
             return '{:20} {}'.format(metric.label, MetricsCommand._secs_to_hms(value.seconds))
-        elif field == 'timestamp':
+        if field == 'timestamp':
             return '{:20} {}'.format(metric.label, MetricsCommand._timestamp_str(value))
-        elif field == 'float_value':
+        if field == 'float_value':
             if metric.units == 'm':
                 return '{:20} {}'.format(metric.label, MetricsCommand._distance_str(value))
             return '{:20} {:.2f} {}'.format(metric.label, value, metric.units)
-        else:
-            # Default formatting
-            return '{:20} {} {}'.format(metric.label, value, metric.units)
+        # Default formatting
+        return '{:20} {} {}'.format(metric.label, value, metric.units)
 
 
 class TimeSyncCommand(Command):

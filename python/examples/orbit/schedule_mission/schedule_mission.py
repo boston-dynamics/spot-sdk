@@ -164,8 +164,7 @@ def select_calendar_event_id(client: 'bosdyn.orbit.client.Client') -> str:
             print(f"Selected event name: {selected_event_name}")
             print(f"Associated event id: {selected_event_id}")
             return selected_event_id
-        else:
-            print("Invalid selection. Please enter a number within the correct range.")
+        print("Invalid selection. Please enter a number within the correct range.")
     except ValueError:
         print("Invalid selection.")
         return None

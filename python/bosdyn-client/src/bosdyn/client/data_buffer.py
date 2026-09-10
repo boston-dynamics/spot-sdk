@@ -6,8 +6,8 @@
 
 """Client for the data-buffer service.
 
-This allows client code to log the following to the robot's data buffer: text-messages,
-operator comments, blobs, signal ticks, and protobuf messages.
+This allows client code to log the following to the robot's data buffer: text-messages, operator
+comments, blobs, signal ticks, and protobuf messages.
 """
 
 import functools
@@ -283,7 +283,7 @@ class DataBufferClient(BaseClient):
         return self._do_register_signal_schema(self.call, variables, schema_name, **kwargs)
 
     def register_signal_schema_async(self, variables, schema_name, **kwargs):
-        """Async version of register_signal_schema"""
+        """Async version of register_signal_schema."""
         return self._do_register_signal_schema(self.call_async, variables, schema_name, **kwargs)
 
     def _do_register_signal_schema(self, func, variables, schema_name, **kwargs):
@@ -578,12 +578,16 @@ class LoggingHandler(logging.Handler):  # pylint: disable=too-many-instance-attr
 
 
 def is_not_text_log(record: logging.LogRecord) -> bool:
-    """Filter out the RecordMessages calls that the handler sends so that we do not go into an infinite loop."""
+    """Filter out the RecordMessages calls that the handler sends so that we do not go into an
+    infinite loop."""
     return not record.name.endswith('.DataBufferService.RecordTextMessages')
 
 
 def is_not_rpc(record: logging.LogRecord) -> bool:
-    """Because our loggers use the form sdk_name.robot_name.service_name.rpc_method, we can't easily just turn
-    off all logging for rpcs.  This function identifies the rpc logging calls to be able to strip them out."""
+    """Because our loggers use the form sdk_name.robot_name.service_name.rpc_method, we can't easily
+    just turn off all logging for rpcs.
+
+    This function identifies the rpc logging calls to be able to strip them out.
+    """
     return not (record.module == 'common' and
                 (record.funcName == 'call' or record.funcName == 'call_async'))

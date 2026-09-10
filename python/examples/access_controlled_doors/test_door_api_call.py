@@ -21,7 +21,7 @@ def main():
     args = parser.parse_args()
 
     if {'OPEN', 'CLOSE'} & set(args.commands) and not args.door_id:
-        print(f"OPEN/CLOSE require door ID, but no door ID was provided. Exiting.")
+        print("OPEN/CLOSE require door ID, but no door ID was provided. Exiting.")
         exit(1)
 
     ret = door_action(file_to_json(Path(args.api_config)), args.door_id, args.commands,

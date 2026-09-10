@@ -14,7 +14,7 @@ except KeyError:
     print('Do not run setup.py directly - use wheels.py to build API wheels')
     raise
 
-with open("README.md", "r") as fh:
+with open("README.md") as fh:
     long_description = fh.read()
 
 setuptools.setup(

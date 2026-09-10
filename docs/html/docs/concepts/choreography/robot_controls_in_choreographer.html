@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Connecting robots to Choreographer &mdash; Spot 5.1.9 documentation</title>
+  <title>Connecting robots to Choreographer &mdash; Spot 5.2.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
     <link rel="shortcut icon" href="../../../_static/bd-favicon.png"/>
@@ -38,7 +38,7 @@
               <img src="../../../_static/bd-official-white.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                5.1.9
+                5.2.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -205,7 +205,8 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/world_object_mutations/README.html">World Object Mutations</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/visualizer/README.html">Visualizer</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/gripper_camera_params/README.html">Gripper Camera Parameters</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_cam/README.html">Spot CAM</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_cam/README.html">Spot CAM Services</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_cam/README.html#spot-cam-video-core-io-extension-example">Spot Cam Video Core IO Extension Example</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/stitch_front_images/README.html">Stitch Front Images</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/get_depth_plus_visual_image/README.html">Project Depth Data on Visual Images</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/service_customization/custom_parameter_image_server/README.html">Custom Parameter Image Server</a></li>
@@ -249,6 +250,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/graph_nav_command_line/README.html">GraphNav and Recording Service Command Line Interfaces</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/graph_nav_command_line/README.html#example-programs">Example Programs</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/graph_nav_extract_point_cloud/README.html">Graph Nav Extract Point Cloud</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/graph_nav_map_to_usd/README.html">Graph Nav Map to USD</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/graph_nav_view_map/README.html">Graph Nav View Map</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/graph_nav_view_gps/README.html">Graph Nav View GPS Data</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/get_mission_state/README.html">Get Mission State</a></li>
@@ -269,7 +271,8 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/joint_control_examples.html">Joint Control API Examples</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/orbit.html">Orbit</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/hello_orbit/README.html">Hello Orbit</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/hello_orbit/README.html">Hello Orbit (v0, OrbitClient)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/orbit_v1_api/README.html">Orbit v1 API (v1, raw HTTP)</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/export_run_archives/README.html">Export Run Archives</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/export_site_walk_archives/README.html">Export Sitewalk Archives</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/anomalies/README.html">Anomalies</a></li>
@@ -324,6 +327,8 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/fault.html">Fault</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/frame_helpers.html">Frame Helpers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/graph_nav.html">Graph Nav</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/graph_nav_download.html">Graph Nav Download</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/graph_nav_upload.html">Graph Nav Upload</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/gripper_camera_param.html">Gripper Camera Params</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/gps/README.html">GPS</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/gps/aggregator_client.html">Aggregator Client</a></li>
@@ -529,7 +534,7 @@ Development Kit License (20191101-BDSDK-SL).
 <h1>Connecting robots to Choreographer<a class="headerlink" href="#connecting-robots-to-choreographer" title="Permalink to this heading"></a></h1>
 <p>Robots can either be connected to Choreographer before starting the application or dynamically connected and disconnected from the application once it is running.</p>
 <section id="connecting-robots-before-starting-the-application">
-<h2>Connecting Robots before starting the Application<a class="headerlink" href="#connecting-robots-before-starting-the-application" title="Permalink to this heading"></a></h2>
+<h2>Connecting robots before starting the Application<a class="headerlink" href="#connecting-robots-before-starting-the-application" title="Permalink to this heading"></a></h2>
 <p>To connect your robot, start Choreographer from the command line with arguments:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">--</span><span class="n">hostname</span> <span class="p">{</span><span class="n">IP</span><span class="o">/</span><span class="n">Hostname</span> <span class="n">of</span> <span class="n">your</span> <span class="n">Spot</span><span class="p">}</span> <span class="o">--</span><span class="n">user</span> <span class="p">{</span><span class="n">Username</span> <span class="n">you</span> <span class="n">use</span> <span class="n">to</span> <span class="n">log</span> <span class="ow">in</span> <span class="n">to</span> <span class="n">your</span> <span class="n">Spot</span><span class="p">}</span> <span class="o">--</span><span class="n">password</span> <span class="p">{</span><span class="n">Password</span> <span class="k">for</span> <span class="n">your</span> <span class="n">Spot</span><span class="p">}</span>
 </pre></div>
@@ -538,7 +543,7 @@ Development Kit License (20191101-BDSDK-SL).
 <p><code class="docutils literal notranslate"><span class="pre">--nickname</span> <span class="pre">{description</span> <span class="pre">for</span> <span class="pre">identifying</span> <span class="pre">your</span> <span class="pre">Spot}</span></code> can also optionally be appended to the above command line argument list for each connection to automatically populate the “Nickname” column.</p>
 </section>
 <section id="connecting-robots-after-starting-the-application">
-<h2>Connecting Robots after starting the Application<a class="headerlink" href="#connecting-robots-after-starting-the-application" title="Permalink to this heading"></a></h2>
+<h2>Connecting robots after starting the Application<a class="headerlink" href="#connecting-robots-after-starting-the-application" title="Permalink to this heading"></a></h2>
 <p>To connect your robot after the application has been started</p>
 <ol class="simple">
 <li><p>Select the Robot Management Tab (shown in the image below)</p></li>
@@ -589,8 +594,12 @@ Development Kit License (20191101-BDSDK-SL).
 <td>Brings Spot to a stand. Cancels all current choreography and music. E-Stop and Power Off can still be used in an emergency.</td>
 </tr>
 <tr>
+<td>Retro Log</td>
+<td>Record a Retro Log. Retro Logs will record data from the previous minute of robot(s) operation. These logs can be downloaded from Spot's Admin Console on Web and then sent to Boston Dynamics Support for help resolving any issues with your Spot.</td>
+</tr>
+<tr>
 <td>Start/Stop Experiment Log</td>
-<td>Record an experiment log. Experiment logs can be downloaded from Spot's Admin Console on Web and then sent to Boston Dynamics Support for help resolving any issues with your Spot.</td>
+<td>Record an Experiment Log. Experiment Logs will record up to 5 minutes of ongoing robot(s) operation. These logs can be downloaded from Spot's Admin Console on Web and then sent to Boston Dynamics Support for help resolving any issues with your Spot.</td>
 </tr>
 <tr>
 <td>Joystick Walk</td>
@@ -613,7 +622,7 @@ Development Kit License (20191101-BDSDK-SL).
 <td>Interrupts any active commands and freezes Spot in its current position. Music will also stop. EStop and Power Off can still be used in an emergency.</td>
 </tr>
 </tbody>
-</table><p>Note: <strong>Return to Start</strong> brings all selected robots back to their starting position after completing a choreography. If multiple robots are being controlled, obstacle avoidance is enabled when they are navigating back to the starting position. To adjust this obstacle padding distance (in meters) the command line argument <code class="docutils literal notranslate"><span class="pre">--obs-padding</span> <span class="pre">DIST_IN_METERS</span></code> can be added to the Choreographer command line, or the set directly through the “Settings”-&gt;”Playback and Music Settings” menu.</p>
+</table><p>Note: <strong>Return to Start</strong> brings all selected robots back to their starting position after completing a choreography. If multiple robots are being controlled, obstacle avoidance is enabled when they are navigating back to the starting position. To adjust this obstacle padding distance (in meters) the command line argument <code class="docutils literal notranslate"><span class="pre">--obs-padding</span> <span class="pre">DIST_IN_METERS</span></code> can be added to the Choreographer command line, or the set directly in the <strong>Robot Operation</strong> section of the <strong>Settings</strong>-&gt;<strong>Preferences</strong> menu.</p>
 </section>
 <section id="joystick-controls">
 <h2>Joystick controls<a class="headerlink" href="#joystick-controls" title="Permalink to this heading"></a></h2>
@@ -674,76 +683,7 @@ Development Kit License (20191101-BDSDK-SL).
 <p>Similar to the joystick control, you can drive the robot using the WASD keys on the keyboard.</p>
 <p>When enabled, the robot can be driven using the WASD keys. Joystick mode is disabled while driving in WASD mode. The hotkeys are set up to mimic the joystick button keys, when applicable.</p>
 <p>When the robot is controlled through any of the other Robot Controls buttons, WASD driving is disabled. Other keypresses still work.</p>
-<table border="1" class="docutils">
-<thead>
-<tr>
-<th>Key</th>
-<th>Function</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>v</td>
-<td>Enable WASD mode</td>
-</tr>
-<tr>
-<td>b</td>
-<td>Enable joystick mode</td>
-</tr>
-<tr>
-<td>k</td>
-<td>Power on</td>
-</tr>
-<tr>
-<td>l</td>
-<td>Power off</td>
-</tr>
-<tr>
-<td>y</td>
-<td>Stand</td>
-</tr>
-<tr>
-<td>x</td>
-<td>Start choreography</td>
-</tr>
-<tr>
-<td>[</td>
-<td>Sit</td>
-</tr>
-<tr>
-<td>]</td>
-<td>Self-right</td>
-</tr>
-<tr>
-<td>w</td>
-<td>Walk forward</td>
-</tr>
-<tr>
-<td>a</td>
-<td>Strafe left</td>
-</tr>
-<tr>
-<td>s</td>
-<td>Walk backwards</td>
-</tr>
-<tr>
-<td>d</td>
-<td>Strafe right</td>
-</tr>
-<tr>
-<td>q</td>
-<td>Turn left</td>
-</tr>
-<tr>
-<td>e</td>
-<td>Turn right</td>
-</tr>
-<tr>
-<td>shift+s</td>
-<td>When a Custom Gait is in progress, finish the active gait and continue on to the rest of the sequence</td>
-</tr>
-</tbody>
-</table><p>Select <strong>Hotkeys Documentation</strong> from the Help menu to view a keystroke mapping table.</p>
+<p>Select <strong>Hotkeys Documentation</strong> from the Help menu to view the full list of Choreographer hotkeys, or see <a class="reference external" href="choreographer.html##HotKey_Mapping">Hotkey Mapping</a></p>
 <p><em>Note: WASD and Joystick input can be used to drive Spot when it is performing a Custom Gait move, though using an XBox Controller is recommended. See the <a class="reference internal" href="custom_gait.html"><span class="doc">CustomGait</span></a> documentation for details.</em></p>
 </section>
 </section>

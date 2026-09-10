@@ -101,6 +101,7 @@ message Node {
         CreateMissionText create_mission_text = 59;
         BosdynQueryStoredCaptures bosdyn_query_stored_captures = 60;
         DataAcquisitionLiveData data_acquisition_live_data = 64;
+        BosdynRecordEventOnInterruption bosdyn_record_event_on_interruption = 65;
     }
 
     // Defines parameters, used by this node or its children.
@@ -240,6 +241,9 @@ message SimpleParallel {
     // will be restarted.  If this flag is set to true, and the secondary node completes before
     // the primary node, it will never be restarted.
     bool run_secondary_node_once = 3;
+    // By default, the primary will be ticked first, then the secondary.
+    // Use this flag to tick the secondary node first.
+    bool tick_secondary_node_first = 4;
 }
 
 // Run many child nodes together, returning only after they have all completed or an
@@ -1068,6 +1072,10 @@ message DateToBlackboard {
     // The key of the variable that will be written.
     string key = 1;
 
+    // If true, write the current time as a google.protobuf.Timestamp instead of a formatted
+    // date/time string.
+    bool write_as_timestamp = 2;
+
 }
 
 // Write the QueryStoredCapturesResponse for a given QueryParameters message to the blackboard.
@@ -1160,6 +1168,83 @@ message DataAcquisitionOnInterruption {
     // error message reason from the JSON metadata. The last key holds error message.
     repeated string keys_for_lease_use_error_message = 13;
 
+
+    reserved 15;
+
+    // If populated, the child returning Result.FAILURE (a normal, non-exceptional failure) will
+    // also be treated as an interruption, using this metadata. By default, only Result.ERROR /
+    // exceptions from the child count as interruptions.
+    Metadata child_node_failure_metadata = 16;
+}
+
+// Record an event when the mission is interrupted.
+// Interruptions are anything that causes the mission to stop ticking automatically.
+message BosdynRecordEventOnInterruption {
+    // Name of the service to use.
+    string service_name = 1;
+    // Host machine the service is running on.
+    string host = 2;
+
+    // Child to run when node starts. If mission is interrupted while the child is still running,
+    // the mission service will record the event described by the fields below. The child will
+    // resume when the mission resumes. The BosdynRecordEventOnInterruption node will always
+    // return the status of this child node.
+    Node child = 3;
+
+    // The event to be logged if the mission is interrupted. Note that everything should be
+    // populated except the id, start_time, and end_time, and severity. These will be populated
+    // by the mission, using the time of the interruption and the type of interruption.
+    bosdyn.api.Event event = 4;
+
+    // Clients can specify additional event parameters for each possible interruption reason
+    // (fields 5-12, 16-17, 19). When an interruption occurs, the parameters corresponding to the
+    // interruption reason will be merged with the parameters already present on "event".
+
+    // Interruption reason: PauseMission RPC called.
+    map<string, Value> pause_mission_parameters = 5;
+
+    // Interruption reason: RestartMission RPC called.
+    map<string, Value> restart_mission_parameters = 6;
+
+    // Interruption reason: LoadMission RPC called.
+    map<string, Value> load_mission_parameters = 7;
+
+    // Interruption reason: StopMission RPC called.
+    map<string, Value> stop_mission_parameters = 8;
+
+    // Interruption reason: Lease use error occurred.
+    map<string, Value> lease_use_error_parameters = 9;
+
+    // Interruption reason: Play mission timeout exceeded.
+    map<string, Value> play_mission_timeout_parameters = 10;
+
+    // Interruption reason: Child node returned an error result.
+    map<string, Value> child_node_error_parameters = 11;
+
+    // Interruption reason: Child node threw an exception.
+    map<string, Value> child_node_exception_parameters = 12;
+
+    // This is used if any of the above are empty or if an unexpected interruption occurs.
+    map<string, Value> default_parameters = 13;
+
+    // Interruption reason: the mission executor failed to set up.
+    map<string, Value> executor_setup_failure_parameters = 16;
+
+    // Interruption reason: the mission service is shutting down.
+    map<string, Value> system_shutdown_parameters = 17;
+
+    // If key(s) are specified, the additional information about the lease use error will be
+    // stored as an event parameter. All given key(s) must be used in order to access the error
+    // message reason from the JSON metadata. The last key holds error message.
+    repeated string keys_for_lease_use_error_message = 14;
+
+
+    reserved 18;
+
+    // If populated, the child returning Result.FAILURE (a normal, non-exceptional failure) will
+    // also be treated as an interruption, using these parameters. By default, only Result.ERROR /
+    // exceptions from the child count as interruptions.
+    map<string, Value> child_node_failure_parameters = 19;
 }
 
 // This node will:

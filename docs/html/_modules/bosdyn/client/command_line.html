@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>bosdyn.client.command_line &mdash; Spot 5.1.9 documentation</title>
+  <title>bosdyn.client.command_line &mdash; Spot 5.2.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
     <link rel="shortcut icon" href="../../../_static/bd-favicon.png"/>
@@ -35,7 +35,7 @@
               <img src="../../../_static/bd-official-white.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                5.1.9
+                5.2.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -202,7 +202,8 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/world_object_mutations/README.html">World Object Mutations</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/visualizer/README.html">Visualizer</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/gripper_camera_params/README.html">Gripper Camera Parameters</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_cam/README.html">Spot CAM</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_cam/README.html">Spot CAM Services</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_cam/README.html#spot-cam-video-core-io-extension-example">Spot Cam Video Core IO Extension Example</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/stitch_front_images/README.html">Stitch Front Images</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/get_depth_plus_visual_image/README.html">Project Depth Data on Visual Images</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/service_customization/custom_parameter_image_server/README.html">Custom Parameter Image Server</a></li>
@@ -246,6 +247,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/graph_nav_command_line/README.html">GraphNav and Recording Service Command Line Interfaces</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/graph_nav_command_line/README.html#example-programs">Example Programs</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/graph_nav_extract_point_cloud/README.html">Graph Nav Extract Point Cloud</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/graph_nav_map_to_usd/README.html">Graph Nav Map to USD</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/graph_nav_view_map/README.html">Graph Nav View Map</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/graph_nav_view_gps/README.html">Graph Nav View GPS Data</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/get_mission_state/README.html">Get Mission State</a></li>
@@ -266,7 +268,8 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/joint_control_examples.html">Joint Control API Examples</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/orbit.html">Orbit</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/hello_orbit/README.html">Hello Orbit</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/hello_orbit/README.html">Hello Orbit (v0, OrbitClient)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/orbit_v1_api/README.html">Orbit v1 API (v1, raw HTTP)</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/export_run_archives/README.html">Export Run Archives</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/export_site_walk_archives/README.html">Export Sitewalk Archives</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/anomalies/README.html">Anomalies</a></li>
@@ -321,6 +324,8 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/fault.html">Fault</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/frame_helpers.html">Frame Helpers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/graph_nav.html">Graph Nav</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/graph_nav_download.html">Graph Nav Download</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/graph_nav_upload.html">Graph Nav Upload</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/gripper_camera_param.html">Gripper Camera Params</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/gps/README.html">GPS</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/gps/aggregator_client.html">Aggregator Client</a></li>
@@ -523,7 +528,7 @@
 <span class="c1"># Development Kit License (20191101-BDSDK-SL).</span>
 
 <span class="c1"># Boston Dynamics, Inc. Confidential Information.</span>
-<span class="c1"># Copyright 2025. All Rights Reserved.</span>
+<span class="c1"># Copyright 2025-2026. All Rights Reserved.</span>
 <span class="sd">&quot;&quot;&quot;Command-line utility code for interacting with robot services.&quot;&quot;&quot;</span>
 
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">division</span>
@@ -549,6 +554,7 @@
 <span class="kn">from</span> <span class="nn">bosdyn.api.data_index_pb2</span> <span class="kn">import</span> <span class="n">EventsCommentsSpec</span>
 <span class="kn">from</span> <span class="nn">bosdyn.api.header_pb2</span> <span class="kn">import</span> <span class="n">CommonError</span>
 <span class="kn">from</span> <span class="nn">bosdyn.api.keepalive</span> <span class="kn">import</span> <span class="n">keepalive_pb2</span>
+<span class="kn">from</span> <span class="nn">bosdyn.api.log_status</span> <span class="kn">import</span> <span class="n">log_status_pb2</span> <span class="k">as</span> <span class="n">log_status</span>
 <span class="kn">from</span> <span class="nn">bosdyn.api.robot_state_pb2</span> <span class="kn">import</span> <span class="n">BehaviorFault</span>
 <span class="kn">from</span> <span class="nn">bosdyn.util</span> <span class="kn">import</span> <span class="n">duration_str</span><span class="p">,</span> <span class="n">now_sec</span><span class="p">,</span> <span class="n">timestamp_to_datetime</span>
 
@@ -562,8 +568,13 @@
 <span class="kn">from</span> <span class="nn">.directory_registration</span> <span class="kn">import</span> <span class="n">DirectoryRegistrationClient</span><span class="p">,</span> <span class="n">DirectoryRegistrationResponseError</span>
 <span class="kn">from</span> <span class="nn">.estop</span> <span class="kn">import</span> <span class="n">EstopClient</span><span class="p">,</span> <span class="n">EstopEndpoint</span><span class="p">,</span> <span class="n">EstopKeepAlive</span>
 <span class="kn">from</span> <span class="nn">.exceptions</span> <span class="kn">import</span> <span class="n">Error</span><span class="p">,</span> <span class="n">InvalidRequestError</span><span class="p">,</span> <span class="n">ProxyConnectionError</span>
-<span class="kn">from</span> <span class="nn">.image</span> <span class="kn">import</span> <span class="p">(</span><span class="n">ImageClient</span><span class="p">,</span> <span class="n">ImageResponseError</span><span class="p">,</span> <span class="n">UnknownImageSourceError</span><span class="p">,</span> <span class="n">build_image_request</span><span class="p">,</span>
-                    <span class="n">save_images_as_files</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">.image</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">ImageClient</span><span class="p">,</span>
+    <span class="n">ImageResponseError</span><span class="p">,</span>
+    <span class="n">UnknownImageSourceError</span><span class="p">,</span>
+    <span class="n">build_image_request</span><span class="p">,</span>
+    <span class="n">save_images_as_files</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">from</span> <span class="nn">.keepalive</span> <span class="kn">import</span> <span class="n">KeepaliveClient</span>
 <span class="kn">from</span> <span class="nn">.lease</span> <span class="kn">import</span> <span class="n">LeaseClient</span>
 <span class="kn">from</span> <span class="nn">.license</span> <span class="kn">import</span> <span class="n">LicenseClient</span>
@@ -571,8 +582,15 @@
 <span class="kn">from</span> <span class="nn">.log_status</span> <span class="kn">import</span> <span class="n">InactiveLogError</span><span class="p">,</span> <span class="n">LogStatusClient</span>
 <span class="kn">from</span> <span class="nn">.payload</span> <span class="kn">import</span> <span class="n">PayloadClient</span>
 <span class="kn">from</span> <span class="nn">.payload_registration</span> <span class="kn">import</span> <span class="n">PayloadAlreadyExistsError</span><span class="p">,</span> <span class="n">PayloadRegistrationClient</span>
-<span class="kn">from</span> <span class="nn">.power</span> <span class="kn">import</span> <span class="p">(</span><span class="n">PowerClient</span><span class="p">,</span> <span class="n">power_cycle_robot</span><span class="p">,</span> <span class="n">power_off_payload_ports</span><span class="p">,</span> <span class="n">power_off_robot</span><span class="p">,</span>
-                    <span class="n">power_off_wifi_radio</span><span class="p">,</span> <span class="n">power_on_payload_ports</span><span class="p">,</span> <span class="n">power_on_wifi_radio</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">.power</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">PowerClient</span><span class="p">,</span>
+    <span class="n">power_cycle_robot</span><span class="p">,</span>
+    <span class="n">power_off_payload_ports</span><span class="p">,</span>
+    <span class="n">power_off_robot</span><span class="p">,</span>
+    <span class="n">power_off_wifi_radio</span><span class="p">,</span>
+    <span class="n">power_on_payload_ports</span><span class="p">,</span>
+    <span class="n">power_on_wifi_radio</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">from</span> <span class="nn">.robot_id</span> <span class="kn">import</span> <span class="n">RobotIdClient</span>
 <span class="kn">from</span> <span class="nn">.robot_state</span> <span class="kn">import</span> <span class="n">RobotStateClient</span>
 <span class="kn">from</span> <span class="nn">.time_sync</span> <span class="kn">import</span> <span class="n">TimeSyncClient</span><span class="p">,</span> <span class="n">TimeSyncEndpoint</span><span class="p">,</span> <span class="n">TimeSyncError</span><span class="p">,</span> <span class="n">timespec_to_robot_timespan</span>
@@ -1906,8 +1924,14 @@
 <span class="sd">            command_dict: Dictionary of command names which take parsed options.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">RobotStateCommands</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
-            <span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">,</span>
-            <span class="p">[</span><span class="n">FullStateCommand</span><span class="p">,</span> <span class="n">HardwareConfigurationCommand</span><span class="p">,</span> <span class="n">MetricsCommand</span><span class="p">,</span> <span class="n">RobotModel</span><span class="p">])</span></div>
+            <span class="n">subparsers</span><span class="p">,</span>
+            <span class="n">command_dict</span><span class="p">,</span>
+            <span class="p">[</span>
+                <span class="n">FullStateCommand</span><span class="p">,</span>
+                <span class="n">HardwareConfigurationCommand</span><span class="p">,</span>
+                <span class="n">MetricsCommand</span><span class="p">,</span>
+                <span class="n">RobotModel</span>
+            <span class="p">])</span></div>
 
 
 <div class="viewcode-block" id="FullStateCommand"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/command_line.html#bosdyn.client.command_line.FullStateCommand">[docs]</a><span class="k">class</span> <span class="nc">FullStateCommand</span><span class="p">(</span><span class="n">Command</span><span class="p">):</span>
@@ -1961,6 +1985,8 @@
             <span class="n">RobotStateClient</span><span class="o">.</span><span class="n">default_service_name</span><span class="p">)</span><span class="o">.</span><span class="n">get_robot_hardware_configuration</span><span class="p">()</span>
         <span class="nb">print</span><span class="p">(</span><span class="n">proto</span><span class="p">)</span>
         <span class="k">return</span> <span class="kc">True</span></div>
+
+
 
 
 <div class="viewcode-block" id="RobotModel"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/command_line.html#bosdyn.client.command_line.RobotModel">[docs]</a><span class="k">class</span> <span class="nc">RobotModel</span><span class="p">(</span><span class="n">Command</span><span class="p">):</span>
@@ -2134,15 +2160,14 @@
         <span class="c1"># Special case formatting</span>
         <span class="k">if</span> <span class="n">field</span> <span class="o">==</span> <span class="s1">&#39;duration&#39;</span><span class="p">:</span>
             <span class="k">return</span> <span class="s1">&#39;</span><span class="si">{:20}</span><span class="s1"> </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">metric</span><span class="o">.</span><span class="n">label</span><span class="p">,</span> <span class="n">MetricsCommand</span><span class="o">.</span><span class="n">_secs_to_hms</span><span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">seconds</span><span class="p">))</span>
-        <span class="k">elif</span> <span class="n">field</span> <span class="o">==</span> <span class="s1">&#39;timestamp&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">field</span> <span class="o">==</span> <span class="s1">&#39;timestamp&#39;</span><span class="p">:</span>
             <span class="k">return</span> <span class="s1">&#39;</span><span class="si">{:20}</span><span class="s1"> </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">metric</span><span class="o">.</span><span class="n">label</span><span class="p">,</span> <span class="n">MetricsCommand</span><span class="o">.</span><span class="n">_timestamp_str</span><span class="p">(</span><span class="n">value</span><span class="p">))</span>
-        <span class="k">elif</span> <span class="n">field</span> <span class="o">==</span> <span class="s1">&#39;float_value&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">field</span> <span class="o">==</span> <span class="s1">&#39;float_value&#39;</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">metric</span><span class="o">.</span><span class="n">units</span> <span class="o">==</span> <span class="s1">&#39;m&#39;</span><span class="p">:</span>
                 <span class="k">return</span> <span class="s1">&#39;</span><span class="si">{:20}</span><span class="s1"> </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">metric</span><span class="o">.</span><span class="n">label</span><span class="p">,</span> <span class="n">MetricsCommand</span><span class="o">.</span><span class="n">_distance_str</span><span class="p">(</span><span class="n">value</span><span class="p">))</span>
             <span class="k">return</span> <span class="s1">&#39;</span><span class="si">{:20}</span><span class="s1"> </span><span class="si">{:.2f}</span><span class="s1"> </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">metric</span><span class="o">.</span><span class="n">label</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">metric</span><span class="o">.</span><span class="n">units</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="c1"># Default formatting</span>
-            <span class="k">return</span> <span class="s1">&#39;</span><span class="si">{:20}</span><span class="s1"> </span><span class="si">{}</span><span class="s1"> </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">metric</span><span class="o">.</span><span class="n">label</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">metric</span><span class="o">.</span><span class="n">units</span><span class="p">)</span></div>
+        <span class="c1"># Default formatting</span>
+        <span class="k">return</span> <span class="s1">&#39;</span><span class="si">{:20}</span><span class="s1"> </span><span class="si">{}</span><span class="s1"> </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">metric</span><span class="o">.</span><span class="n">label</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">metric</span><span class="o">.</span><span class="n">units</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="TimeSyncCommand"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/command_line.html#bosdyn.client.command_line.TimeSyncCommand">[docs]</a><span class="k">class</span> <span class="nc">TimeSyncCommand</span><span class="p">(</span><span class="n">Command</span><span class="p">):</span>

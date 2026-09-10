@@ -9,26 +9,35 @@ import shutil
 import tempfile
 from bisect import bisect_left
 
+from bosdyn.api import image_geometry_pb2
 from bosdyn.api.spot_cam import ptz_pb2
 from bosdyn.client.command_line import Command, Subcommands
 from bosdyn.client.spot_cam.ptz import PtzClient
 
 
 class PtzCommands(Subcommands):
-    """Commands related to the Spot CAM's Ptz service"""
+    """Commands related to the Spot CAM's Ptz service."""
 
     NAME = 'ptz'
 
     def __init__(self, subparsers, command_dict):
-        super(PtzCommands, self).__init__(subparsers, command_dict, [
-            PtzListPtzCommand, PtzGetPtzPositionCommand, PtzGetPtzVelocityCommand,
-            PtzSetPtzPositionCommand, PtzSetPtzVelocityCommand, PtzInitializeLensCommand,
-            PtzGetPtzFocusCommand, PtzSetPtzFocusCommand
-        ])
+        super(PtzCommands, self).__init__(
+            subparsers,
+            command_dict,
+            [
+                PtzListPtzCommand,
+                PtzGetPtzPositionCommand,
+                PtzGetPtzVelocityCommand,
+                PtzSetPtzPositionCommand,
+                PtzSetPtzVelocityCommand,
+                PtzInitializeLensCommand,
+                PtzGetPtzFocusCommand,
+                PtzSetPtzFocusCommand,
+            ])
 
 
 class PtzListPtzCommand(Command):
-    """Info about each ptz"""
+    """Info about each ptz."""
 
     NAME = 'list'
 
@@ -42,7 +51,7 @@ class PtzListPtzCommand(Command):
 
 
 class PtzGetPtzPositionCommand(Command):
-    """Position of the specified ptz"""
+    """Position of the specified ptz."""
 
     NAME = 'get_position'
 
@@ -61,7 +70,7 @@ class PtzGetPtzPositionCommand(Command):
 
 
 class PtzGetPtzVelocityCommand(Command):
-    """Velocity of the specified ptz"""
+    """Velocity of the specified ptz."""
 
     NAME = 'get_velocity'
 
@@ -79,7 +88,7 @@ class PtzGetPtzVelocityCommand(Command):
 
 
 class PtzSetPtzPositionCommand(Command):
-    """Set position of the specified ptz"""
+    """Set position of the specified ptz."""
 
     NAME = 'set_position'
 
@@ -102,7 +111,7 @@ class PtzSetPtzPositionCommand(Command):
 
 
 class PtzSetPtzVelocityCommand(Command):
-    """Set velocity of the specified ptz"""
+    """Set velocity of the specified ptz."""
 
     NAME = 'set_velocity'
 
@@ -124,7 +133,7 @@ class PtzSetPtzVelocityCommand(Command):
 
 
 class PtzInitializeLensCommand(Command):
-    """Initializes the PTZ autofocus or resets it if already initialized"""
+    """Initializes the PTZ autofocus or resets it if already initialized."""
 
     NAME = 'initialize_lens'
 
@@ -144,7 +153,7 @@ class PtzInitializeLensCommand(Command):
 
 
 class PtzGetPtzFocusCommand(Command):
-    """Focus of the ptz"""
+    """Focus of the ptz."""
 
     NAME = 'get_focus'
 
@@ -158,7 +167,7 @@ class PtzGetPtzFocusCommand(Command):
 
 
 class PtzSetPtzFocusCommand(Command):
-    """Set focus of the ptz"""
+    """Set focus of the ptz."""
 
     NAME = 'set_focus'
 
@@ -172,9 +181,7 @@ class PtzSetPtzFocusCommand(Command):
             default=0.0, type=float)
 
     def _focus_mode_str_to_enum(self, mode: str):
-        """
-        Returns a PTZ focus mode enum based on the input string
-        """
+        """Returns a PTZ focus mode enum based on the input string."""
         str_to_enum_dict = {
             'auto_focus': ptz_pb2.PtzFocusState.PTZ_FOCUS_AUTO,
             'manual_focus': ptz_pb2.PtzFocusState.PTZ_FOCUS_MANUAL,
@@ -188,3 +195,5 @@ class PtzSetPtzFocusCommand(Command):
             focus_mode, dist, None)
 
         return ptz_focus
+
+

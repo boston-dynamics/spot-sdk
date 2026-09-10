@@ -112,6 +112,7 @@ class RobotStateClient(BaseClient):
             link.obj_model.CopyFrom(obj_model)
         return hardware_configuration
 
+
     @staticmethod
     def _get_robot_state_request():
         return robot_state_pb2.RobotStateRequest()
@@ -127,6 +128,7 @@ class RobotStateClient(BaseClient):
     @staticmethod
     def _get_robot_link_model_request(link_name):
         return robot_state_pb2.RobotLinkModelRequest(link_name=link_name)
+
 
 
 class RobotStateStreamingClient(BaseClient):
@@ -151,6 +153,16 @@ class RobotStateStreamingClient(BaseClient):
         return robot_state_pb2.RobotStateStreamRequest()
 
 
+        return self._stub.GetDynamicDiagnosticInfoStream(req)
+
+    @staticmethod
+    def _get_dynamic_diagnostic_info_stream_request():
+        return robot_state_pb2.GetDynamicDiagnosticInfoStreamRequest()
+
+
+# @do_not_publish_end
+
+
 def _get_robot_state_value(response):
     return response.robot_state
 
@@ -169,6 +181,8 @@ def _get_robot_hardware_configuration_value(response):
 
 def _get_robot_link_model_value(response):
     return response.link_model
+
+
 
 
 def has_arm(state_client, timeout=None):

@@ -577,7 +577,7 @@ def set_version_number(version_number=None):
     if not version_number:
         module_path = os.path.abspath(__file__)
         version_path = os.path.abspath(os.path.join(module_path, '..', '..', 'VERSION'))
-        f = open(version_path, 'r')
+        f = open(version_path)
         version_number = f.readline().strip()
         f.close()
     os.environ['BOSDYN_SDK_VERSION'] = version_number

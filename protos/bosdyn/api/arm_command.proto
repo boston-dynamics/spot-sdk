@@ -94,6 +94,16 @@ message ArmParams {
     google.protobuf.BoolValue disable_body_force_limiter = 1;
 }
 
+// Optional mode for command tracking.
+enum TrackingMode {
+    TRACKING_MODE_UNKNOWN = 0;
+    TRACKING_MODE_DEFAULT = 1;
+    // Uses an integral gain to help reduce steady state error.
+    // Note: This should be used with caution as it can lead to instability.
+    // This is designed for slow trajectories that require very high precision.
+    TRACKING_MODE_SLOW_PRECISE = 2;
+}
+
 // When controlling the arm with a joystick, because of latency it can often be better to send
 // velocity commands rather than position commands.  Both linear and angular velocity can be
 // specified.  The linear velocity can be specified in a cylindrical frame around the shoulder or
@@ -328,6 +338,10 @@ message ArmJointMoveCommand {
         // Note: Sending a single point empty trajectory will cause the arm to freeze in place. This
         // is an easy way to lock the arm in its current configuration.
         ArmJointTrajectory trajectory = 1;
+
+        // Optional mode for joint trajectory tracking.
+        TrackingMode tracking_mode = 3;
+
     }
 
     message Feedback {

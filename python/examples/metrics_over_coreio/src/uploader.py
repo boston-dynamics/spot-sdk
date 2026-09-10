@@ -155,8 +155,7 @@ class Uploader:
                 return response
             if response.status_code == 201:
                 return response
-            else:
-                raise requests.RequestException
+            raise requests.RequestException
         except requests.RequestException as e:
             _LOGGER.info(e)
             return response

@@ -45,7 +45,7 @@ The different robot resources create a tree-structured hierarchy such that the c
 
 ## [Advanced] Additional Lease Usage Patterns
 
-Typically, the lease and ownership can be gained using the `AcquireLease` RPC> If the lease is actively being owned, the `TakeLease` RPC provides an alternative that will forcefully take ownership of the lease resources to give control to the application issuing the RPC. This should only be used expressly by a human who is aware of what they’re taking control from.
+Typically, the lease and ownership can be gained using the `AcquireLease` RPC. If the lease is actively being owned, the `TakeLease` RPC provides an alternative that will forcefully take ownership of the lease resources to give control to the application issuing the RPC. This should only be used expressly by a human who is aware of what they’re taking control from.
 
 When issuing a specific command which requires a lease, the robot should be sent a sub-lease of the main, acquired lease. This delegates the ownership of that lease’s resources to the particular service being sent the command. Note, the creation of a sub-lease for a specific command is done automatically by the client library. Commands which require a lease will respond with `LeaseUseResult` protos, which reflect whether or not the lease provides proper ownership of the robot.
 

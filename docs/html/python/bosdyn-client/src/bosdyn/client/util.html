@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Util &mdash; Spot 5.1.9 documentation</title>
+  <title>Util &mdash; Spot 5.2.0 documentation</title>
       <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../../../_static/style.css" type="text/css" />
     <link rel="shortcut icon" href="../../../../../_static/bd-favicon.png"/>
@@ -38,7 +38,7 @@
               <img src="../../../../../_static/bd-official-white.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                5.1.9
+                5.2.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
@@ -205,7 +205,8 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/world_object_mutations/README.html">World Object Mutations</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/visualizer/README.html">Visualizer</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/gripper_camera_params/README.html">Gripper Camera Parameters</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../../examples/spot_cam/README.html">Spot CAM</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/spot_cam/README.html">Spot CAM Services</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/spot_cam/README.html#spot-cam-video-core-io-extension-example">Spot Cam Video Core IO Extension Example</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/stitch_front_images/README.html">Stitch Front Images</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/get_depth_plus_visual_image/README.html">Project Depth Data on Visual Images</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/service_customization/custom_parameter_image_server/README.html">Custom Parameter Image Server</a></li>
@@ -249,6 +250,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/graph_nav_command_line/README.html">GraphNav and Recording Service Command Line Interfaces</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/graph_nav_command_line/README.html#example-programs">Example Programs</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/graph_nav_extract_point_cloud/README.html">Graph Nav Extract Point Cloud</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/graph_nav_map_to_usd/README.html">Graph Nav Map to USD</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/graph_nav_view_map/README.html">Graph Nav View Map</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/graph_nav_view_gps/README.html">Graph Nav View GPS Data</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/get_mission_state/README.html">Get Mission State</a></li>
@@ -269,7 +271,8 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../examples/docs/joint_control_examples.html">Joint Control API Examples</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../examples/docs/orbit.html">Orbit</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../../../examples/orbit/hello_orbit/README.html">Hello Orbit</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/orbit/hello_orbit/README.html">Hello Orbit (v0, OrbitClient)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/orbit/orbit_v1_api/README.html">Orbit v1 API (v1, raw HTTP)</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/orbit/export_run_archives/README.html">Export Run Archives</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/orbit/export_site_walk_archives/README.html">Export Sitewalk Archives</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/orbit/anomalies/README.html">Anomalies</a></li>
@@ -324,6 +327,8 @@
 <li class="toctree-l4"><a class="reference internal" href="fault.html">Fault</a></li>
 <li class="toctree-l4"><a class="reference internal" href="frame_helpers.html">Frame Helpers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="graph_nav.html">Graph Nav</a></li>
+<li class="toctree-l4"><a class="reference internal" href="graph_nav_download.html">Graph Nav Download</a></li>
+<li class="toctree-l4"><a class="reference internal" href="graph_nav_upload.html">Graph Nav Upload</a></li>
 <li class="toctree-l4"><a class="reference internal" href="gripper_camera_param.html">Gripper Camera Params</a></li>
 <li class="toctree-l4"><a class="reference internal" href="gps/README.html">GPS</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="gps/aggregator_client.html">Aggregator Client</a></li>
@@ -653,8 +658,8 @@ add_base_arguments instead.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="bosdyn.client.util.read_payload_credentials">
 <span class="sig-prename descclassname"><span class="pre">bosdyn.client.util.</span></span><span class="sig-name descname"><span class="pre">read_payload_credentials</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/util.html#read_payload_credentials"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.util.read_payload_credentials" title="Permalink to this definition"></a></dt>
-<dd><p>Read the guid and secret from a file that already exists.  The file should have the guid and secret
-as the first and second lines in the file.</p>
+<dd><p>Read the guid and secret from a file that already exists.  The file should have the guid and
+secret as the first and second lines in the file.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>filename</strong> – Name of the file to read.</p>
@@ -674,8 +679,8 @@ as the first and second lines in the file.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="bosdyn.client.util.read_or_create_payload_credentials">
 <span class="sig-prename descclassname"><span class="pre">bosdyn.client.util.</span></span><span class="sig-name descname"><span class="pre">read_or_create_payload_credentials</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/util.html#read_or_create_payload_credentials"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.util.read_or_create_payload_credentials" title="Permalink to this definition"></a></dt>
-<dd><p>Only for use when attempting to register a payload. If simply trying to authenticate,
-use get_guid_or_secret or read_payload_credentials instead.</p>
+<dd><p>Only for use when attempting to register a payload. If simply trying to authenticate, use
+get_guid_or_secret or read_payload_credentials instead.</p>
 <p>When registering, attempt to read the payload’s guid and secret from the specified file.
 If this file exists, it should have the guid and secret as the first and second lines in the
 file. If the file does not exist, this function creates a valid credentials file at filename.</p>
@@ -701,8 +706,8 @@ as a volume to the CORE I/O’s /data or /persist locations.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="bosdyn.client.util.get_guid_and_secret">
 <span class="sig-prename descclassname"><span class="pre">bosdyn.client.util.</span></span><span class="sig-name descname"><span class="pre">get_guid_and_secret</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parsed_options</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/util.html#get_guid_and_secret"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.util.get_guid_and_secret" title="Permalink to this definition"></a></dt>
-<dd><p>Get the guid and secret for a payload, based on the options that were added
-via add_payload_credentials_arguments().</p>
+<dd><p>Get the guid and secret for a payload, based on the options that were added via
+add_payload_credentials_arguments().</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>parsed_options</strong> – Namespace result of parser.parse_args()</p>
@@ -722,12 +727,9 @@ via add_payload_credentials_arguments().</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="bosdyn.client.util.add_payload_credentials_file_argument">
 <span class="sig-prename descclassname"><span class="pre">bosdyn.client.util.</span></span><span class="sig-name descname"><span class="pre">add_payload_credentials_file_argument</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parser</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/util.html#add_payload_credentials_file_argument"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.util.add_payload_credentials_file_argument" title="Permalink to this definition"></a></dt>
-<dd><dl class="simple">
-<dt>Add argument for payload_credentials_file to an ArgumentParser or argument group.</dt><dd><p>This file is where the payload’s GUID and secret are stored. The GUID and secret can
-be securely generated on a per-robot basis and written to this file with
-read_or_create_payload_credentials(filename).</p>
-</dd>
-</dl>
+<dd><p>Add argument for payload_credentials_file to an ArgumentParser or argument group. This file
+is where the payload’s GUID and secret are stored. The GUID and secret can be securely generated
+on a per-robot basis and written to this file with read_or_create_payload_credentials(filename).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>parser</strong> – Argument parser object</p>
@@ -738,8 +740,8 @@ read_or_create_payload_credentials(filename).</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="bosdyn.client.util.add_payload_credentials_arguments">
 <span class="sig-prename descclassname"><span class="pre">bosdyn.client.util.</span></span><span class="sig-name descname"><span class="pre">add_payload_credentials_arguments</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parser</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">required</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/util.html#add_payload_credentials_arguments"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.util.add_payload_credentials_arguments" title="Permalink to this definition"></a></dt>
-<dd><p>Add arguments common to most payload related applications.
-Use get_guid_and_secret() to get the guid and secret from the resulting parse.</p>
+<dd><p>Add arguments common to most payload related applications. Use get_guid_and_secret() to get
+the guid and secret from the resulting parse.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -775,8 +777,8 @@ Use get_guid_and_secret() to get the guid and secret from the resulting parse.</
 <dl class="py function">
 <dt class="sig sig-object py" id="bosdyn.client.util.safe_pb_enum_to_string">
 <span class="sig-prename descclassname"><span class="pre">bosdyn.client.util.</span></span><span class="sig-name descname"><span class="pre">safe_pb_enum_to_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pb_enum_obj</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/util.html#safe_pb_enum_to_string"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.util.safe_pb_enum_to_string" title="Permalink to this definition"></a></dt>
-<dd><p>Safe wrapper to convert a protobuf enum object to its string representation.
-Avoids throwing an exception if the status is unknown by the enum object.</p>
+<dd><p>Safe wrapper to convert a protobuf enum object to its string representation. Avoids throwing
+an exception if the status is unknown by the enum object.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">

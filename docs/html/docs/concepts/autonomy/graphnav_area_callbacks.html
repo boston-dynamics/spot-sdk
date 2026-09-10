@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>GraphNav Area Callbacks &mdash; Spot 5.1.9 documentation</title>
+  <title>GraphNav Area Callbacks &mdash; Spot 5.2.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
     <link rel="shortcut icon" href="../../../_static/bd-favicon.png"/>
@@ -38,7 +38,7 @@
               <img src="../../../_static/bd-official-white.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                5.1.9
+                5.2.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -205,7 +205,8 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/world_object_mutations/README.html">World Object Mutations</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/visualizer/README.html">Visualizer</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/gripper_camera_params/README.html">Gripper Camera Parameters</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_cam/README.html">Spot CAM</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_cam/README.html">Spot CAM Services</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_cam/README.html#spot-cam-video-core-io-extension-example">Spot Cam Video Core IO Extension Example</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/stitch_front_images/README.html">Stitch Front Images</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/get_depth_plus_visual_image/README.html">Project Depth Data on Visual Images</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/service_customization/custom_parameter_image_server/README.html">Custom Parameter Image Server</a></li>
@@ -249,6 +250,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/graph_nav_command_line/README.html">GraphNav and Recording Service Command Line Interfaces</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/graph_nav_command_line/README.html#example-programs">Example Programs</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/graph_nav_extract_point_cloud/README.html">Graph Nav Extract Point Cloud</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/graph_nav_map_to_usd/README.html">Graph Nav Map to USD</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/graph_nav_view_map/README.html">Graph Nav View Map</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/graph_nav_view_gps/README.html">Graph Nav View GPS Data</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/get_mission_state/README.html">Get Mission State</a></li>
@@ -269,7 +271,8 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/joint_control_examples.html">Joint Control API Examples</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/orbit.html">Orbit</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/hello_orbit/README.html">Hello Orbit</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/hello_orbit/README.html">Hello Orbit (v0, OrbitClient)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/orbit_v1_api/README.html">Orbit v1 API (v1, raw HTTP)</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/export_run_archives/README.html">Export Run Archives</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/export_site_walk_archives/README.html">Export Sitewalk Archives</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/anomalies/README.html">Anomalies</a></li>
@@ -324,6 +327,8 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/fault.html">Fault</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/frame_helpers.html">Frame Helpers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/graph_nav.html">Graph Nav</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/graph_nav_download.html">Graph Nav Download</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/graph_nav_upload.html">Graph Nav Upload</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/gripper_camera_param.html">Gripper Camera Params</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/gps/README.html">GPS</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/gps/aggregator_client.html">Aggregator Client</a></li>
@@ -529,20 +534,20 @@ Development Kit License (20191101-BDSDK-SL).
 <h1>GraphNav Area Callbacks<a class="headerlink" href="#graphnav-area-callbacks" title="Permalink to this heading"></a></h1>
 <section id="introduction">
 <h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading"></a></h2>
-<p>Imagine we want Spot to check for forklifts before deciding to cross the road. If this is part of a mission, we could add a <a class="reference internal" href="../../../python/examples/remote_mission_service/README.html"><span class="doc">remote mission callback service</span></a> that makes the robot to look left and right before crossing the road, where the robot’s vision is connected to an ML model that checks for the forklift on the road. However, this approach will only execute the callback when it is at that point in the mission. In cases where the robot reroutes across the crosswalk due to a blockage elsewhere, or the robot decides to return to a dock across the crosswalk when its battery is low, or if the map is used for navigation outside of that mission, the robot will <em>not</em> execute that callback, but will instead walk directly out into the crosswalk, regardless of whether it is safe to do so.</p>
-<p>We sometimes want the robot <em>to execute a sequence of actions anytime the robot is at the certain location in the map</em>. That is where we can use <strong>Area Callbacks</strong>. An Area Callback allows the user to associate certain areas with specified actions, such as safety checks at the crosswalks, opening doors, and signaling the environment using the lights and sounds.</p>
+<p>Imagine we want Spot to check for forklifts before deciding to cross the road. If this is part of a mission, we could add a <a class="reference internal" href="../../../python/examples/remote_mission_service/README.html"><span class="doc">remote mission callback service</span></a> that makes the robot look left and right before crossing the road, where the robot’s vision is connected to an ML model that checks for the forklift on the road. However, this approach will only execute the callback when it is at that point in the mission. In cases where the robot reroutes across the crosswalk due to a blockage elsewhere, or the robot decides to return to a dock across the crosswalk when its battery is low, or if the map is used for navigation outside of that mission, the robot will <em>not</em> execute that callback, but will instead walk directly out into the crosswalk, regardless of whether it is safe to do so.</p>
+<p>We sometimes want the robot <em>to execute a sequence of actions anytime the robot is at a certain location in the map</em>. That is where we can use <strong>Area Callbacks</strong>. An Area Callback allows the user to associate certain areas with specified actions, such as safety checks at the crosswalks, opening doors, and signaling the environment using the lights and sounds.</p>
 </section>
 <section id="how-does-an-area-callback-work">
 <h2>How does an Area Callback work?<a class="headerlink" href="#how-does-an-area-callback-work" title="Permalink to this heading"></a></h2>
 <p><img alt="Area Callback Figure" src="../../../_images/area_callback_figure.png" /></p>
-<p>GraphNav maps are composed of edges and waypoints. These edges are annotated with information that is necessary for the successful navigation of the robot. In addition to information such as detected stairs and different friction coefficient settings for slippery surfaces, annotations can include <strong>Area Callback Regions</strong> so that robot can complete assigned actions every time it visits these edges. These regions specify which <strong>Area Callback Service</strong> should be called to handle this region.</p>
+<p>GraphNav maps are composed of edges and waypoints. These edges are annotated with information that is necessary for the successful navigation of the robot. In addition to information such as detected stairs and different friction coefficient settings for slippery surfaces, annotations can include <strong>Area Callback Regions</strong> so that the robot can complete assigned actions every time it visits these edges. These regions specify which <strong>Area Callback Service</strong> should be called to handle this region.</p>
 <p>We may want the robot to do different things for each of the following cases:</p>
 <ul class="simple">
 <li><p>the robot gets to the <em>start</em> of the Area Callback region</p></li>
 <li><p>the robot is <em>crossing</em> the Area Callback region</p></li>
 <li><p>the robot gets to the <em>end</em> of the Area Callback region</p></li>
 </ul>
-<p>The Area Callback service that is called can specify a <em>policy</em> as to what should GraphNav should do at the start and end of the region. Options include continuing on, stopping and waiting for the callback to allow it to continue, or delegating control to the callback to perform an action with the robot.</p>
+<p>The Area Callback service that is called can specify a <em>policy</em> as to what GraphNav should do at the start and end of the region. Options include continuing on, stopping and waiting for the callback to allow it to continue, or delegating control to the callback to perform an action with the robot.</p>
 </section>
 <section id="area-callback-policies">
 <h2>Area Callback Policies<a class="headerlink" href="#area-callback-policies" title="Permalink to this heading"></a></h2>
@@ -576,7 +581,7 @@ The callback will still continue to be updated by graph nav for the duration of 
 <li><p>The callback service registers itself with the robot’s directory.</p></li>
 <li><p>GraphNav calls the <code class="docutils literal notranslate"><span class="pre">AreaCallbackInformation</span></code> RPC to get information about this callback.</p></li>
 </ol>
-<p>At this point the callback is “live”, meaning that it is running an GraphNav has successfully contacted it.</p>
+<p>At this point the callback is “live”, meaning that it is running and GraphNav has successfully contacted it.</p>
 </section>
 <section id="recording">
 <h3>Recording<a class="headerlink" href="#recording" title="Permalink to this heading"></a></h3>
@@ -606,7 +611,7 @@ The callback will still continue to be updated by graph nav for the duration of 
 <p>The behavior of GraphNav during an Area Callback can be modified by setting various fields in the <code class="docutils literal notranslate"><span class="pre">AreaCallbackInformation</span></code> message that GraphNav will query for. It is best practice to set all the available configuration options, even if the default behavior is the desired behavior.</p>
 <section id="expected-blockages">
 <h4>Expected Blockages<a class="headerlink" href="#expected-blockages" title="Permalink to this heading"></a></h4>
-<p>Certain callback regions may be expected to appear blocked to GraphNav (such as a callback that opens a door). In those cases, GraphNav should not pre-emptively consider them blocked until the callback has had a chance to run. This is specified by setting the <code class="docutils literal notranslate"><span class="pre">blockage</span></code> field to <code class="docutils literal notranslate"><span class="pre">BLOCKAGE_SKIP</span></code> or <code class="docutils literal notranslate"><span class="pre">BLOCKAGE_CHECK</span></code>.</p>
+<p>Certain callback regions may be expected to appear blocked to GraphNav (such as a callback that opens a door). In those cases, GraphNav should not preemptively consider them blocked until the callback has had a chance to run. This is specified by setting the <code class="docutils literal notranslate"><span class="pre">blockage</span></code> field to <code class="docutils literal notranslate"><span class="pre">BLOCKAGE_SKIP</span></code> or <code class="docutils literal notranslate"><span class="pre">BLOCKAGE_CHECK</span></code>.</p>
 </section>
 <section id="impairment-check">
 <h4>Impairment Check<a class="headerlink" href="#impairment-check" title="Permalink to this heading"></a></h4>
@@ -631,7 +636,7 @@ To control whether GraphNav will check for impairment errors when the callback i
 <li><p><code class="docutils literal notranslate"><span class="pre">block_until_control()</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">safe_sleep()</span></code></p></li>
 </ul>
-<p>These methods will return when their particular condition is met. If the navigation is aborted, they will raise an exception of a subclass of <code class="docutils literal notranslate"><span class="pre">bosdyn.client.area_callback_region_handler_base.HandlerError</span></code>. These exceptions do not need to be caught, and can be used to exit from <code class="docutils literal notranslate"><span class="pre">run()</span></code>. If you <em>do</em> catch these exceptions for performing cleanup work, be sure to re-raise them after cleaning up, rather than continuing on in the <code class="docutils literal notranslate"><span class="pre">run()</span></code> method. It is expected that <code class="docutils literal notranslate"><span class="pre">run()</span></code> will complete quickly once navigation has stopped. If your use-case requires more time for cleanup operations you should create a thread to do that work and still return from <code class="docutils literal notranslate"><span class="pre">run()</span></code> quickly. Note that <code class="docutils literal notranslate"><span class="pre">safe_sleep()</span></code> works very similar to python’s <code class="docutils literal notranslate"><span class="pre">time.sleep()</span></code> except that it will raise one of the above exceptions if the navigation through the region aborts during the sleep.</p>
+<p>These methods will return when their particular condition is met. If the navigation is aborted, they will raise an exception of a subclass of <code class="docutils literal notranslate"><span class="pre">bosdyn.client.area_callback_region_handler_base.HandlerError</span></code>. These exceptions do not need to be caught, and can be used to exit from <code class="docutils literal notranslate"><span class="pre">run()</span></code>. If you <em>do</em> catch these exceptions for performing cleanup work, be sure to re-raise them after cleaning up, rather than continuing on in the <code class="docutils literal notranslate"><span class="pre">run()</span></code> method. It is expected that <code class="docutils literal notranslate"><span class="pre">run()</span></code> will complete quickly once navigation has stopped. If your use-case requires more time for cleanup operations you should create a thread to do that work and still return from <code class="docutils literal notranslate"><span class="pre">run()</span></code> quickly. Note that <code class="docutils literal notranslate"><span class="pre">safe_sleep()</span></code> works very similarly to Python’s <code class="docutils literal notranslate"><span class="pre">time.sleep()</span></code> except that it will raise one of the above exceptions if the navigation through the region aborts during the sleep.</p>
 <p>In addition to these blocking methods, implementations can directly call <code class="docutils literal notranslate"><span class="pre">check()</span></code> which will immediately raise a <code class="docutils literal notranslate"><span class="pre">HandlerError</span></code> if the callback should abort. Also, the <code class="docutils literal notranslate"><span class="pre">stage()</span></code> and <code class="docutils literal notranslate"><span class="pre">has_control()</span></code> helpers can be used to check this information about current stage and control state in a non-blocking manner. <code class="docutils literal notranslate"><span class="pre">stage()</span></code> will return the <a class="reference external" href="../../../protos/bosdyn/api/proto_reference.html#updatecallbackrequest-stage"><code class="docutils literal notranslate"><span class="pre">bosdyn.api.UpdateCallbackRequest.Stage</span></code></a> enum describing the stage of crossing the region.</p>
 <p>Aside from the task-specific work that the callback does, its other responsibility is to communicate a two-part <em>policy</em> to GraphNav as to what actions GraphNav should perform at the start and end of the region.
 The recommended way to set and update this policy is to use the helper methods:</p>
@@ -659,7 +664,7 @@ Inside <code class="docutils literal notranslate"><span class="pre">run()</span>
 </section>
 <section id="controlling-the-robot">
 <h3>Controlling the Robot<a class="headerlink" href="#controlling-the-robot" title="Permalink to this heading"></a></h3>
-<p>Control can be given to the robot to perform an action at the start or end of the region. The common use case for this are to position the robot precisely and perform an action before giving control back to graph nav to cross the region, or to manage the traversal of the entire region itself. Control is acquired by setting the policy to <strong>control</strong>, and waiting for GraphNav to delegate control. After GraphNav delegates control, the <code class="docutils literal notranslate"><span class="pre">Robot</span></code> object for the callback will have its lease wallet updated and commands can be sent.</p>
+<p>Control can be given to the robot to perform an action at the start or end of the region. The common use cases for this are to position the robot precisely and perform an action before giving control back to graph nav to cross the region, or to manage the traversal of the entire region itself. Control is acquired by setting the policy to <strong>control</strong>, and waiting for GraphNav to delegate control. After GraphNav delegates control, the <code class="docutils literal notranslate"><span class="pre">Robot</span></code> object for the callback will have its lease wallet updated and commands can be sent.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span>        <span class="bp">self</span><span class="o">.</span><span class="n">control_at_start</span><span class="p">()</span>     <span class="c1"># Set region policy</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">block_until_control</span><span class="p">()</span>  <span class="c1"># Wait for GraphNav to delegate control</span>
 
@@ -681,7 +686,7 @@ Inside <code class="docutils literal notranslate"><span class="pre">run()</span>
 </section>
 <section id="reporting-errors">
 <h3>Reporting Errors<a class="headerlink" href="#reporting-errors" title="Permalink to this heading"></a></h3>
-<p>If an unrecoverable error occurs, the <code class="docutils literal notranslate"><span class="pre">run()</span></code> method should raise an exception. This will get translated into a response to GraphNav that the callback has failed. There are a few special errors that can re-raised with special meaning.</p>
+<p>If an unrecoverable error occurs, the <code class="docutils literal notranslate"><span class="pre">run()</span></code> method should raise an exception. This will get translated into a response to GraphNav that the callback has failed. There are a few special errors that can be re-raised with special meaning.</p>
 <ul class="simple">
 <li><p><strong>LeaseError</strong> - This will be raised when the callback has control if some other system takes over control of the robot. This will generally be raised by robot command RPCs sent by the callback service, and it is recommended to not catch the error, but to instead let it raise out of <code class="docutils literal notranslate"><span class="pre">run()</span></code>. If a callback needs to catch it to perform some cleanup, it should re-raise it after that cleanup is performed.</p></li>
 <li><p><strong>PathBlocked</strong> - This error should be raised if the callback determines that the region is blocked, and GraphNav should attempt to re-route around it. This should only be raised at the start of the region. If the callback service has been in control of the robot, it should attempt to return to the start of the region before raising this error, or GraphNav may not be able to successfully resume navigation. It should not be raised if the localization has already been updated to the end of the region.</p></li>
@@ -695,7 +700,7 @@ Inside <code class="docutils literal notranslate"><span class="pre">run()</span>
 <ol class="simple">
 <li><p>The Area Callback is not restarted, but an additional RPC will be made to the callback informing it of the new route. This occurs when GraphNav reroutes during a navigation command.</p></li>
 </ol>
-<p>Most callbacks can ignore that RPC, but callbacks that want to react to it can override the <code class="docutils literal notranslate"><span class="pre">route_changed()</span></code> method. Be aware <code class="docutils literal notranslate"><span class="pre">route_changed()</span></code> method will be called from a different thread than the thread that is running the <code class="docutils literal notranslate"><span class="pre">run()</span></code> method. The return type for <code class="docutils literal notranslate"><span class="pre">route_changed()</span></code> currently only has a single option which lets the callback request that <code class="docutils literal notranslate"><span class="pre">run()</span></code> be restarted if it had previously finished. Note that if it restarts, it will already be past the start of the region, so <code class="docutils literal notranslate"><span class="pre">block_until_arrived_at_start()</span></code> will immediately return <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p>
+<p>Most callbacks can ignore that RPC, but callbacks that want to react to it can override the <code class="docutils literal notranslate"><span class="pre">route_changed()</span></code> method. Be aware the <code class="docutils literal notranslate"><span class="pre">route_changed()</span></code> method will be called from a different thread than the thread that is running the <code class="docutils literal notranslate"><span class="pre">run()</span></code> method. The return type for <code class="docutils literal notranslate"><span class="pre">route_changed()</span></code> currently only has a single option which lets the callback request that <code class="docutils literal notranslate"><span class="pre">run()</span></code> be restarted if it had previously finished. Note that if it restarts, it will already be past the start of the region, so <code class="docutils literal notranslate"><span class="pre">block_until_arrived_at_start()</span></code> will immediately return <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p>
 <ol class="simple">
 <li><p>The Area Callback is restarted. This occurs when GraphNav is stopped and then re-run with a new command (such as to ask the operator what to do, or because a mission was explicitly paused).</p></li>
 </ol>

@@ -68,6 +68,7 @@ from .world_object import WorldObjectClient
 from .audio_visual import AudioVisualClient  # isort:skip
 
 
+
 class SdkError(Error):
     """General class of errors to handle non-response non-rpc errors."""
 
@@ -182,8 +183,8 @@ def create_standard_sdk(client_name_prefix, service_clients=None, cert_resource_
 
 
 class Sdk(object):
-    """Repository for settings typically common to a single developer and/or robot fleet.
-    See also Robot for robot-specific settings.
+    """Repository for settings typically common to a single developer and/or robot fleet. See also
+    Robot for robot-specific settings.
 
     Args:
         name: Name to identify the client when communicating with the robot.
@@ -296,9 +297,10 @@ class Sdk(object):
 
     def clear_robots(self):
         """Remove all cached Robot instances.
-        Subsequent calls to create_robot() will return newly created Robots.
-        Existing robot instances will continue to work, but their time sync and token refresh
-        threads will be stopped.
+
+        Subsequent calls to create_robot() will return newly created Robots. Existing robot
+        instances will continue to work, but their time sync and token refresh threads will be
+        stopped.
         """
         for robot in self.robots.values():
             robot._shutdown()

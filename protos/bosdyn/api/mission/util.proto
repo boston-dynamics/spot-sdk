@@ -12,6 +12,7 @@ option go_package = "bosdyn/api/mission/util";
 option java_outer_classname = "UtilProto";
 
 import "google/protobuf/any.proto";
+import "google/protobuf/timestamp.proto";
 
 import "bosdyn/api/alerts.proto";
 
@@ -44,6 +45,7 @@ message VariableDeclaration {
         TYPE_MESSAGE = 5;
         TYPE_LIST = 6;
         TYPE_DICT = 7;
+        TYPE_TIMESTAMP = 8;
     }
     // Subtype of the variable if it is a list or dict type. This would be type of the elements of
     // that collection
@@ -72,6 +74,7 @@ message ConstantValue {
         google.protobuf.Any msg_value = 5;
         ListValue list_value = 6;
         DictValue dict_value = 7;
+        google.protobuf.Timestamp timestamp_value = 8;
     }
 }
 

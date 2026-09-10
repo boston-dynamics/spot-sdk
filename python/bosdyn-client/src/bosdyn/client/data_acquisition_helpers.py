@@ -117,7 +117,7 @@ def acquire_and_process_request(data_acquisition_client, acquisition_requests, g
 
 
 def cancel_acquisition_request(data_acq_client, request_id):
-    """Cancels an acquisition request based on the request id
+    """Cancels an acquisition request based on the request id.
 
     Args:
         data_acq_client: DataAcquisition client for send the acquisition requests.
@@ -296,14 +296,12 @@ def download_data_REST(query_params, hostname, token, destination_folder='.',
             if not content or len(content) < 2:
                 print("ERROR: Content-Disposition is not set correctly")
                 return False
-            else:
-                start_ind = content.find('\"')
-                if start_ind == -1:
-                    print("ERROR: Content-Disposition does not have a \"")
-                    return False
-                else:
-                    start_ind += 1
-                    download_file = Path(folder, clean_filename(content[start_ind:-1]))
+            start_ind = content.find('\"')
+            if start_ind == -1:
+                print("ERROR: Content-Disposition does not have a \"")
+                return False
+            start_ind += 1
+            download_file = Path(folder, clean_filename(content[start_ind:-1]))
 
             with open(str(download_file), 'wb') as fid:
                 while True:

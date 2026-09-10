@@ -86,6 +86,6 @@ sudo docker run --privileged -v /etc:/etc gpio_control -pin_mode gpio --gpio 1 -
 sudo docker run --privileged -v /etc:/etc gpio_control --pin_mode voltage --voltage 5 --duration 5
 
 # PWM
-sudo docker run --privileged -v /sys/class/pwm/:/sys/class/pwm/ --entrypoint python3 gpio_pwm pwm_control.py --number 1 --duty-ratio 0.7
+sudo docker run --privileged -v /etc:/etc -v /sys/class/pwm/:/sys/class/pwm/ --entrypoint python3 gpio_control pwm_control.py --number 1 --duty-ratio 0.7
 
 ```

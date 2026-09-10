@@ -50,7 +50,7 @@ The robot command service allows a client to move the robot.
 
 There are many commands exposed to clients to make the robot self-right, sit, stand, move to a position, move with a velocity, stop and power off. Most commands have associated parameters, for example the stand command contains an optional offset allowing the client to orient the robot's body.
 
-Clients are encouraged to send short-lived commands and continuously resend them so that the robot stops in the even of a client-side issue. For longer commands, client should cache the id returned by the CommandResponse and poll the associated CommandFeedbackRequest to monitor the command.
+Clients are encouraged to send short-lived commands and continuously resend them so that the robot stops in the event of a client-side issue. For longer commands, client should cache the id returned by the CommandResponse and poll the associated CommandFeedbackRequest to monitor the command.
 
 ## robot-state
 

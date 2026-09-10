@@ -13,10 +13,16 @@ from deprecated.sphinx import deprecated
 
 from bosdyn.api.docking import docking_pb2, docking_service_pb2_grpc
 from bosdyn.client import lease
-from bosdyn.client.common import (BaseClient, common_header_errors, common_lease_errors,
-                                  error_factory, handle_common_header_errors,
-                                  handle_lease_use_result_errors, handle_unset_status_error,
-                                  maybe_raise)
+from bosdyn.client.common import (
+    BaseClient,
+    common_header_errors,
+    common_lease_errors,
+    error_factory,
+    handle_common_header_errors,
+    handle_lease_use_result_errors,
+    handle_unset_status_error,
+    maybe_raise,
+)
 from bosdyn.client.exceptions import ResponseError
 from bosdyn.client.robot_command import CommandFailedError
 from bosdyn.util import now_sec, seconds_to_timestamp
@@ -24,9 +30,10 @@ from bosdyn.util import now_sec, seconds_to_timestamp
 
 class DockingClient(BaseClient):
     """A client for the docking service to help issue DockingCommand and get state.
-    Clients are expected to issue a single DockingCommand and then periodically
-    check the status of its execution.
-    This service requires ownership over the robot, in the form of a lease and timesync.
+
+    Clients are expected to issue a single DockingCommand and then periodically check the status of
+    its execution. This service requires ownership over the robot, in the form of a lease and
+    timesync.
     """
     default_service_name = 'docking'
     service_type = 'bosdyn.api.docking.DockingService'
@@ -63,7 +70,7 @@ class DockingClient(BaseClient):
 
     def docking_command_async(self, station_id, clock_identifier, end_time, prep_pose_behavior=None,
                               lease=None, **kwargs):
-        """Async version of docking_command(). """
+        """Async version of docking_command()."""
         req = self._docking_command_request(lease, station_id, clock_identifier, end_time,
                                             prep_pose_behavior)
         return self.call_async(self._stub.DockingCommand, req, self._docking_id_from_response,
@@ -81,7 +88,8 @@ class DockingClient(BaseClient):
     def docking_command_full_async(self, station_id, clock_identifier, end_time,
                                    prep_pose_behavior=None, lease=None, require_fiducial=False,
                                    **kwargs):
-        """Identical to docking_command_async(), except will return the full DockingCommandResponse."""
+        """Identical to docking_command_async(), except will return the full
+        DockingCommandResponse."""
         req = self._docking_command_request(lease, station_id, clock_identifier, end_time,
                                             prep_pose_behavior, require_fiducial)
         return self.call_async(self._stub.DockingCommand, req,

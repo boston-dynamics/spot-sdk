@@ -4,7 +4,7 @@
 # is subject to the terms and conditions of the Boston Dynamics Software
 # Development Kit License (20191101-BDSDK-SL).
 
-"""pyqt wrapper for bddf_download.py"""
+"""Pyqt wrapper for bddf_download.py."""
 
 import argparse
 import datetime
@@ -14,9 +14,10 @@ import platform
 import signal
 import subprocess
 import sys
+import warnings
 
 from bddf_download import collect_and_write_file, prepare_download
-from PyQt5 import QtCore, QtWidgets, uic
+from qtpy import API_NAME, QtCore, QtWidgets, uic
 
 import bosdyn.client
 from bosdyn.api.data_index_pb2 import EventsCommentsSpec
@@ -316,23 +317,22 @@ class BDDFDownloadGui(QtWidgets.QMainWindow):
                     f'Unable to get data. Reason: {reason}. https response: {response.status_code}',
                     DEFAULT_STATUS_BAR_TIMEOUT)
                 return False
+            number_of_bytes_processed = number_of_bytes_processed + chunk
+            total_size_of_request = total_content_length
+            if total_size_of_request == 0:
+                bytes_processed_string = f'Data is chunked. Number of megabytes processed: {number_of_bytes_processed/1e6:.0f} [MB].'
+                self.label_filesize.setText(bytes_processed_string)
             else:
-                number_of_bytes_processed = number_of_bytes_processed + chunk
-                total_size_of_request = total_content_length
-                if total_size_of_request == 0:
-                    bytes_processed_string = f'Data is chunked. Number of megabytes processed: {number_of_bytes_processed/1e6:.0f} [MB].'
-                    self.label_filesize.setText(bytes_processed_string)
-                else:
-                    self.label_filesize.setText(
-                        f'Download progress: {number_of_bytes_processed/1e6:.2f} [MB] of {total_size_of_request/1e6:.2f} [MB]'
-                    )
-                    percentage_compete = round(
-                        (number_of_bytes_processed / total_size_of_request) * 100)
-                    download_percentage_string = f'Download is {percentage_compete:.2f}% complete.'
-                    logging.debug(download_percentage_string)
-                    self.pb.setValue(percentage_compete)
-                # Hack to get the label_filesize to update quickly.
-                QtCore.QCoreApplication.processEvents()
+                self.label_filesize.setText(
+                    f'Download progress: {number_of_bytes_processed/1e6:.2f} [MB] of {total_size_of_request/1e6:.2f} [MB]'
+                )
+                percentage_compete = round(
+                    (number_of_bytes_processed / total_size_of_request) * 100)
+                download_percentage_string = f'Download is {percentage_compete:.2f}% complete.'
+                logging.debug(download_percentage_string)
+                self.pb.setValue(percentage_compete)
+            # Hack to get the label_filesize to update quickly.
+            QtCore.QCoreApplication.processEvents()
 
         self.statusBar().showMessage(f'Download complete: {output}')
 
@@ -344,9 +344,8 @@ class BDDFDownloadGui(QtWidgets.QMainWindow):
             self.statusBar().showMessage(f'Ping of {hostname} was successful.',
                                          DEFAULT_STATUS_BAR_TIMEOUT)
             return True
-        else:
-            self.statusBar().showMessage(f'Ping of {hostname} FAILED.', DEFAULT_STATUS_BAR_TIMEOUT)
-            return False
+        self.statusBar().showMessage(f'Ping of {hostname} FAILED.', DEFAULT_STATUS_BAR_TIMEOUT)
+        return False
 
     def use_date_time_switch(self, new_state):
         """Toggle timespan options.
@@ -354,7 +353,7 @@ class BDDFDownloadGui(QtWidgets.QMainWindow):
         Args:
             new_state (int) New checked state return from QCheckBox.
         """
-        if new_state == 2:
+        if new_state == QtCore.Qt.Checked or new_state == 2:
             self.dte_1.setEnabled(True)
             self.dte_2.setEnabled(True)
             self.le_val.setEnabled(False)
@@ -378,11 +377,19 @@ class BDDFDownloadGui(QtWidgets.QMainWindow):
 
 def main():
     """Start GUI and handle interrupt."""
+
+    if API_NAME != "PyQt6":
+        warnings.warn(
+            f"RuntimeWarning: Running on {API_NAME}. Backwards compatibility is expected, but "
+            f"this script is optimized for PyQt6. "
+            f"Please run 'export QT_API=pyqt6' to configure qtpy to PyQt6.", stacklevel=2)
+
     signal.signal(signal.SIGINT, signal.SIG_DFL)
     app = QtWidgets.QApplication(sys.argv)
     window = BDDFDownloadGui()
     window.show()
-    sys.exit(app.exec_())
+
+    sys.exit(app.exec())
 
 
 if __name__ == '__main__':

@@ -9,8 +9,12 @@ import logging
 from threading import Event, Lock
 
 from bosdyn.api.graph_nav import area_callback_pb2
-from bosdyn.api.graph_nav.area_callback_pb2 import (BeginCallbackRequest, BeginCallbackResponse,
-                                                    UpdateCallbackRequest, UpdateCallbackResponse)
+from bosdyn.api.graph_nav.area_callback_pb2 import (
+    BeginCallbackRequest,
+    BeginCallbackResponse,
+    UpdateCallbackRequest,
+    UpdateCallbackResponse,
+)
 from bosdyn.client.area_callback_service_utils import AreaCallbackServiceConfig
 from bosdyn.client.common import LeaseUseError
 from bosdyn.client.robot import Robot
@@ -20,24 +24,23 @@ _LOGGER = logging.getLogger(__name__)
 
 class PathBlocked(Exception):
     """The callback reports the that path/area it's trying to traverse is blocked and the robot
-    should take another route or action.
-    """
+    should take another route or action."""
 
 
 class IncorrectUsage(Exception):
     """Error raised by calling a helper function incorrectly.
 
-    Raised when a call would block forever or has otherwise been used in an incorrect manner.
-    This exception is not intended to be caught, but indicates a programming error.
+    Raised when a call would block forever or has otherwise been used in an incorrect manner. This
+    exception is not intended to be caught, but indicates a programming error.
     """
 
 
 class HandlerError(Exception):
     """Error base class for errors raised from the internals of the AreaCallbackRegionHandlerBase.
 
-    This error will be raised when the shutdown_event signal is set, or can be raised by the user
-    to signal an error. A wrapper around the run implementation will catch this exception and
-    report back to a client a UpdateCallbackResponse error.
+    This error will be raised when the shutdown_event signal is set, or can be raised by the user to
+    signal an error. A wrapper around the run implementation will catch this exception and report
+    back to a client a UpdateCallbackResponse error.
     """
 
 
@@ -46,8 +49,10 @@ class CallbackEnded(HandlerError):
 
 
 class CallbackTimedOutError(HandlerError):
-    """The callback has already been stopped, via passing the end time. If caught, it should be
-    re-raised to make sure the response is set correctly."""
+    """The callback has already been stopped, via passing the end time.
+
+    If caught, it should be re-raised to make sure the response is set correctly.
+    """
 
 
 class RouteChangedResult:
@@ -73,7 +78,6 @@ class AreaCallbackRegionHandlerBase:
         config: The AreaCallbackServiceConfig defining the data for the AreaCallbackInformation
             response.
         robot: The Robot object used to create service clients.
-
     """
 
     def __init__(self, config: AreaCallbackServiceConfig, robot: Robot):
@@ -111,8 +115,10 @@ class AreaCallbackRegionHandlerBase:
 
     def route_changed(self, request: area_callback_pb2.RouteChangeRequest) -> RouteChangedResult:
         """This function is called when Graph Nav re-routes inside the callback region.
+
         In most cases, the callback does not need to do anything for this case and can leave the
-        default implementation"""
+        default implementation
+        """
         return RouteChangedResult()
 
     @property
@@ -122,7 +128,7 @@ class AreaCallbackRegionHandlerBase:
 
     @property
     def config(self) -> AreaCallbackServiceConfig:
-        """Get AreaCallbackServiceConfig"""
+        """Get AreaCallbackServiceConfig."""
         return self._config
 
     # Policy functions, which change the policy that the callback is returning to the robot.
@@ -171,9 +177,8 @@ class AreaCallbackRegionHandlerBase:
 
     def set_localization_at_end(self):
         """Set the localization hint to the end of the callback region, indicating that graph nav
-        that navigation should continue from this point.
-        Robot control is required to set this. It should be called after walking to the end of
-        the region, but before ceding control.
+        that navigation should continue from this point. Robot control is required to set this. It
+        should be called after walking to the end of the region, but before ceding control.
 
         Raises:
             IncorrectUsage: When called without robot control.
@@ -212,8 +217,8 @@ class AreaCallbackRegionHandlerBase:
         return self._lease_event.is_set()
 
     def block_until_arrived_at_start(self) -> bool:
-        """Block until the robot arrives at the start of the area callback.
-        If the robot is already past the start, this will return immediately.
+        """Block until the robot arrives at the start of the area callback. If the robot is already
+        past the start, this will return immediately.
 
         Returns:
             True if the robot is at the start, False if the robot is already beyond the start.
@@ -288,8 +293,8 @@ class AreaCallbackRegionHandlerBase:
             return copy.deepcopy(self._update_response)
 
     def will_get_control(self):
-        """Determine if the current policy and stage mean that the callback will eventually be
-        given control without any further action on its part"""
+        """Determine if the current policy and stage mean that the callback will eventually be given
+        control without any further action on its part."""
 
         response = self.update_response
         # Check if the policy wants control at the start, and we haven't passed the start.
@@ -309,7 +314,9 @@ class AreaCallbackRegionHandlerBase:
 
     def internal_begin_complete(self):
         """The handler finished BeginCallback and is ready to start run().
-        Blocking calls may now be used."""
+
+        Blocking calls may now be used.
+        """
         self._begin_complete = True
 
     def internal_set_stage(self, stage: UpdateCallbackRequest.Stage):
@@ -325,7 +332,9 @@ class AreaCallbackRegionHandlerBase:
         self._end_time = end_time
 
     def internal_give_control(self):
-        """Set Event indicating region handler has been given control. Lease is available in wallet.
+        """Set Event indicating region handler has been given control.
+
+        Lease is available in wallet.
         """
         self._lease_event.set()
 

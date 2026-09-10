@@ -11,10 +11,18 @@ import threading
 from google.protobuf.duration_pb2 import Duration
 from google.protobuf.timestamp_pb2 import Timestamp
 
-from bosdyn.api.metrics_logging import (absolute_metrics_pb2, metrics_logging_robot_pb2,
-                                        metrics_logging_robot_service_pb2_grpc)
-from bosdyn.client.common import (BaseClient, common_header_errors, error_factory,
-                                  handle_common_header_errors, handle_unset_status_error)
+from bosdyn.api.metrics_logging import (
+    absolute_metrics_pb2,
+    metrics_logging_robot_pb2,
+    metrics_logging_robot_service_pb2_grpc,
+)
+from bosdyn.client.common import (
+    BaseClient,
+    common_header_errors,
+    error_factory,
+    handle_common_header_errors,
+    handle_unset_status_error,
+)
 from bosdyn.client.data_buffer import make_parameter
 from bosdyn.client.exceptions import ResponseError
 
@@ -28,8 +36,7 @@ class UnableToOptOutError(ResponseError):
 
 
 class MetricsLoggingClient(BaseClient):
-    """A client for the metrics logging service on the robot.
-    """
+    """A client for the metrics logging service on the robot."""
     default_service_name = 'metrics-logging'
     service_type = 'bosdyn.api.metrics_logging.MetricsLoggingRobotService'
 
@@ -62,7 +69,8 @@ class MetricsLoggingClient(BaseClient):
 
 
     def get_store_sequence_range(self, **kwargs):
-        """Determine the range of sequence numbers currently being used by the metrics system's store.
+        """Determine the range of sequence numbers currently being used by the metrics system's
+        store.
 
         Returns:
             A list where the first number represents the starting index (inclusive), and the second number represents

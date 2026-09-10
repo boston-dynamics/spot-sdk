@@ -4,16 +4,21 @@
 # is subject to the terms and conditions of the Boston Dynamics Software
 # Development Kit License (20191101-BDSDK-SL).
 
-"""For clients to use the graph nav recording service"""
+"""For clients to use the graph nav recording service."""
 
 import collections
 from enum import Enum
 
 from bosdyn.api.graph_nav import map_pb2, recording_pb2
 from bosdyn.api.graph_nav import recording_service_pb2_grpc as recording_service
-from bosdyn.client.common import (BaseClient, common_header_errors, error_factory,
-                                  handle_common_header_errors, handle_license_errors_if_present,
-                                  handle_unset_status_error)
+from bosdyn.client.common import (
+    BaseClient,
+    common_header_errors,
+    error_factory,
+    handle_common_header_errors,
+    handle_license_errors_if_present,
+    handle_unset_status_error,
+)
 from bosdyn.client.exceptions import ResponseError
 
 
@@ -51,7 +56,7 @@ class GraphNavRecordingServiceClient(BaseClient):
 
     def start_recording_full(self, lease=None, recording_environment=None, require_fiducials=None,
                              **kwargs):
-        """Same as start_recording() but returns a full response"""
+        """Same as start_recording() but returns a full response."""
         request = self._build_start_recording_request(lease, recording_environment,
                                                       require_fiducials)
         return self.call(self._stub.StartRecording, request, value_from_response=_get_response,
@@ -363,15 +368,20 @@ class TooFarFromExistingMapError(RecordingServiceResponseError):
 
 
 class RemoteCloudFailureNotInDirectoryError(RecordingServiceResponseError):
-    """Failed to start recording because a remote point cloud (e.g. a LIDAR) is not registered to the service directory."""
+    """Failed to start recording because a remote point cloud (e.g. a LIDAR) is not registered to
+    the service directory."""
 
 
 class RemoteCloudFailureNoDataError(RecordingServiceResponseError):
-    """Failed to start recording because a remote point cloud (e.g. a LIDAR) is not delivering data."""
+    """Failed to start recording because a remote point cloud (e.g. a LIDAR) is not delivering
+    data."""
 
 
 class NotReadyYetError(RecordingServiceResponseError):
-    """The service is processing the map at its current position. Try again in 1-2 seconds."""
+    """The service is processing the map at its current position.
+
+    Try again in 1-2 seconds.
+    """
 
 
 class MapTooLargeLicenseError(RecordingServiceResponseError):

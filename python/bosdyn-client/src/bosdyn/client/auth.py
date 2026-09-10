@@ -16,8 +16,12 @@ import logging
 
 from bosdyn.api import auth_pb2, auth_service_pb2_grpc
 
-from .common import (BaseClient, error_factory, handle_common_header_errors,
-                     handle_unset_status_error)
+from .common import (
+    BaseClient,
+    error_factory,
+    handle_common_header_errors,
+    handle_unset_status_error,
+)
 from .exceptions import ResponseError
 
 _LOGGER = logging.getLogger(__name__)

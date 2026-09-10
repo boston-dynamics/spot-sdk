@@ -335,7 +335,7 @@ def read_and_find_animation_params(animate_move_params_file, filepath_input=True
     """
     if (filepath_input):
         #if animate_move_params_file is a filepath open the file
-        params_file = open(animate_move_params_file, "r")
+        params_file = open(animate_move_params_file)
     else:
         #if animate_move_params_file is a string of parameter information split the string by newline characters
         params_file = animate_move_params_file.splitlines()
@@ -395,7 +395,7 @@ def convert_animation_file_to_proto(animated_file, animate_move_params_file=""):
 
     animation.name = ntpath.basename(animated_file).split(".cha")[0]
 
-    animation_specs = open(animated_file, "r")
+    animation_specs = open(animated_file)
 
     # Expecting three chunks, separated by a blank line.
     section_counter = 0

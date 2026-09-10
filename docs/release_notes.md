@@ -12,6 +12,130 @@ Development Kit License (20191101-BDSDK-SL).
 
 # Spot Release Notes
 
+## Release 5.2.0
+
+### Breaking Changes
+
+- If you have any inspections that were authored with the blocklisted SV600 services mentioned in the [5.1.9](#release-519) deprecations section, they will stop working in 5.2.0 and you will need to rerecord them using the default leak and mechanical inspections in the tablet or SiteView.
+
+### New Features
+
+- The robot now reports two new categories of behavior faults: command failures (software-based failures that require user acknowledgement before proceeding) and safety restrictions (the safety system is limiting robot capabilities due to, e.g., people being nearby). See [BehaviorFault.Cause](../protos/bosdyn/api/robot_state.proto#behaviorfault).
+
+#### Choreography
+
+- New Choreographer application features:
+  - Added the Stage Planner tool to the 2D Dance previews view in the Choreographer application. Enables viewing stage dimensions relative to robot(s) position. See [Stage Planner](concepts/choreography/dance_previews.md#stage-planner) for details.
+  - Added Project Folders to the Choreographer application . Project Folders are selectable directories with default locations for different file types, which aid in organization for different projects. See [Project Folders](concepts/choreography/choreographer.md#project-folders) for details.
+
+#### Keepalive
+
+- Added two new action types to the [Keepalive Policy](../protos/bosdyn/api/keepalive/keepalive.proto#actionafter):
+  - `ImmediateMotorsOff`: Powers off the robot's motors immediately without first sitting down. Takes priority over AutoReturn and HaltRobot actions. WARNING: May cause damage if the robot is not already sitting.
+  - `HaltRobot`: Brings the robot to a halt and then maintains its position, without sitting down or powering off.
+- Keepalive status now reports whether a policy is actively controlling the robot and which action it is performing (e.g., halt or immediate motors-off). See the `active_control_actions` field in [GetStatusResponse](../protos/bosdyn/api/keepalive/keepalive.proto#getstatusresponse).
+
+#### Missions / Autowalk
+
+- Added a new mission node type for recording events when a mission is interrupted (pause, stop, restart, lease errors, timeouts, or child node failures). Clients can specify per-reason event parameters that are merged with the base event when the interruption occurs. Normal child failures (not just errors/exceptions) can also be treated as interruptions. See [BosdynRecordEventOnInterruption](../protos/bosdyn/api/mission/nodes.proto#bosdynrecordeventoninterruption).
+
+- The [DataAcquisitionOnInterruption](../protos/bosdyn/api/mission/nodes.proto#dataacquisitiononinterruption) node can now trigger data acquisition on normal child node failures (Result.FAILURE), not just errors and exceptions.
+
+- [SimpleParallel](../protos/bosdyn/api/mission/nodes.proto#simpleparallel) nodes now support ticking the secondary node before the primary on each tick (by default, the primary is ticked first).
+
+- [DateToBlackboard](../protos/bosdyn/api/mission/nodes.proto#datetoblackboard) now supports writing the current time as a `google.protobuf.Timestamp` in addition to a formatted ISO8601 string. The `python_var_to_value` and `python_type_to_pb_type` helpers in [bosdyn.mission.util](../python/bosdyn-mission/src/bosdyn/mission/util.py) have been updated accordingly.
+
+- Data acquisition query results now indicate whether metadata contains an autowalk report entry, allowing clients to efficiently filter for mission reports without parsing metadata. The autowalk report describes what happened during a mission (e.g., which actions succeeded or failed). See `is_autowalk_report_entry` in [AssociatedMetadata](../protos/bosdyn/api/data_acquisition.proto#associatedmetadata).
+
+### Bug Fixes and Improvements
+
+#### Arm
+
+- Arm joint move commands now support a slow-precise tracking mode that uses integral gain to reduce steady-state error, designed for slow trajectories requiring very high precision. See `TrackingMode` in [ArmJointMoveCommand.Request](../protos/bosdyn/api/arm_command.proto#armjointmovecommand). The `arm_joint_move_helper` in [robot_command.py](../python/bosdyn-client/src/bosdyn/client/robot_command.py) has been updated with a `tracking_mode` parameter (defaults to `TRACKING_MODE_DEFAULT`).
+
+#### Audio Visual
+
+- The audio system now supports independent volume limits for the buzzer and speaker, as well as the ability to disable automatic gain control (AGC) and noise reduction (NR) on incoming speaker audio. See [AudioVisualSystemParams](../protos/bosdyn/api/audio_visual.proto#audiovisualsystemparams). The [AudioVisualClient](../python/bosdyn-client/src/bosdyn/client/audio_visual.py) `set_system_params` and `set_system_params_async` methods have been updated with corresponding optional parameters. The [A/V Params example](../python/examples/audio_visual/audio_visual_params/README.md) has also been updated to support these new options.
+
+#### Choreography
+
+- Choreographer application feature improvements:
+
+  - Undo/Redo framework: Choreographer will now support continuous undo/redo functionality across different tabs and views.
+  - [Dance Previews](concepts/choreography/dance_previews.md):
+    - The Dance Previews views will now auto-update to reflect user changes.
+    - The 3D model geometry has been updated to include the most recent Spot geometry, including the addition of color.
+    - Additional export options have been added for Dance Preview cache exports.
+    - 2D view sequence labels will now only be shown for the selected dance tab, and can optionally be hidden completely.
+  - Timeline:
+    - Separated responsibilities for sequence start time and Dance Previews visualization into separate display elements. See [Red Slider and Start Marker](concepts/choreography/choreographer.md#red-slider-and-start-marker) for details.
+    - Different timeline tracks can now be hidden/shown using a new track visibility menu added to the Timeline Toolbar.
+    - General improvements to Timeline element selection behavior and scrolling.
+  - Upgraded application framework from PyQt5 to PyQt6.
+  - A button to take a retro log (Boston Dynamics log) has been added to the lower button bar.
+  - Timing issues when using the `--dance-filepath` argument with animation file dependencies have been resolved. The `--dance-filepath` argument has been renamed to `--filepaths` to make it more clear multiple sequence filepaths can be passed, and now also accepts directory paths along with individual `.chr` filepaths.
+
+- Choreography SDK improvements:
+
+  - The start time in the robot's clock for an active choreography sequence will now be reported in the `ChoreographyStatus` RPC.
+  - New animation uploads requested by the `UploadAnimatedMove` RPC will now be rejected with new status `STATUS_REJECTED_DANCE_ACTIVE`. This prevents possible interference with active choreography sequences.
+
+- Choreographer application changes:
+  - The Workspaces menu has been removed. Instead of a manual workspace selection the main Move Configuration tools can be manually resized and collapsed.
+  - The "Timeline" and "Playback" settings menu options have been moved to a shared "Preferences" menu, which can also be found under "Settings".
+  - The smaller robot model view displayed for specific moves has been removed in favor of the Dance Previews view.
+  - Lower button bar:
+    - The play music and load music buttons have been removed. Music in the timeline can be played by running the sequence(s) on robots or playing dance previews.
+
+#### Data Acquisition
+
+- Data acquisition plugins can now specify custom timeouts for individual storage RPCs, preventing timeout failures when storing large payloads. The `store_data_as_chunks` and `store_file` helpers in [data_acquisition_plugin_service.py](../python/bosdyn-client/src/bosdyn/client/data_acquisition_plugin_service.py) now accept `**kwargs` that are passed through to the underlying client RPCs. Previously, these calls used hardcoded default timeouts with no way to override them. Note: this is distinct from the `timeout_deadline` in `AcquirePluginDataResponse`, which applies to the entire acquisition request rather than individual RPCs made during that request.
+
+#### Logging
+
+- Log status now reports a stopping-in-progress state, providing more granular feedback between a stop request and the terminal done state. See `STATUS_STOPPING` in [LogStatus.Status](../protos/bosdyn/api/log_status/log_status.proto#logstatus).
+- Log status now reports the associated event for event-triggered logs (empty for retro logs). See `event_key` in [LogStatus](../protos/bosdyn/api/log_status/log_status.proto#logstatus).
+
+#### SDK
+
+- The Python SDK now automatically resets gRPC channels that enter a bad state (e.g., due to a deserialization error or connection reset), so that subsequent RPCs can succeed without the client needing to recreate the channel itself. The failing RPC will still raise an error, but retrying will use a fresh channel transparently. Two new exception types have been added: `InternalDeserializationError` and `ConnectionResetError` (the latter replaces `RetryableUnavailableError` for socket-closed/connection-reset conditions).
+
+#### World Objects
+
+- AprilTag detections now include Hamming distance and observation count metrics, which can be useful for filtering false positives in autowalk interrupts triggered by fiducial detections (though filtering too aggressively could increase false negatives). See [AprilTagProperties](../protos/bosdyn/api/world_object.proto#apriltagproperties).
+
+### Spot Sample Code
+
+#### New
+
+- [Graph Nav Download](../python/bosdyn-client/src/bosdyn/client/graph_nav_download.py): A standalone script and importable helper function for downloading a graph and all snapshots from a robot to disk, following the standard file structure and naming conventions.
+
+- [Graph Nav Upload](../python/bosdyn-client/src/bosdyn/client/graph_nav_upload.py): A standalone script and importable helper function for uploading a graph and all snapshots to a robot from disk. Supports batched snapshot uploads for efficient transfer of large maps. Requires robots running 5.1.0 or later.
+
+- [Graph Nav Map to USD](../python/examples/graph_nav_map_to_usd/README.md): Demonstrates how to load a globally-optimized Graph Nav map and export its point cloud data to a Universal Scene Description (USD) file. The output can be viewed in NVIDIA Omniverse, Apple Reality Composer, Pixar's usdview, or Blender.
+
+- [Core IO GPIO](../python/examples/core_io_gpio/README.md): Fixed the documented `docker run` command for PWM control to use the correct image name (`gpio_control` instead of `gpio_pwm`) and added the missing `-v /etc:/etc` volume mount.
+
+- [GPS Listener](../python/examples/gps_service/README.md): Added step-by-step sensor configuration instructions for the Trimble SPS986 (NMEA output, logging, positioning mode, satellite, and MSS service setup) and the Leica GA03 (Novatel application setup, USB port configuration, and optional correction service subscription). Added documentation for building and deploying the Leica GA03 CORE I/O extension, including the `build_extension.py` command and a note about the known USB remount issue on reboot.
+
+#### Updated
+
+- [A/V Params](../python/examples/audio_visual/audio_visual_params/README.md): The max buzzer volume, max speaker volume, automatic gain control (AGC), and noise reduction (NR) may now be configured.
+
+- [BDDF Download GUI](../python/examples/bddf_download/README.md), [Edit Autowalk](../python/examples/edit_autowalk/README.md), [E-Stop GUI](../python/examples/estop/README.md), [Record Autowalk](../python/examples/record_autowalk/README.md), and [Velodyne Client](../python/examples/velodyne_client/README.md): Upgraded from PyQt5 to PyQt6. These examples now use `qtpy` as a compatibility layer and emit a warning if `QT_API` is not set to `pyqt6`.
+
+- [Graph Nav Anchoring Optimization](../python/examples/graph_nav_anchoring_optimization/README.md): Updated README to reference PyQt6 as the recommended matplotlib backend.
+
+### Orbit Sample Code
+
+#### New
+
+- [Orbit v1 API](../python/examples/orbit/orbit_v1_api/README.md): Demonstrates the new Orbit v1 REST API using raw HTTP calls with the `requests` library. Shows how to authenticate with a Bearer token, list robots and SiteWalks via the Fleet and Facilities services, walk paginated results, and handle the standard v1 error shape. This example intentionally does not use `OrbitClient` (which targets v0) to make the v1 API shape tangible for developers building their own integrations.
+
+#### Updated
+
+- [Export SiteWalk Archive(s)](../python/examples/orbit/export_site_walk_archives/README.md): Fixed an off-by-one error where the "download all" option skipped the last SiteWalk and used incorrect zero-based indices.
+
 ## Release 5.1.9
 
 ### Deprecations
@@ -744,7 +868,7 @@ In addition to those listed for 4.0.0:
 
 ##### Orbit
 
-- <a href="orbit/docs.html">Orbit API</a>: The name of the `site_elements` endpoint has been corrected (previously `SiteElements`).
+- [Orbit API](concepts/orbit/orbit_api.md): The name of the `site_elements` endpoint has been corrected (previously `SiteElements`).
 
 - [Orbit Send Robot Back to Dock](../python/examples/orbit/send_robot_back_to_dock/README.md): The example has been made more interactive.
 
@@ -782,9 +906,9 @@ Network Compute Bridge workers are now required to set the status field. Previou
 
 #### Orbit (formerly Scout)
 
-- [**Webhooks**](concepts/orbit/about_orbit.md#webhooks): Webhooks are a new mechanism for clients to subscribe to real-time Orbit events. In order to receive events, Webhook subscribers must register with Orbit via the settings UI or the new `/webhooks` endpoints documented as part of the <a href="orbit/docs.html">Orbit API</a>. Corresponding helper functions such as `post_webhook` are available in [bosdyn-orbit](https://pypi.org/project/bosdyn-orbit/)'s client.
+- [**Webhooks**](concepts/orbit/about_orbit.md#webhooks): Webhooks are a new mechanism for clients to subscribe to real-time Orbit events. In order to receive events, Webhook subscribers must register with Orbit via the settings UI or the new `/webhooks` endpoints documented as part of the [Orbit API](concepts/orbit/orbit_api.md). Corresponding helper functions such as `post_webhook` are available in [bosdyn-orbit](https://pypi.org/project/bosdyn-orbit/)'s client.
 
-- [**Scheduler**](concepts/orbit/about_orbit.md#scheduling-missions): Alongside the new Orbit scheduler, one can also schedule missions via the new `/calendar` set of <a href="orbit/docs.html">Orbit API</a> endpoints. Corresponding helper functions such as `post_calendar_event` and `get_calendar` are available in [bosdyn-orbit](https://pypi.org/project/bosdyn-orbit/)'s client.
+- [**Scheduler**](concepts/orbit/about_orbit.md#scheduling-missions): Alongside the new Orbit scheduler, one can also schedule missions via the new `/calendar` set of [Orbit API](concepts/orbit/orbit_api.md) endpoints. Corresponding helper functions such as `post_calendar_event` and `get_calendar` are available in [bosdyn-orbit](https://pypi.org/project/bosdyn-orbit/)'s client.
 
 #### GPS
 
@@ -884,9 +1008,9 @@ Published robot state messages previously contained kinematic information for a 
 
 - The package `bosdyn-scout` is deprecated and replaced with [bosdyn-orbit](https://pypi.org/project/bosdyn-orbit/), due to Scout being renamed to Orbit. As a result, the pre-existing examples in `../python/examples/scout/` are moved to `../python/examples/orbit/`. All examples use `bosdyn-orbit` instead of `bosdyn-scout`.
 
-- The `/login` <a href="orbit/docs.html">Orbit API</a> endpoint is now deprecated. It has been functionally replaced by the `/api_token/authenticate` endpoint. This endpoint allows an admin user to generate an API Access Token with specific permissions for use against the Orbit API. A corresponding `authenticate_with_api_token` helper function in [bosdyn-orbit](https://pypi.org/project/bosdyn-orbit/)'s client has replaced 3.3's `authenticate_with_password` function.
+- The `/login` [Orbit API](concepts/orbit/orbit_api.md) endpoint is now deprecated. It has been functionally replaced by the `/api_token/authenticate` endpoint. This endpoint allows an admin user to generate an API Access Token with specific permissions for use against the Orbit API. A corresponding `authenticate_with_api_token` helper function in [bosdyn-orbit](https://pypi.org/project/bosdyn-orbit/)'s client has replaced 3.3's `authenticate_with_password` function.
 
-- The `/missions` set of <a href="orbit/docs.html">Orbit API</a> endpoints are now deprecated in favor of the `/site_walks` endpoints. Corresponding helper functions such as `get_site_walks` in [bosdyn-orbit](https://pypi.org/project/bosdyn-orbit/)'s client support this.
+- The `/missions` set of [Orbit API](concepts/orbit/orbit_api.md) endpoints are now deprecated in favor of the `/site_walks` endpoints. Corresponding helper functions such as `get_site_walks` in [bosdyn-orbit](https://pypi.org/project/bosdyn-orbit/)'s client support this.
 
 ### Known Issues
 
@@ -1090,7 +1214,7 @@ More detailed descriptions of how to specify these parameters can be found in th
 
 #### Navigation
 
-**No-Go Regions**: Added the ability to apply user-defined rectangular obstacles to the foot and body obstacle maps.  
+**No-Go Regions**: Added the ability to apply user-defined rectangular obstacles to the foot and body obstacle maps.
 A user can define rectangular regions in which the robot should not step, and/or rectangular regions the body should not enter, in addition to the standard obstacle mapping.
 By default, a User No-Go Region will add both a body obstacle, and a slightly expanded footstep obstacle to the respective obstacle maps. If this default behavior is not desired there are optional flags to designate the User No-Go Region as just a body obstacle or just a foot obstacle instead of both, and to remove the extra padding on the foot obstacle.
 These regions are added via the World Object Service, which now includes an `object_lifetime` field with the duration after which the obstacle expires.
@@ -1218,9 +1342,9 @@ Some malformed Graph Nav graphs were previously accepted, but would leave the se
 
 **SE2VelocityLimits require care**. Correct usage of the `SE2VelocityLimit` message requires the user to fully fill out all the fields, setting unlimited values to a large number, say 1e6.
 
-**Velodyne client API example has python/matplotlib issue** and it needs PyQt5
+**Velodyne client API example has python/matplotlib issue** and it needs PyQt6
 
-- Workaround: run `pip install pyqt5` in the venv to get it to work.
+- Workaround: run `pip install pyqt6` in the venv to get it to work.
 
 **Robot command feedback response incorrect with multiple clients running** in the configuration with a Mission client sending synchro arm commands with body lease and a Localnav client sending synchro mobility command with mobility lease. In this case, sending both robot command requests and robot command feedback requests, messes up the feedback request for the mission client. It was receiving feedback for the mobility request, and not the arm request.
 
@@ -1534,9 +1658,9 @@ Deprecated Spot CORE Documentation and moved to [Pre-3.2 Spot CORE Documentation
 
 - Workaround: Use `nvcr.io/nvidia/l4t-tensorflow:r32.7.1-tf2.5-py3` as the base image instead.
 
-**Velodyne client API example has python/matplotlib issue** and it needs PyQt5
+**Velodyne client API example has python/matplotlib issue** and it needs PyQt6
 
-- Workaround: run `pip install pyqt5` in the venv to get it to work.
+- Workaround: run `pip install pyqt6` in the venv to get it to work.
 
 **Robot command feedback response incorrect with multiple clients running** in the configuration with a Mission client sending synchro arm commands with body lease and a Localnav client sending synchro mobility command with mobility lease. In this case, sending both robot command requests and robot command feedback requests, messes up the feedback request for the mission client. It was receiving feedback for the mobility request, and not the arm request.
 
@@ -1620,7 +1744,7 @@ Modified server to use user confidence value as a threshold for returning detect
 
 #### Safely powering off on staircases.
 
-To improve safety when operating on stairs, the robot may now autonomously walk off staircases in scenarios where it may have previously entered a sit. In the event of communication loss, critically low battery state of charge, or a Safe Power Off Request, the robot will walk off the staircase before sitting and powering off. The direction of travel will generally be to descend the stairs unless the robot has already reached the top landing. This includes automatic sit-and-power-off cases such as from low battery or the E-stop `SETTLE_THEN_CUT` level, as well as any client SafePowerOff commands. It does _not_ affect immediate power cut cases such the PowerOff command or the E-stop CUT level.  
+To improve safety when operating on stairs, the robot may now autonomously walk off staircases in scenarios where it may have previously entered a sit. In the event of communication loss, critically low battery state of charge, or a Safe Power Off Request, the robot will walk off the staircase before sitting and powering off. The direction of travel will generally be to descend the stairs unless the robot has already reached the top landing. This includes automatic sit-and-power-off cases such as from low battery or the E-stop `SETTLE_THEN_CUT` level, as well as any client SafePowerOff commands. It does _not_ affect immediate power cut cases such the PowerOff command or the E-stop CUT level.
 To override this behavior for SafePowerOff commands, there is a new unsafe_action field in `SafePowerOffCommand` which can be set to `UNSAFE_FORCE_COMMAND` to force the command to take place immediately. To override this behavior for E-stop or battery power off, set the `disable_stair_error_auto_descent` field in the mobility params for the robot commands.
 As part of this change, a new `TerrainState` message in `RobotState` contains the `is_unsafe_to_sit` value to report when the robot considers the terrain unsafe to sit on.
 

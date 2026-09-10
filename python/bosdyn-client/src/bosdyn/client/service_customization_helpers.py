@@ -8,30 +8,38 @@ from abc import ABC, abstractmethod
 from typing import Callable, Dict, List, Optional, Union
 
 from bosdyn.api.image_geometry_pb2 import AreaI
-from bosdyn.api.service_customization_pb2 import (BoolParam, CustomParam, CustomParamError,
-                                                  DictParam, DoubleParam, Int64Param, ListParam,
-                                                  OneOfParam, RegionOfInterestParam, StringParam,
-                                                  UserInterfaceInfo)
+from bosdyn.api.service_customization_pb2 import (
+    BoolParam,
+    CustomParam,
+    CustomParamError,
+    DictParam,
+    DoubleParam,
+    Int64Param,
+    ListParam,
+    OneOfParam,
+    RegionOfInterestParam,
+    StringParam,
+    UserInterfaceInfo,
+)
 from bosdyn.api.units_pb2 import Units
 
 
 
 class InvalidCustomParamSpecError(ValueError):
-    """Error indicating that the defined custom parameter Spec is invalid,
-    with a list of error messages explaining why the spec is invalid"""
+    """Error indicating that the defined custom parameter Spec is invalid, with a list of error
+    messages explaining why the spec is invalid."""
 
 
 class InvalidCustomParamValueError(ValueError):
-    """Error indicating that the defined custom parameter value does not match
-    the associated Spec, with a list of error messages explaining why."""
+    """Error indicating that the defined custom parameter value does not match the associated Spec,
+    with a list of error messages explaining why."""
 
     def __init__(self, proto_error: CustomParamError):
         self.proto_error = proto_error
 
 
 def validate_dict_spec(dict_spec: DictParam.Spec) -> None:
-    """
-    Checks that a DictParam.Spec is valid
+    """Checks that a DictParam.Spec is valid.
 
     Args:
         dict_spec (service_customization_pb2.DictParam.Spec): Spec to be validated
@@ -47,8 +55,8 @@ def validate_dict_spec(dict_spec: DictParam.Spec) -> None:
 
 def create_value_validator(
         dict_spec: DictParam.Spec) -> Callable[[DictParam], Optional[CustomParamError]]:
-    """
-    Checks if the DictParam.Spec is value and if so, returns a function that can be used to validate any DictParam value
+    """Checks if the DictParam.Spec is value and if so, returns a function that can be used to
+    validate any DictParam value.
 
     Args:
         dict_spec (service_customization_pb2.DictParam.Spec): Spec to be validated and validate values against
@@ -161,14 +169,14 @@ def check_types_match(param, proto_type):
 
 
 class _ParamValidatorInterface(ABC):
-    """ Class providing a common structure and interface to validate parameter types.
+    """Class providing a common structure and interface to validate parameter types.
 
-        Specifically, a <Type>ParamValidator class can be used to validate a service_customization_pb2.<Type>Param.Spec
-        via a validate_spec function with a consistent signature, and can validate a service_customization_pb2.<Type>Param
-        against a specific Spec via a validate_value function
+    Specifically, a <Type>ParamValidator class can be used to validate a service_customization_pb2.<Type>Param.Spec
+    via a validate_spec function with a consistent signature, and can validate a service_customization_pb2.<Type>Param
+    against a specific Spec via a validate_value function
 
-        Args:
-            param_spec (service_customization_pb2.<Type>Param.Spec): A Spec message for a type of custom parameter
+    Args:
+        param_spec (service_customization_pb2.<Type>Param.Spec): A Spec message for a type of custom parameter
     """
 
     @abstractmethod
@@ -177,8 +185,7 @@ class _ParamValidatorInterface(ABC):
 
     @abstractmethod
     def validate_spec(self) -> None:
-        """
-        Checks if the parameter Spec is valid for its type
+        """Checks if the parameter Spec is valid for its type.
 
         Returns:
             None for a valid spec, and raises a CustomParamError with a status besides STATUS_OK for an invalid spec
@@ -186,8 +193,7 @@ class _ParamValidatorInterface(ABC):
 
     @abstractmethod
     def validate_value(self, param_value) -> Optional[CustomParamError]:
-        """
-        Checks if a parameter value is valid for this class's self.param_spec
+        """Checks if a parameter value is valid for this class's self.param_spec.
 
         Args:
             param_value (service_customization.<Type>Param): A custom parameter value to validate against self.param_spec
@@ -198,8 +204,7 @@ class _ParamValidatorInterface(ABC):
 
 
 class _DictParamValidator(_ParamValidatorInterface):
-    """
-    ParamValidator class for a service_customization_pb2.DictParam.Spec
+    """ParamValidator class for a service_customization_pb2.DictParam.Spec.
 
     Args:
         param_spec (service_customization_pb2.DictParam.Spec): The DictParam Spec this helper instance is being used for
@@ -222,8 +227,7 @@ class _DictParamValidator(_ParamValidatorInterface):
             raise InvalidCustomParamSpecError(error_list)
 
     def validate_value(self, param_value):
-        """
-        Checks if a parameter value is valid for this class's self.param_spec
+        """Checks if a parameter value is valid for this class's self.param_spec.
 
         Args:
             param_value (service_customization.DictParam): A custom parameter value to validate against self.param_spec
@@ -257,8 +261,7 @@ class _DictParamValidator(_ParamValidatorInterface):
 
 
 class _NumericalParamValidator(_ParamValidatorInterface):
-    """
-    Generic ParamValidator class for shared logic between numerical Param Specs
+    """Generic ParamValidator class for shared logic between numerical Param Specs.
 
     Args:
         param_spec (service_customization_pb2.<Numerical>Param.Spec): The Numerical Spec this helper instance is being used for
@@ -302,8 +305,7 @@ class _NumericalParamValidator(_ParamValidatorInterface):
 
 
 class _Int64ParamValidator(_NumericalParamValidator):
-    """
-    ParamValidator class for a service_customization_pb2.Int64Param.Spec
+    """ParamValidator class for a service_customization_pb2.Int64Param.Spec.
 
     Args:
         param_spec (service_customization_pb2.Int64Param.Spec): The Int64Param Spec this helper instance is being used for
@@ -317,8 +319,7 @@ class _Int64ParamValidator(_NumericalParamValidator):
 
 
 class _DoubleParamValidator(_NumericalParamValidator):
-    """
-    ParamValidator class for a service_customization_pb2.DoubleParam.Spec
+    """ParamValidator class for a service_customization_pb2.DoubleParam.Spec.
 
     Args:
         param_spec (service_customization_pb2.DoubleParam.Spec): The DoubleParam Spec this helper instance is being used for
@@ -331,8 +332,7 @@ class _DoubleParamValidator(_NumericalParamValidator):
 
 
 class _StringParamValidator(_ParamValidatorInterface):
-    """
-    ParamValidator class for a service_customization_pb2.StringParam.Spec
+    """ParamValidator class for a service_customization_pb2.StringParam.Spec.
 
     Args:
         param_spec (service_customization_pb2.StringParam.Spec): The StringParam Spec this helper instance is being used for
@@ -365,8 +365,7 @@ class _StringParamValidator(_ParamValidatorInterface):
 
 
 class _BoolParamValidator(_ParamValidatorInterface):
-    """
-    ParamValidator class for a service_customization_pb2.BoolParam.Spec
+    """ParamValidator class for a service_customization_pb2.BoolParam.Spec.
 
     Args:
         param_spec (service_customization_pb2.BoolParam.Spec): The BoolParam Spec this helper instance is being used for
@@ -387,8 +386,7 @@ class _BoolParamValidator(_ParamValidatorInterface):
 
 
 class _RegionOfInterestParamValidator(_ParamValidatorInterface):
-    """
-    ParamValidator class for a service_customization_pb2.RegionOfInterestParam.Spec
+    """ParamValidator class for a service_customization_pb2.RegionOfInterestParam.Spec.
 
     Args:
         param_spec (service_customization_pb2.RegionOfInterestParam.Spec): The RegionOfInterestParam Spec this helper instance is being used for
@@ -435,8 +433,7 @@ class _RegionOfInterestParamValidator(_ParamValidatorInterface):
 
 
 class _ListParamValidator(_ParamValidatorInterface):
-    """
-    ParamValidator class for a service_customization_pb2.ListParam.Spec
+    """ParamValidator class for a service_customization_pb2.ListParam.Spec.
 
     Args:
         param_spec (service_customization_pb2.ListParam.Spec): The ListParam Spec this helper instance is being used for
@@ -514,8 +511,7 @@ class _ListParamValidator(_ParamValidatorInterface):
 
 
 class _OneOfParamValidator(_ParamValidatorInterface):
-    """
-    ParamValidator class for a service_customization_pb2.OneOfInterestParam.Spec
+    """ParamValidator class for a service_customization_pb2.OneOfInterestParam.Spec.
 
     Args:
         param_spec (service_customization_pb2.OneOfInterestParam.Spec): The OneOfInterestParam Spec this helper instance is being used for
@@ -566,8 +562,7 @@ class _OneOfParamValidator(_ParamValidatorInterface):
 
 
 class _CustomParamValidator(_ParamValidatorInterface):
-    """
-    ParamValidator class for a service_customization_pb2.CustomParam.Spec
+    """ParamValidator class for a service_customization_pb2.CustomParam.Spec.
 
     Args:
         param_spec (service_customization_pb2.CustomParam.Spec): The CustomParam Spec this helper instance is being used for
@@ -588,9 +583,8 @@ class _CustomParamValidator(_ParamValidatorInterface):
         self.sub_param_helper = self.get_param_helper()
 
     def get_param_helper(self):
-        """
-        Returns the ParamValidator instance for the defined OneOf spec in self.param_spec (a service_customization_pb2.CustomParam.Spec)
-        """
+        """Returns the ParamValidator instance for the defined OneOf spec in self.param_spec (a
+        service_customization_pb2.CustomParam.Spec)"""
         field_name = self.param_spec.WhichOneof('spec')
         return self.custom_param_dict[field_name](getattr(self.param_spec, field_name))
 
@@ -603,9 +597,8 @@ class _CustomParamValidator(_ParamValidatorInterface):
 
 
 def _nested_error_message_helper(child_name, child_error_messages):
-    """
-    Simple internal string helper function to take a list of errors from a child and return a list of errors
-    for the parent, with each error specifying which child it came from.
+    """Simple internal string helper function to take a list of errors from a child and return a
+    list of errors for the parent, with each error specifying which child it came from.
 
     Args:
         child_name (string): The human-readable name of the child parameter in the parent's context.
@@ -630,8 +623,8 @@ def _nested_error_message_helper(child_name, child_error_messages):
 
 
 def custom_spec_to_default(spec):
-    """
-    Create a default service_customization_pb2.CustomParam based off of the service_customization_pb2.CustomParam.Spec argument
+    """Create a default service_customization_pb2.CustomParam based off of the
+    service_customization_pb2.CustomParam.Spec argument.
 
     Args:
         spec (service_customization_pb2.CustomParam.Spec): spec to which the parameter should be defaulted
@@ -646,27 +639,26 @@ def custom_spec_to_default(spec):
 
     if which_spec == 'dict_spec':
         return CustomParam(dict_value=param_value)
-    elif which_spec == 'list_spec':
+    if which_spec == 'list_spec':
         return CustomParam(list_value=param_value)
-    elif which_spec == 'int_spec':
+    if which_spec == 'int_spec':
         return CustomParam(int_value=param_value)
-    elif which_spec == 'double_spec':
+    if which_spec == 'double_spec':
         return CustomParam(double_value=param_value)
-    elif which_spec == 'string_spec':
+    if which_spec == 'string_spec':
         return CustomParam(string_value=param_value)
-    elif which_spec == 'roi_spec':
+    if which_spec == 'roi_spec':
         return CustomParam(roi_value=param_value)
-    elif which_spec == 'bool_spec':
+    if which_spec == 'bool_spec':
         return CustomParam(bool_value=param_value)
-    elif which_spec == 'one_of_spec':
+    if which_spec == 'one_of_spec':
         return CustomParam(one_of_value=param_value)
-    else:
-        return None
+    return None
 
 
 def dict_spec_to_default(spec):
-    """
-    Create a default service_customization_pb2.DictParam based off of the service_customization_pb2.DictParam.Spec argument.
+    """Create a default service_customization_pb2.DictParam based off of the
+    service_customization_pb2.DictParam.Spec argument.
 
     Args:
         spec (service_customization_pb2.DictParam.Spec): spec to which the parameter should be defaulted
@@ -680,8 +672,8 @@ def dict_spec_to_default(spec):
 
 
 def list_spec_to_default(spec):
-    """
-    Create a default service_customization_pb2.ListParam based off of the service_customization_pb2.ListParam.Spec argument
+    """Create a default service_customization_pb2.ListParam based off of the
+    service_customization_pb2.ListParam.Spec argument.
 
     Args:
         spec (service_customization_pb2.ListParam.Spec): spec to which the parameter should be defaulted
@@ -696,8 +688,8 @@ def list_spec_to_default(spec):
 
 
 def int_spec_to_default(spec):
-    """
-    Create a default service_customization_pb2.IntParam based off of the service_customization_pb2.IntParam.Spec argument
+    """Create a default service_customization_pb2.IntParam based off of the
+    service_customization_pb2.IntParam.Spec argument.
 
     Args:
         spec (service_customization_pb2.IntParam.Spec): spec to which the parameter should be defaulted
@@ -715,8 +707,8 @@ def int_spec_to_default(spec):
 
 
 def double_spec_to_default(spec):
-    """
-    Create a default service_customization_pb2.DoubleParam based off of the service_customization_pb2.DoubleParam.Spec argument
+    """Create a default service_customization_pb2.DoubleParam based off of the
+    service_customization_pb2.DoubleParam.Spec argument.
 
     Args:
         spec (service_customization_pb2.DoubleParam.Spec): spec to which the parameter should be defaulted
@@ -734,8 +726,8 @@ def double_spec_to_default(spec):
 
 
 def string_spec_to_default(spec):
-    """
-    Create a default service_customization_pb2.StringParam based off of the service_customization_pb2.StringParam.Spec argument
+    """Create a default service_customization_pb2.StringParam based off of the
+    service_customization_pb2.StringParam.Spec argument.
 
     Args:
         spec (service_customization_pb2.StringParam.Spec): spec to which the parameter should be defaulted
@@ -751,8 +743,8 @@ def string_spec_to_default(spec):
 
 
 def roi_spec_to_default(spec):
-    """
-    Create a default service_customization_pb2.RegionOfInterestParam based off of the service_customization_pb2.RegionOfInterestParam.Spec argument
+    """Create a default service_customization_pb2.RegionOfInterestParam based off of the
+    service_customization_pb2.RegionOfInterestParam.Spec argument.
 
     Args:
         spec (service_customization_pb2.RegionOfInterestParam.Spec): spec to which the parameter should be defaulted
@@ -768,8 +760,8 @@ def roi_spec_to_default(spec):
 
 
 def bool_spec_to_default(spec):
-    """
-    Create a default service_customization_pb2.BoolParam based off of the service_customization_pb2.BoolParam.Spec argument
+    """Create a default service_customization_pb2.BoolParam based off of the
+    service_customization_pb2.BoolParam.Spec argument.
 
     Args:
         spec (service_customization_pb2.BoolParam.Spec): spec to which the parameter should be defaulted
@@ -780,8 +772,8 @@ def bool_spec_to_default(spec):
 
 
 def one_of_spec_to_default(spec):
-    """
-    Create a default service_customization_pb2.OneOfParam based off of the service_customization_pb2.OneOfParam.Spec argument
+    """Create a default service_customization_pb2.OneOfParam based off of the
+    service_customization_pb2.OneOfParam.Spec argument.
 
     Args:
         spec (service_customization_pb2.OneOfParam.Spec): spec to which the parameter should be defaulted
@@ -798,8 +790,8 @@ def one_of_spec_to_default(spec):
 
 
 def dict_param_coerce_to(param, spec):
-    """
-    Coerce a service_customization_pb2.DictParam based off of the spec passed in. The parameter is modified in-place.
+    """Coerce a service_customization_pb2.DictParam based off of the spec passed in. The parameter
+    is modified in-place.
 
     Args:
         param (service_customization_pb2.DictParam): parameter that requires coercing
@@ -828,8 +820,8 @@ def dict_param_coerce_to(param, spec):
 
 
 def list_param_coerce_to(param, spec):
-    """
-    Coerce a service_customization_pb2.ListParam based off of the spec passed in. The parameter is modified in-place.
+    """Coerce a service_customization_pb2.ListParam based off of the spec passed in. The parameter
+    is modified in-place.
 
     Args:
         param (service_customization_pb2.ListParam): parameter that requires coercing
@@ -857,8 +849,8 @@ def list_param_coerce_to(param, spec):
 
 
 def int_param_coerce_to(param, spec):
-    """
-    Coerce a service_customization_pb2.IntParam based off of the spec passed in. The parameter is modified in-place.
+    """Coerce a service_customization_pb2.IntParam based off of the spec passed in. The parameter is
+    modified in-place.
 
     Args:
         param (service_customization_pb2.IntParam): parameter that requires coercing
@@ -878,8 +870,8 @@ def int_param_coerce_to(param, spec):
 
 
 def double_param_coerce_to(param, spec):
-    """
-    Coerce a service_customization_pb2.CustomParam based off of the spec passed in. The parameter is modified in-place.
+    """Coerce a service_customization_pb2.CustomParam based off of the spec passed in. The parameter
+    is modified in-place.
 
     Args:
         param (service_customization_pb2.DoubleParam): parameter that requires coercing
@@ -899,8 +891,8 @@ def double_param_coerce_to(param, spec):
 
 
 def string_param_coerce_to(param, spec):
-    """
-    Coerce a service_customization_pb2.StringParam based off of the spec passed in. The parameter is modified in-place.
+    """Coerce a service_customization_pb2.StringParam based off of the spec passed in. The parameter
+    is modified in-place.
 
     Args:
         param (service_customization_pb2.StringParam): parameter that requires coercing
@@ -918,9 +910,8 @@ def string_param_coerce_to(param, spec):
 
 
 def roi_param_coerce_to(param, spec):
-    """
-    Coercion is tricky with ROI parameters due to the fact that there is no standard frame size. ROI parameter is not
-    modified in place; rather, a boolean value is returned.
+    """Coercion is tricky with ROI parameters due to the fact that there is no standard frame size.
+    ROI parameter is not modified in place; rather, a boolean value is returned.
 
     Args:
         param (service_customization_pb2.RegionOfInterestParam): parameter that requires coercing
@@ -935,8 +926,8 @@ def roi_param_coerce_to(param, spec):
 
 
 def one_of_param_coerce_to(param, spec):
-    """
-    Coerce a service_customization_pb2.OneOfParam based off of the spec passed in. The parameter is modified in-place.
+    """Coerce a service_customization_pb2.OneOfParam based off of the spec passed in. The parameter
+    is modified in-place.
 
     Args:
         param (service_customization_pb2.OneOfParam): parameter that requires coercing
@@ -982,8 +973,8 @@ _SPEC_VALUES = {
 
 
 def custom_param_coerce_to(param, spec):
-    """
-    Coerce a service_customization_pb2.CustomParam based off of the spec passed in. The parameter is modified in-place.
+    """Coerce a service_customization_pb2.CustomParam based off of the spec passed in. The parameter
+    is modified in-place.
 
     Args:
         param (service_customization_pb2.CustomParam): parameter that requires coercing
@@ -1012,8 +1003,7 @@ def make_custom_param_spec(
     spec: Union[DictParam.Spec, ListParam.Spec, Int64Param.Spec, DoubleParam.Spec, StringParam.Spec,
                 RegionOfInterestParam.Spec, BoolParam.Spec, OneOfParam.Spec]
 ) -> CustomParam.Spec:
-    """
-    Helper function to create a CustomParam.Spec
+    """Helper function to create a CustomParam.Spec.
 
     Args:
          spec: spec to be wrapped by a CustomParam.Spec
@@ -1042,8 +1032,7 @@ def make_dict_child_spec(param_spec: Union[DictParam.Spec, ListParam.Spec, Int64
                                            RegionOfInterestParam.Spec, BoolParam.Spec,
                                            OneOfParam.Spec],
                          ui_info: Optional[UserInterfaceInfo] = None) -> DictParam.ChildSpec:
-    """
-    Helper function to create a DictParam.ChildSpec
+    """Helper function to create a DictParam.ChildSpec.
 
     Args:
          param_spec: spec for DictParam.ChildSpec that is converted into a CustomParam.Spec when forming the ChildSpec
@@ -1054,8 +1043,7 @@ def make_dict_child_spec(param_spec: Union[DictParam.Spec, ListParam.Spec, Int64
 
 def make_dict_param_spec(specs: Dict[str, DictParam.ChildSpec],
                          is_hidden_by_default: bool) -> DictParam.Spec:
-    """
-    Helper function to create a DictParam.Spec
+    """Helper function to create a DictParam.Spec.
 
     Args:
          specs: specs contained by the DictParam
@@ -1066,8 +1054,7 @@ def make_dict_param_spec(specs: Dict[str, DictParam.ChildSpec],
 
 def make_one_of_child_spec(dict_param_spec: DictParam.Spec,
                            ui_info: Optional[UserInterfaceInfo] = None) -> OneOfParam.ChildSpec:
-    """
-    Helper function to create a OneOfParam.ChildSpec
+    """Helper function to create a OneOfParam.ChildSpec.
 
     Args:
          dict_param_spec: spec for OneOfParam.ChildSpec
@@ -1078,8 +1065,7 @@ def make_one_of_child_spec(dict_param_spec: DictParam.Spec,
 
 def make_one_of_param_spec(specs: Dict[str, OneOfParam.ChildSpec],
                            default_key: Optional[str] = None) -> OneOfParam.Spec:
-    """
-    Helper function to create a OneOfParam.Spec
+    """Helper function to create a OneOfParam.Spec.
 
     Args:
          specs: specs contained by the OneOfParam
@@ -1090,8 +1076,7 @@ def make_one_of_param_spec(specs: Dict[str, OneOfParam.ChildSpec],
 
 def make_list_param_spec(element_spec: CustomParam.Spec, min_number_of_values: Optional[int] = None,
                          max_number_of_values: Optional[int] = None) -> ListParam.Spec:
-    """
-    Helper function to create a ListParam.Spec
+    """Helper function to create a ListParam.Spec.
 
     Args:
          element_spec: spec for each element of the list
@@ -1109,8 +1094,7 @@ def make_list_param_spec(element_spec: CustomParam.Spec, min_number_of_values: O
 def make_int64_param_spec(default_value: Optional[int] = None, units: Optional[Units] = None,
                           min_value: Optional[int] = None,
                           max_value: Optional[int] = None) -> Int64Param.Spec:
-    """
-    Helper function to create an Int64Param.Spec
+    """Helper function to create an Int64Param.Spec.
 
     Args:
          default_value: starting value for Int64Param
@@ -1131,8 +1115,7 @@ def make_int64_param_spec(default_value: Optional[int] = None, units: Optional[U
 def make_double_param_spec(default_value: Optional[float] = None, units: Optional[Units] = None,
                            min_value: Optional[float] = None,
                            max_value: Optional[float] = None) -> DoubleParam.Spec:
-    """
-    Helper function to create a DoubleParam.Spec
+    """Helper function to create a DoubleParam.Spec.
 
     Args:
          default_value: starting value for DoubleParam
@@ -1152,8 +1135,7 @@ def make_double_param_spec(default_value: Optional[float] = None, units: Optiona
 
 def make_string_param_spec(options: Optional[List[str]] = None, editable: Optional[bool] = None,
                            default_value: Optional[str] = None) -> StringParam.Spec:
-    """
-    Helper function to create a StringParam.Spec
+    """Helper function to create a StringParam.Spec.
 
     Args:
          options: predetermined options the StringParam may be
@@ -1164,8 +1146,7 @@ def make_string_param_spec(options: Optional[List[str]] = None, editable: Option
 
 
 def make_bool_param_spec(default_value: Optional[bool] = None) -> BoolParam.Spec:
-    """
-    Helper function to create an BoolParam.Spec
+    """Helper function to create an BoolParam.Spec.
 
     Args:
          default_value: starting value for BoolParam
@@ -1180,8 +1161,7 @@ def make_region_of_interest_param_spec(service_and_source: Optional[
     RegionOfInterestParam.ServiceAndSource] = None, default_area: Optional[AreaI] = None,
                                        allows_rectangle: bool = False,
                                        allows_polygon: bool = False) -> RegionOfInterestParam.Spec:
-    """
-    Helper function to create a RegionOfInterestParam.Spec
+    """Helper function to create a RegionOfInterestParam.Spec.
 
     Args:
          service_and_source: service and source to which the RegionOfInterestParam should adhere
@@ -1199,8 +1179,7 @@ def make_region_of_interest_param_spec(service_and_source: Optional[
 
 def make_user_interface_info(display_name: Optional[str] = None, description: Optional[str] = None,
                              display_order: Optional[int] = None) -> UserInterfaceInfo:
-    """
-    Helper function to create UserInterfaceInfo
+    """Helper function to create UserInterfaceInfo.
 
     Args:
          display_name: human-readable name displayed by the UI
@@ -1219,8 +1198,7 @@ def make_user_interface_info(display_name: Optional[str] = None, description: Op
 
 def make_roi_service_and_source(service: str,
                                 source: str) -> RegionOfInterestParam.ServiceAndSource:
-    """
-    Helper function to create a RegionOfInterestParam.ServiceAndSource
+    """Helper function to create a RegionOfInterestParam.ServiceAndSource.
 
     Args:
          service: the ImageService providing the image

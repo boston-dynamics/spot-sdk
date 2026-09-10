@@ -7,8 +7,10 @@
 # pylint: disable=missing-module-docstring
 from bosdyn.api.graph_nav import area_callback_service_pb2_grpc
 from bosdyn.client.area_callback_service_servicer import AreaCallbackServiceServicer
-from bosdyn.client.directory_registration import (DirectoryRegistrationClient,
-                                                  DirectoryRegistrationKeepAlive)
+from bosdyn.client.directory_registration import (
+    DirectoryRegistrationClient,
+    DirectoryRegistrationKeepAlive,
+)
 from bosdyn.client.robot import Robot
 from bosdyn.client.server_util import GrpcServiceRunner
 

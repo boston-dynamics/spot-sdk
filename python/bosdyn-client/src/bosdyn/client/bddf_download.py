@@ -12,8 +12,13 @@ import sys
 from urllib.parse import urlencode
 from urllib.request import Request, urlopen
 
-from bosdyn.client.time_sync import (NotEstablishedError, TimeSyncClient, TimeSyncEndpoint,
-                                     robot_time_range_from_nanoseconds, timespec_to_robot_timespan)
+from bosdyn.client.time_sync import (
+    NotEstablishedError,
+    TimeSyncClient,
+    TimeSyncEndpoint,
+    robot_time_range_from_nanoseconds,
+    timespec_to_robot_timespan,
+)
 from bosdyn.util import TIME_FORMAT_DESC
 
 LOGGER = logging.getLogger()
@@ -67,8 +72,7 @@ def _request_timespan_from_nanoseconds(start_nsec, end_nsec, time_sync_endpoint)
 def download_data(  # pylint: disable=too-many-arguments,too-many-locals
         robot, hostname, start_nsec=None, end_nsec=None, timespan_spec=None, output_filename=None,
         robot_time=False, channel=None, message_type=None, grpc_service=None, show_progress=False):
-    """
-    Download data from robot in bddf format
+    """Download data from robot in bddf format.
 
     Args:
       robot:          API robot object
@@ -145,7 +149,7 @@ def _output_filename(response):
 
 
 def main():
-    """Command-line interface"""
+    """Command-line interface."""
     # pylint: disable=import-outside-toplevel
     import argparse
 

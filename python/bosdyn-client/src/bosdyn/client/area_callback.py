@@ -7,9 +7,16 @@
 import collections
 
 from bosdyn.api.graph_nav import area_callback_pb2, area_callback_service_pb2_grpc
-from bosdyn.client.common import (BaseClient, common_header_errors, error_factory, error_pair,
-                                  handle_common_header_errors, handle_custom_params_errors,
-                                  handle_lease_use_result_errors, handle_unset_status_error)
+from bosdyn.client.common import (
+    BaseClient,
+    common_header_errors,
+    error_factory,
+    error_pair,
+    handle_common_header_errors,
+    handle_custom_params_errors,
+    handle_lease_use_result_errors,
+    handle_unset_status_error,
+)
 from bosdyn.client.exceptions import LeaseUseError, ResponseError
 
 

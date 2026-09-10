@@ -17,8 +17,7 @@ from bosdyn.client.common import BaseClient, handle_common_header_errors
 
 
 class AudioClient(BaseClient):
-    """A client calling Spot CAM Audio service.
-    """
+    """A client calling Spot CAM Audio service."""
     default_service_name = 'spot-cam-audio'
     service_type = 'bosdyn.api.spot_cam.AudioService'
 
@@ -26,7 +25,7 @@ class AudioClient(BaseClient):
         super(AudioClient, self).__init__(service_pb2_grpc.AudioServiceStub)
 
     def list_sounds(self, **kwargs):
-        """Retrieve the list of available sounds"""
+        """Retrieve the list of available sounds."""
         request = audio_pb2.ListSoundsRequest()
         return self.call(self._stub.ListSounds, request, self._list_sounds_from_response,
                          self._audio_error_from_response, copy_request=False, **kwargs)
@@ -38,7 +37,7 @@ class AudioClient(BaseClient):
                                self._audio_error_from_response, copy_request=False, **kwargs)
 
     def set_volume(self, percentage, **kwargs):
-        """Set the current volume as a percentage"""
+        """Set the current volume as a percentage."""
         request = audio_pb2.SetVolumeRequest(volume=percentage)
         return self.call(self._stub.SetVolume, request, self._set_volume_from_response,
                          self._audio_error_from_response, copy_request=False, **kwargs)
@@ -50,7 +49,7 @@ class AudioClient(BaseClient):
                                self._audio_error_from_response, copy_request=False, **kwargs)
 
     def get_volume(self, **kwargs):
-        """Retrieve the current volume as a percentage"""
+        """Retrieve the current volume as a percentage."""
         request = audio_pb2.GetVolumeRequest()
         return self.call(self._stub.GetVolume, request, self._get_volume_from_response,
                          self._audio_error_from_response, copy_request=False, **kwargs)
@@ -62,7 +61,7 @@ class AudioClient(BaseClient):
                                self._audio_error_from_response, copy_request=False, **kwargs)
 
     def play_sound(self, sound, gain=None, **kwargs):
-        """Play already uploaded sound with optional volume gain multiplier"""
+        """Play already uploaded sound with optional volume gain multiplier."""
         if gain:
             fv = FloatValue()
             fv.value = gain
@@ -94,7 +93,7 @@ class AudioClient(BaseClient):
                                self._audio_error_from_response, copy_request=False, **kwargs)
 
     def load_sound(self, sound, data, max_chunk_size=1024 * 1024, **kwargs):
-        """Uploads the WAV data tagged with the specified Sound"""
+        """Uploads the WAV data tagged with the specified Sound."""
 
         def yield_requests(data):
             request = audio_pb2.LoadSoundRequest(sound=sound)
@@ -120,7 +119,7 @@ class AudioClient(BaseClient):
     #
 
     def set_audio_capture_channel(self, channel, **kwargs):
-        """Set the audio capture channel
+        """Set the audio capture channel.
 
         Args:
             channel (audio_pb2.AudioCaptureChannel): Microphone to use
@@ -136,8 +135,7 @@ class AudioClient(BaseClient):
                                self._audio_error_from_response, copy_request=False, **kwargs)
 
     def get_audio_capture_channel(self, **kwargs):
-        """Retrieve the audio capture channel (microphone)
-        """
+        """Retrieve the audio capture channel (microphone)"""
         request = audio_pb2.GetAudioCaptureChannelRequest()
         return self.call(self._stub.GetAudioCaptureChannel, request,
                          self._get_audio_capture_channel_from_response,
@@ -151,7 +149,7 @@ class AudioClient(BaseClient):
                                self._audio_error_from_response, copy_request=False, **kwargs)
 
     def set_audio_capture_gain(self, channel, gain, **kwargs):
-        """Set the audio capture gain
+        """Set the audio capture gain.
 
         Args:
             channel (audio_pb2.AudioCaptureChannel): Microphone to set gain for

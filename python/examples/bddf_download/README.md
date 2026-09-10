@@ -136,7 +136,7 @@ $ python3 ./bddf_read.py show-grpc robot-id.bddf bosdyn.api.RobotIdResponse
 
 ## GUI
 
-A graphical user interface is also available using `bddf_download_gui.py`. An additional PyQt5 dependency is required.
+A graphical user interface is also available using `bddf_download_gui.py`. An additional PyQt6 dependency is required.
 
 ```
 $ python3 -m pip install -r gui_requirements.txt

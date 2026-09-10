@@ -217,17 +217,16 @@ def main():  # pylint: disable=too-many-locals
         # Check for success status response.
         if response.status_code != 200:
             return False
+        # Calculate and write status updates.
+        number_of_bytes_processed = number_of_bytes_processed + chunk
+        total_size_of_request = total_content_length
+        if total_size_of_request == 0:
+            print(
+                f'Data is chunked. Number of megabytes processed: {number_of_bytes_processed/1e6:.0f} [MB].',
+                end='\r')
         else:
-            # Calculate and write status updates.
-            number_of_bytes_processed = number_of_bytes_processed + chunk
-            total_size_of_request = total_content_length
-            if total_size_of_request == 0:
-                print(
-                    f'Data is chunked. Number of megabytes processed: {number_of_bytes_processed/1e6:.0f} [MB].',
-                    end='\r')
-            else:
-                percentage_compete = (number_of_bytes_processed / total_size_of_request) * 100
-                print(f'Download is {percentage_compete:.2f}% complete.', end='\r')
+            percentage_compete = (number_of_bytes_processed / total_size_of_request) * 100
+            print(f'Download is {percentage_compete:.2f}% complete.', end='\r')
     print()
 
     return True

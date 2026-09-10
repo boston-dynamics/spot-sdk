@@ -4,12 +4,12 @@
 # is subject to the terms and conditions of the Boston Dynamics Software
 # Development Kit License (20191101-BDSDK-SL).
 
-import distutils.cmd
 import importlib.resources
 import os
 import sys
 
 import setuptools.command.build_py
+from setuptools import Command
 
 try:
     SDK_VERSION = os.environ['BOSDYN_SDK_VERSION']
@@ -33,7 +33,7 @@ class BuildPy(setuptools.command.build_py.build_py, object):
         super(BuildPy, self).run()
 
 
-class proto_build(distutils.cmd.Command, object):
+class proto_build(Command, object):
 
     user_options = [('build-base=', 'b', 'Directory to compile protobufs into')]
     """Compiles protobufs into pb2.py files."""
@@ -97,7 +97,7 @@ class proto_build(distutils.cmd.Command, object):
                     protoc.main(args)
 
 
-with open("README.md", "r") as fh:
+with open("README.md") as fh:
     long_description = fh.read()
 
 

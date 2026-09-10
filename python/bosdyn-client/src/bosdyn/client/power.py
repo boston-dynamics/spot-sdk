@@ -13,13 +13,30 @@ from concurrent.futures import TimeoutError
 from deprecated.sphinx import deprecated
 from google.protobuf.duration_pb2 import Duration
 
-from bosdyn.api import (basic_command_pb2, full_body_command_pb2, power_pb2, power_service_pb2_grpc,
-                        robot_command_pb2, robot_state_pb2)
-from bosdyn.client.common import (BaseClient, common_header_errors, common_license_errors,
-                                  error_factory, handle_common_header_errors,
-                                  handle_lease_use_result_errors, handle_unset_status_error)
-from bosdyn.client.exceptions import (Error, InternalServerError, LicenseError, ResponseError,
-                                      TimedOutError)
+from bosdyn.api import (
+    basic_command_pb2,
+    full_body_command_pb2,
+    power_pb2,
+    power_service_pb2_grpc,
+    robot_command_pb2,
+    robot_state_pb2,
+)
+from bosdyn.client.common import (
+    BaseClient,
+    common_header_errors,
+    common_license_errors,
+    error_factory,
+    handle_common_header_errors,
+    handle_lease_use_result_errors,
+    handle_unset_status_error,
+)
+from bosdyn.client.exceptions import (
+    Error,
+    InternalServerError,
+    LicenseError,
+    ResponseError,
+    TimedOutError,
+)
 from bosdyn.util import now_sec
 
 from .lease import add_lease_wallet_processors
@@ -628,8 +645,7 @@ def _power_command(power_client, request, timeout_sec=30, update_frequency=1.0,
     except TimedOutError as e:
         if expect_grpc_timeout:
             return
-        else:
-            raise
+        raise
     if response.status == power_pb2.STATUS_SUCCESS:
         return  # Command succeeded immediately.
 
@@ -649,8 +665,7 @@ def _power_command(power_client, request, timeout_sec=30, update_frequency=1.0,
         except TimedOutError as e:
             if expect_grpc_timeout:
                 return
-            else:
-                raise
+            raise
         except TimeoutError:
             raise CommandTimedOutError
         call_time = now_sec() - start_call_time

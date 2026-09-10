@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Map Processing &mdash; Spot 5.1.9 documentation</title>
+  <title>Map Processing &mdash; Spot 5.2.0 documentation</title>
       <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../../../_static/style.css" type="text/css" />
     <link rel="shortcut icon" href="../../../../../_static/bd-favicon.png"/>
@@ -38,7 +38,7 @@
               <img src="../../../../../_static/bd-official-white.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                5.1.9
+                5.2.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
@@ -205,7 +205,8 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/world_object_mutations/README.html">World Object Mutations</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/visualizer/README.html">Visualizer</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/gripper_camera_params/README.html">Gripper Camera Parameters</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../../examples/spot_cam/README.html">Spot CAM</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/spot_cam/README.html">Spot CAM Services</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/spot_cam/README.html#spot-cam-video-core-io-extension-example">Spot Cam Video Core IO Extension Example</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/stitch_front_images/README.html">Stitch Front Images</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/get_depth_plus_visual_image/README.html">Project Depth Data on Visual Images</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/service_customization/custom_parameter_image_server/README.html">Custom Parameter Image Server</a></li>
@@ -249,6 +250,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/graph_nav_command_line/README.html">GraphNav and Recording Service Command Line Interfaces</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/graph_nav_command_line/README.html#example-programs">Example Programs</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/graph_nav_extract_point_cloud/README.html">Graph Nav Extract Point Cloud</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/graph_nav_map_to_usd/README.html">Graph Nav Map to USD</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/graph_nav_view_map/README.html">Graph Nav View Map</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/graph_nav_view_gps/README.html">Graph Nav View GPS Data</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/get_mission_state/README.html">Get Mission State</a></li>
@@ -269,7 +271,8 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../examples/docs/joint_control_examples.html">Joint Control API Examples</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../examples/docs/orbit.html">Orbit</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../../../examples/orbit/hello_orbit/README.html">Hello Orbit</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/orbit/hello_orbit/README.html">Hello Orbit (v0, OrbitClient)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/orbit/orbit_v1_api/README.html">Orbit v1 API (v1, raw HTTP)</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/orbit/export_run_archives/README.html">Export Run Archives</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/orbit/export_site_walk_archives/README.html">Export Sitewalk Archives</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/orbit/anomalies/README.html">Anomalies</a></li>
@@ -324,6 +327,8 @@
 <li class="toctree-l4"><a class="reference internal" href="fault.html">Fault</a></li>
 <li class="toctree-l4"><a class="reference internal" href="frame_helpers.html">Frame Helpers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="graph_nav.html">Graph Nav</a></li>
+<li class="toctree-l4"><a class="reference internal" href="graph_nav_download.html">Graph Nav Download</a></li>
+<li class="toctree-l4"><a class="reference internal" href="graph_nav_upload.html">Graph Nav Upload</a></li>
 <li class="toctree-l4"><a class="reference internal" href="gripper_camera_param.html">Gripper Camera Params</a></li>
 <li class="toctree-l4"><a class="reference internal" href="gps/README.html">GPS</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="gps/aggregator_client.html">Aggregator Client</a></li>
@@ -548,7 +553,8 @@
 <dt class="sig sig-object py" id="bosdyn.client.map_processing.InvalidGraphError">
 <em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bosdyn.client.map_processing.</span></span><span class="sig-name descname"><span class="pre">InvalidGraphError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">response</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">error_message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/map_processing.html#InvalidGraphError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.map_processing.InvalidGraphError" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#bosdyn.client.map_processing.MapProcessingServiceResponseError" title="bosdyn.client.map_processing.MapProcessingServiceResponseError"><code class="xref py py-class docutils literal notranslate"><span class="pre">MapProcessingServiceResponseError</span></code></a></p>
-<p>The graph is invalid topologically, for example containing missing waypoints referenced by edges.</p>
+<p>The graph is invalid topologically, for example containing missing waypoints referenced by
+edges.</p>
 </dd></dl>
 
 <dl class="py exception">
@@ -576,14 +582,16 @@
 <dt class="sig sig-object py" id="bosdyn.client.map_processing.InvalidHintsError">
 <em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bosdyn.client.map_processing.</span></span><span class="sig-name descname"><span class="pre">InvalidHintsError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">response</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">error_message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/map_processing.html#InvalidHintsError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.map_processing.InvalidHintsError" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#bosdyn.client.map_processing.MapProcessingServiceResponseError" title="bosdyn.client.map_processing.MapProcessingServiceResponseError"><code class="xref py py-class docutils literal notranslate"><span class="pre">MapProcessingServiceResponseError</span></code></a></p>
-<p>One or more of the hints passed in to the optimizer are invalid (do not correspond to real waypoints or objects).</p>
+<p>One or more of the hints passed in to the optimizer are invalid (do not correspond to real
+waypoints or objects).</p>
 </dd></dl>
 
 <dl class="py exception">
 <dt class="sig sig-object py" id="bosdyn.client.map_processing.InvalidGravityAlignmentError">
 <em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bosdyn.client.map_processing.</span></span><span class="sig-name descname"><span class="pre">InvalidGravityAlignmentError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">response</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">error_message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/map_processing.html#InvalidGravityAlignmentError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.map_processing.InvalidGravityAlignmentError" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#bosdyn.client.map_processing.MapProcessingServiceResponseError" title="bosdyn.client.map_processing.MapProcessingServiceResponseError"><code class="xref py py-class docutils literal notranslate"><span class="pre">MapProcessingServiceResponseError</span></code></a></p>
-<p>One or more anchoring hints disagrees with gravity. Ensure the orientation of any hints is correct.</p>
+<p>One or more anchoring hints disagrees with gravity.</p>
+<p>Ensure the orientation of any hints is correct.</p>
 </dd></dl>
 
 <dl class="py exception">
@@ -597,7 +605,8 @@
 <dt class="sig sig-object py" id="bosdyn.client.map_processing.MapModifiedError">
 <em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bosdyn.client.map_processing.</span></span><span class="sig-name descname"><span class="pre">MapModifiedError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">response</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">error_message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/map_processing.html#MapModifiedError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.map_processing.MapModifiedError" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#bosdyn.client.map_processing.MapProcessingServiceResponseError" title="bosdyn.client.map_processing.MapProcessingServiceResponseError"><code class="xref py py-class docutils literal notranslate"><span class="pre">MapProcessingServiceResponseError</span></code></a></p>
-<p>The map was modified on the server by another client during processing. Please try again.</p>
+<p>The map was modified on the server by another client during processing.</p>
+<p>Please try again.</p>
 </dd></dl>
 
 <dl class="py class">
@@ -618,10 +627,8 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="bosdyn.client.map_processing.MapProcessingServiceClient.process_topology">
 <span class="sig-name descname"><span class="pre">process_topology</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">params</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modify_map_on_server</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/map_processing.html#MapProcessingServiceClient.process_topology"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.map_processing.MapProcessingServiceClient.process_topology" title="Permalink to this definition"></a></dt>
-<dd><dl class="simple">
-<dt>Process the topology of the map on the server, closing loops and producing a</dt><dd><p>consistent topology.</p>
-</dd>
-</dl>
+<dd><p>Process the topology of the map on the server, closing loops and producing a consistent
+topology.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -643,7 +650,8 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="bosdyn.client.map_processing.MapProcessingServiceClient.process_anchoring">
 <span class="sig-name descname"><span class="pre">process_anchoring</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">params</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modify_anchoring_on_server</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stream_intermediate_results</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_hint</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">apply_gps_results</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/map_processing.html#MapProcessingServiceClient.process_anchoring"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.map_processing.MapProcessingServiceClient.process_anchoring" title="Permalink to this definition"></a></dt>
-<dd><p>Process the anchoring of the map on the server, producing a metrically consistent anchoring.</p>
+<dd><p>Process the anchoring of the map on the server, producing a metrically consistent
+anchoring.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">

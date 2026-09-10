@@ -15,8 +15,7 @@ from bosdyn.client.common import BaseClient, handle_common_header_errors
 
 
 class LightingClient(BaseClient):
-    """A client calling Spot CAM Lighting service.
-    """
+    """A client calling Spot CAM Lighting service."""
     default_service_name = 'spot-cam-lighting'
     service_type = 'bosdyn.api.spot_cam.LightingService'
 

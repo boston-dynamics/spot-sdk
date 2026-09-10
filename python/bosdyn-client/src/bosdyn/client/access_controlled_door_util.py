@@ -16,8 +16,8 @@ API_TIMEOUT_DEFAULT = 30
 
 
 def file_to_json(file_path):
-    """
-    Helper to read and parse JSON files.
+    """Helper to read and parse JSON files.
+
     Args:
         file_path (Path): Path to JSON file.
     Returns:
@@ -30,8 +30,8 @@ def file_to_json(file_path):
 
 # Functions to handle api calls to access control systems
 def door_action(api_calls, door_id, action, path_to_cert=None, is_robot=True):
-    """Executes a sequence of API calls required to perform an action (e.g., open or close) on a specified door,
-    handling data substitutions and certificate verification as needed.
+    """Executes a sequence of API calls required to perform an action (e.g., open or close) on a
+    specified door, handling data substitutions and certificate verification as needed.
 
         api_calls (list of dict): List of API call specifications, where each dict contains information
             such as 'method', 'url', 'action', 'sni_hostname', 'route', 'request_data', and 'responses'.
@@ -107,7 +107,7 @@ def door_action(api_calls, door_id, action, path_to_cert=None, is_robot=True):
                     cross_call_substitutions[tag] = content
             except Exception as e:
                 print(f"API call error: couldn't read data, got exception {e}")
-                error_msg["extra_message"] = f"API call error: couldn't read data, got exception"
+                error_msg["extra_message"] = "API call error: couldn't read data, got exception"
                 break
     return error_msg
 
@@ -117,7 +117,7 @@ def door_action(api_calls, door_id, action, path_to_cert=None, is_robot=True):
 def make_access_control_system_api_call(method, url, request_data, store_responses=None,
                                         sni_hostname=None, is_robot=True, route=None):
     """Makes an HTTP request and optionally extracts specific fields from the JSON response.
-    
+
     Args:
         method (str): HTTP method to use (e.g., 'GET', 'POST')
         url (str): The endpoint URL for the API call
@@ -192,8 +192,10 @@ def make_access_control_system_api_call(method, url, request_data, store_respons
 
 
 def get_value_by_path(data_json, path_to_info):
-    """Takes in a json representing the data of a call response, and a string representing the 
-        path through the json to the desired data. Traverses the json and returns the data.      
+    """Takes in a json representing the data of a call response, and a string representing the path
+    through the json to the desired data.
+
+    Traverses the json and returns the data.
     """
     keys = path_to_info.split('.')
     result = data_json
@@ -202,5 +204,4 @@ def get_value_by_path(data_json, path_to_info):
         result = result.get(key, None)
     if result is not None:
         return result
-    else:
-        return False
+    return False

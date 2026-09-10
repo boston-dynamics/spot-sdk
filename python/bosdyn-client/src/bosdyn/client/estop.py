@@ -20,8 +20,13 @@ from google.protobuf.duration_pb2 import Duration
 from bosdyn.api import estop_pb2, estop_service_pb2_grpc
 from bosdyn.util import now_sec
 
-from .common import (BaseClient, common_header_errors, error_factory, handle_common_header_errors,
-                     handle_unset_status_error)
+from .common import (
+    BaseClient,
+    common_header_errors,
+    error_factory,
+    handle_common_header_errors,
+    handle_unset_status_error,
+)
 from .exceptions import Error, ResponseError, RpcError, TimedOutError
 
 
@@ -222,8 +227,7 @@ class EstopClient(BaseClient):
     def _choose_check_in_err_func(suppress_incorrect):
         if suppress_incorrect:
             return _check_in_error_from_response_no_incorrect
-        else:
-            return _check_in_error_from_response
+        return _check_in_error_from_response
 
 
 class EstopEndpoint(object):
@@ -251,9 +255,9 @@ class EstopEndpoint(object):
     def __str__(self):
         if self.estop_cut_power_timeout is None:
             return '{} (timeout {:.3}s)'.format(self._name, self.estop_timeout)
-        else:
-            return '{} (timeout {:.3}s, cut_power_timeout {:.3}s)'.format(
-                self._name, self.estop_timeout, self.estop_cut_power_timeout)
+        return '{} (timeout {:.3}s, cut_power_timeout {:.3}s)'.format(self._name,
+                                                                      self.estop_timeout,
+                                                                      self.estop_cut_power_timeout)
 
     @property
     def last_set_level(self):
@@ -318,7 +322,8 @@ class EstopEndpoint(object):
         self.check_in_at_level(StopLevel.ESTOP_LEVEL_CUT, **kwargs)
 
     def settle_then_cut(self, **kwargs):
-        """Issue a SETTLE_THEN_CUT stop level. The robot will attempt to sit before cutting motor power.
+        """Issue a SETTLE_THEN_CUT stop level. The robot will attempt to sit before cutting motor
+        power.
 
         Args:
             kwargs: Passed to underlying RPC. Example: timeout=5 to cancel the RPC after 5 seconds.
@@ -421,13 +426,12 @@ class EstopEndpoint(object):
             return estop_pb2.EstopEndpoint(role=self.role, name=self._name,
                                            unique_id=self._unique_id,
                                            timeout=Duration(seconds=t_seconds, nanos=t_nanos))
-        else:
-            cpt_seconds = int(self.estop_cut_power_timeout)
-            cpt_nanos = int((self.estop_cut_power_timeout - cpt_seconds) * 1e9)
-            return estop_pb2.EstopEndpoint(
-                role=self.role, name=self._name, unique_id=self._unique_id,
-                timeout=Duration(seconds=t_seconds, nanos=t_nanos),
-                cut_power_timeout=Duration(seconds=cpt_seconds, nanos=cpt_nanos))
+        cpt_seconds = int(self.estop_cut_power_timeout)
+        cpt_nanos = int((self.estop_cut_power_timeout - cpt_seconds) * 1e9)
+        return estop_pb2.EstopEndpoint(
+            role=self.role, name=self._name, unique_id=self._unique_id,
+            timeout=Duration(seconds=t_seconds, nanos=t_nanos),
+            cut_power_timeout=Duration(seconds=cpt_seconds, nanos=cpt_nanos))
 
     def _response(self):
         """Generate a response for self._challenge."""
@@ -436,7 +440,10 @@ class EstopEndpoint(object):
 
     @property
     def unique_id(self):
-        """Return the _unique_id. Should be used as read-only."""
+        """Return the _unique_id.
+
+        Should be used as read-only.
+        """
         return self._unique_id
 
 
@@ -555,7 +562,8 @@ class EstopKeepAlive(object):
         self.logger.debug('Check-in successful')
 
     def _update_status(self, status, msg=''):
-        """Update the estop_keep_alive status by populating the queue, clearing old entries if the queue is full.
+        """Update the estop_keep_alive status by populating the queue, clearing old entries if the
+        queue is full.
 
         Note: this method is not thread safe because if called by multiple different threads it could
         create a race condition which will raise a FullQueue exception. The EstopKeepAlive only uses
@@ -617,12 +625,18 @@ class EstopKeepAlive(object):
 
     @property
     def endpoint(self):
-        """Return the _endpoint. Should be used as read-only."""
+        """Return the _endpoint.
+
+        Should be used as read-only.
+        """
         return self._endpoint
 
     @property
     def client(self):
-        """Return the _endpoint.client. Should be used as read-only."""
+        """Return the _endpoint.client.
+
+        Should be used as read-only.
+        """
         return self._endpoint.client
 
     class KeepAliveStatus(enum.Enum):
@@ -665,7 +679,7 @@ def _check_in_error_from_response(response):
 
 
 def _check_in_error_from_response_no_incorrect(resp):
-    """Return an exception based on response from EstopCheckIn RPC, ignoring incorrect chal/resp"""
+    """Return an exception based on response from EstopCheckIn RPC, ignoring incorrect chal/resp."""
     if resp.status == estop_pb2.EstopCheckInResponse.STATUS_INCORRECT_CHALLENGE_RESPONSE:
         return None
     return _check_in_error_from_response(resp)

@@ -8,21 +8,21 @@ Development Kit License (20191101-BDSDK-SL).
 
 # Autowalk Service
 
-The autowalk service is a way for API clients to specify high level autonomous behavior for Spot using the autowalk format. This service is a partial abstraction of the [mission service][missions], so it is beneficial to have an understanding of the [mission service][missions].
+The autowalk service is a way for API clients to specify high-level autonomous behavior for Spot using the autowalk format. This service is a partial abstraction of the [mission service][missions], so it is beneficial to have an understanding of the [mission service][missions].
 
 ## Terminology
 
 | Term                                                                                           | Description                                                                                                                           |
 | ---------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
 | [Mission](../../../protos/bosdyn/api/mission/nodes.proto#node)                                 | A `bosdyn.api.mission.Node` proto that fully defines a behavior tree. The structure is infinitely recursive.                          |
-| [Mission Service](../../../protos/bosdyn/api/mission/mission_service.proto#missionservice)     | A GRPC service that sits on top of the API and can compile & run a mission.                                                           |
-| Program                                                                                        | Some high level robot behavior that can either be expressed as a mission, a python script, or some other medium.                      |
+| [Mission Service](../../../protos/bosdyn/api/mission/mission_service.proto#missionservice)     | A gRPC service that sits on top of the API and can compile & run a mission.                                                           |
+| Program                                                                                        | Some high-level robot behavior that can either be expressed as a mission, a python script, or some other medium.                      |
 | [Autowalk](../../../protos/bosdyn/api/autowalk/walks.proto#walk)                               | A `bosdyn.api.autowalk.Walk` proto that fully defines a program with structure sequence { go here, do this, go there, do that, etc }. |
-| [Autowalk Service](../../../protos/bosdyn/api/autowalk/autowalk_service.proto#autowalkservice) | A GRPC service that translates an autowalk into a mission.                                                                            |
+| [Autowalk Service](../../../protos/bosdyn/api/autowalk/autowalk_service.proto#autowalkservice) | A gRPC service that translates an autowalk into a mission.                                                                            |
 
 ## How Autowalks Differs From Missions
 
-The mission service and missions sit on top of the API. There is nothing you can do with the mission service that you can’t do with a python script. The reasons to write a program using missions instead of a python script are:
+The mission service and missions sit on top of the API. There is nothing you can do with the mission service that you cannot do with a Python script. The reasons to write a program using missions instead of a Python script are:
 
 1. The program needs to be resilient to comms loss.
    - Missions are run on robot and can be run with an ~infinite end time. Clients still have to send a single PlayMission request at the start but once they do, they do not have to communicate with the robot ever again.
@@ -33,7 +33,7 @@ The mission service and missions sit on top of the API. There is nothing you can
 1. To seamlessly move a program from client to client.
    - Because missions are defined using protobufs, they are language agnostic. The proto defining a mission can be interpreted by any client.
 
-The missions that the tablet generates as part of the autowalk application handle many different failure modes using the mission service's behavior tree structure. Because of that, the corresponding behavior trees are very deep (42 layers) and very wide (1000’s of nodes). However, at their core they are very simple: go to location A, perform action 1, go to location B, perform action 2, etc. Given the complex behavior tree, suppose you would like to remove location B and action 2 from the mission. Finding the nodes that correspond to location B and action 2 would be a difficult and tedious task. Therein lies the problem. Backing out a high level understanding of what a behavior tree does is hard. This is not a new problem. Anyone familiar with programming knows that assembly code is harder to read than the C code that generated the assembly code, and that the C code is harder to read than the MATLAB code that generated the C code, even though they all express the same identical thing. Autowalk is the formalized layer above missions, and like missions it is defined using protobufs. The language layer looks like:
+The missions that the tablet generates as part of the autowalk application handle many different failure modes using the mission service's behavior tree structure. Because of that, the corresponding behavior trees are very deep (42 layers) and very wide (1000’s of nodes). However, at their core they are very simple: go to location A, perform action 1, go to location B, perform action 2, etc. Given the complex behavior tree, suppose you would like to remove location B and action 2 from the mission. Finding the nodes that correspond to location B and action 2 would be a difficult and tedious task. Therein lies the problem. Backing out a high-level understanding of what a behavior tree does is hard. This is not a new problem. Anyone familiar with programming knows that assembly code is harder to read than the C code that generated the assembly code, and that the C code is harder to read than the MATLAB code that generated the C code, even though they all express the same identical thing. Autowalk is the formalized layer above missions, and like missions it is defined using protobufs. The language layer looks like:
 
 ![Autowalk language layer][autowalklanguage]
 

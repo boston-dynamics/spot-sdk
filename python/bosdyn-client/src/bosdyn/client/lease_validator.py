@@ -87,8 +87,8 @@ class LeaseValidator:
 
     def test_and_set_active_lease(self, incoming_lease, allow_super_leases,
                                   allow_different_epoch=False):
-        """Compare an incoming lease to the latest active lease, and if it is ok then set it as
-        the latest lease.
+        """Compare an incoming lease to the latest active lease, and if it is ok then set it as the
+        latest lease.
 
         Args:
             incoming_lease(Lease object or lease_pb2.Lease): The incoming lease to test.
@@ -171,19 +171,17 @@ class LeaseValidator:
         if compare_result is Lease.CompareResult.DIFFERENT_EPOCHS:  # pylint: disable=no-else-return
             if allow_different_epoch:
                 return lease_pb2.LeaseUseResult.STATUS_OK, current_lease
-            else:
-                return lease_pb2.LeaseUseResult.STATUS_WRONG_EPOCH, current_lease
+            return lease_pb2.LeaseUseResult.STATUS_WRONG_EPOCH, current_lease
 
-        elif compare_result is Lease.CompareResult.SUPER_LEASE:
+        if compare_result is Lease.CompareResult.SUPER_LEASE:
             if allow_super_lease:  # pylint: disable=no-else-return
                 return lease_pb2.LeaseUseResult.STATUS_OK, current_lease
-            else:
-                # If super leases are not allowed, then mark this as older.
-                return lease_pb2.LeaseUseResult.STATUS_OLDER, current_lease
-        elif compare_result is Lease.CompareResult.OLDER:
+            # If super leases are not allowed, then mark this as older.
             return lease_pb2.LeaseUseResult.STATUS_OLDER, current_lease
-        elif compare_result in (Lease.CompareResult.SUB_LEASE, Lease.CompareResult.SAME,
-                                Lease.CompareResult.NEWER):
+        if compare_result is Lease.CompareResult.OLDER:
+            return lease_pb2.LeaseUseResult.STATUS_OLDER, current_lease
+        if compare_result in (Lease.CompareResult.SUB_LEASE, Lease.CompareResult.SAME,
+                              Lease.CompareResult.NEWER):
             return lease_pb2.LeaseUseResult.STATUS_OK, current_lease
 
         # We should not end up here since all compare results should be enumerated.
@@ -266,8 +264,8 @@ class LeaseValidator:
 
 
 class LeaseValidatorResponseProcessor:  # pylint: disable=too-few-public-methods
-    """LeaseValidatorResponseProcessor updates the lease validator using the
-    latest_known_lease from the response's LeaseUseResult.
+    """LeaseValidatorResponseProcessor updates the lease validator using the latest_known_lease from
+    the response's LeaseUseResult.
 
     Args:
         lease_validator (LeaseValidator): validator for a specific robot to be updated.

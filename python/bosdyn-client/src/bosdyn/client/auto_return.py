@@ -9,13 +9,18 @@
 import collections
 
 from bosdyn.api.auto_return import auto_return_pb2, auto_return_service_pb2_grpc
-from bosdyn.client.common import (BaseClient, error_factory, error_pair,
-                                  handle_common_header_errors, handle_unset_status_error)
+from bosdyn.client.common import (
+    BaseClient,
+    error_factory,
+    error_pair,
+    handle_common_header_errors,
+    handle_unset_status_error,
+)
 from bosdyn.client.exceptions import ResponseError
 
 
 class AutoReturnResponseError(ResponseError):
-    """Error in Auto Return RPC"""
+    """Error in Auto Return RPC."""
 
 
 class InvalidParameterError(AutoReturnResponseError):

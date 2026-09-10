@@ -11,8 +11,12 @@ from concurrent.futures import Future
 
 import bosdyn.client
 from bosdyn.api import audio_visual_pb2
-from bosdyn.client.audio_visual import (AudioVisualClient, BehaviorExpiredError, DoesNotExistError,
-                                        InvalidClientError)
+from bosdyn.client.audio_visual import (
+    AudioVisualClient,
+    BehaviorExpiredError,
+    DoesNotExistError,
+    InvalidClientError,
+)
 from bosdyn.util import now_sec
 
 _LOGGER = logging.getLogger(__name__)

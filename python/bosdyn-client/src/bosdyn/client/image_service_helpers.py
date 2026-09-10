@@ -14,12 +14,19 @@ from abc import ABC, abstractmethod
 
 import numpy as np
 
-from bosdyn.api import (image_pb2, image_service_pb2_grpc, service_customization_pb2,
-                        service_fault_pb2)
+from bosdyn.api import (
+    image_pb2,
+    image_service_pb2_grpc,
+    service_customization_pb2,
+    service_fault_pb2,
+)
 from bosdyn.client.data_buffer import DataBufferClient
 from bosdyn.client.exceptions import RpcError
-from bosdyn.client.fault import (FaultClient, ServiceFaultAlreadyExistsError,
-                                 ServiceFaultDoesNotExistError)
+from bosdyn.client.fault import (
+    FaultClient,
+    ServiceFaultAlreadyExistsError,
+    ServiceFaultDoesNotExistError,
+)
 from bosdyn.client.server_util import ResponseContext, populate_response_header
 from bosdyn.client.service_customization_helpers import create_value_validator
 from bosdyn.client.util import setup_logging
@@ -53,8 +60,8 @@ def convert_RGB_to_grayscale(image_data_RGB_np):
 class CameraInterface(ABC):
     """Abstract class interface for capturing and decoding images from a camera.
 
-    This interface is used by the VisualImageSource to ensure that each image source
-    has the expected capture and decoding methods with the right specification.
+    This interface is used by the VisualImageSource to ensure that each image source has the
+    expected capture and decoding methods with the right specification.
     """
 
     def __init__(self):
@@ -62,9 +69,9 @@ class CameraInterface(ABC):
 
     @abstractmethod
     def blocking_capture(self, *, custom_params=None, **kwargs):
-        """Communicates with the camera payload to collect the image data. Ensure this is threadsafe as multiple
-        threads/requests may try to call blocking_capture at the same time. A Lock (self.capture_lock) is provided
-        as a convenience to help with this.
+        """Communicates with the camera payload to collect the image data. Ensure this is threadsafe
+        as multiple threads/requests may try to call blocking_capture at the same time. A Lock
+        (self.capture_lock) is provided as a convenience to help with this.
 
         Args:
             custom_params (service_customization_pb2.DictParam): Custom parameters defined by the image source
@@ -179,9 +186,7 @@ class VisualImageSource():
             self.logger = logger
 
     def create_capture_thread(self, custom_params=None):
-        """Initialize a background thread to continuously capture images.
-
-        """
+        """Initialize a background thread to continuously capture images."""
         self.capture_thread = ImageCaptureThread(self.image_source_name, self.capture_function,
                                                  custom_params=custom_params)
         self.capture_thread.start_capturing()
@@ -325,12 +330,10 @@ class VisualImageSource():
                     # Force the printout of the last error message since the capture failed.
                     self._maybe_log_error(show_last_error=True)
                 return image, timestamp
-            else:
-                return self.capture_function(custom_params=custom_params, **capture_func_kwargs)
-        else:
-            # Call the capture function (which is wrapped with an error checker) to block and get the data.
-            # capture_function already handles pre-3.3 blocking capture compatibility
             return self.capture_function(custom_params=custom_params, **capture_func_kwargs)
+        # Call the capture function (which is wrapped with an error checker) to block and get the data.
+        # capture_function already handles pre-3.3 blocking capture compatibility
+        return self.capture_function(custom_params=custom_params, **capture_func_kwargs)
 
     def image_decode_with_error_checking(self, image_data, image_proto, image_req):
         """Decode the image data into an Image proto based on the requested format and quality.
@@ -454,8 +457,8 @@ class VisualImageSource():
 
 
 class ThreadCaptureOutput:
-    """Small struct to represent the output of an ImageCaptureThread's get_latest_captured_image
-    in a future-compatible way
+    """Small struct to represent the output of an ImageCaptureThread's get_latest_captured_image in
+    a future-compatible way.
 
     Args:
         is_valid (Boolean): Whether the latest capture uses the custom parameters and other arguments
@@ -472,8 +475,8 @@ class ThreadCaptureOutput:
 
 
 class ImageCaptureThread():
-    """Continuously query and store the last successfully captured image and its
-    associated timestamp for a single camera device.
+    """Continuously query and store the last successfully captured image and its associated
+    timestamp for a single camera device.
 
     Args:
         image_source_name(string): The image source name.
@@ -546,21 +549,22 @@ class ImageCaptureThread():
             self.has_updated_capture = True
 
     def get_latest_captured_image(self, custom_params=None, **capture_func_kwargs):
-        """Returns the last found image and timestamp in a ThreadCaptureOutput object if that
-            image uses the latest params. Otherwise returns a ThreadCaptureOutput object with
-            is_valid = False and capture/timestamp as None.
+        """Returns the last found image and timestamp in a ThreadCaptureOutput object if that image
+        uses the latest params.
+
+        Otherwise returns a ThreadCaptureOutput object with is_valid = False and capture/timestamp
+        as None.
         """
 
         with self._thread_lock:
             if (custom_params == self.custom_params and
                     capture_func_kwargs == self.capture_func_kwargs and self.has_updated_capture):
                 return ThreadCaptureOutput(True, self.last_captured_image, self.last_captured_time)
-            else:
-                self.maybe_update_thread(custom_params=custom_params, **capture_func_kwargs)
-                return ThreadCaptureOutput(False, None, None)
+            self.maybe_update_thread(custom_params=custom_params, **capture_func_kwargs)
+            return ThreadCaptureOutput(False, None, None)
 
     def _make_capture_func(self, capture_func, custom_params=None, **capture_func_kwargs):
-        """Update the capture function to use custom_params and capture_func_kwargs if it can"""
+        """Update the capture function to use custom_params and capture_func_kwargs if it can."""
 
         # capture_func is likely provided through create_capture_thread, which already does handling for pre-3.3 blocking_capture
         # Still, check for the custom_params argument to ensure we accommodate pre-3.3 direct implementations of ImageCaptureThreads
@@ -610,7 +614,6 @@ class CameraBaseImageServicer(image_service_pb2_grpc.ImageServiceServicer):
             custom image source parameters used for all of the background captures. Otherwise ignored
         log_images (bool): if true, include image request/response messages in robot logs.  This is turned off
             by default.
-
     """
 
     def __init__(self, bosdyn_sdk_robot, service_name, image_sources, logger=None,
@@ -674,7 +677,8 @@ class CameraBaseImageServicer(image_service_pb2_grpc.ImageServiceServicer):
         return response
 
     def _set_format_and_decode(self, image_data, img_proto, img_req):
-        """Calls the image_decode_with_error_checking function, which returns a (Boolean, Boolean) if the decoding succeeds."""
+        """Calls the image_decode_with_error_checking function, which returns a (Boolean, Boolean)
+        if the decoding succeeds."""
         # This function should set the image data, pixel format, image format, and transform snapshot fields.
         return self.image_sources_mapped[
             img_req.image_source_name].image_decode_with_error_checking(

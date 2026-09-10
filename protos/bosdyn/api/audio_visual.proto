@@ -393,10 +393,20 @@ message AudioVisualSystemParams {
     // The buzzer's current max volume [0, 1].
     float buzzer_max_volume = 3;
 
+    // The speaker's current max volume [0, 1].
+    float speaker_max_volume = 4;
 
     PresetColorAssociation normal_color_association = 5;
     PresetColorAssociation warning_color_association = 6;
     PresetColorAssociation danger_color_association = 7;
+
+    // Disable automatic gain control applied to incoming speaker audio. AGC is on
+    // by default; set true to turn it off.
+    bool speaker_disable_agc = 8;
+
+    // Disable noise reduction applied to incoming speaker audio. Noise reduction is
+    // on by default; set true to turn it off.
+    bool speaker_disable_nr = 9;
 }
 
 message GetSystemParamsRequest {
@@ -421,10 +431,20 @@ message SetSystemParamsRequest {
     // The new buzzer max volume value [0, 1].
     google.protobuf.FloatValue buzzer_max_volume = 4;
 
+    // The new speaker max volume value [0, 1].
+    google.protobuf.FloatValue speaker_max_volume = 5;
 
     PresetColorAssociation normal_color_association = 6;
     PresetColorAssociation warning_color_association = 7;
     PresetColorAssociation danger_color_association = 8;
+
+    // Disable automatic gain control applied to incoming speaker audio. AGC is on
+    // by default; set true to turn it off. Unset leaves the current setting unchanged.
+    google.protobuf.BoolValue speaker_disable_agc = 9;
+
+    // Disable noise reduction applied to incoming speaker audio. Noise reduction is
+    // on by default; set true to turn it off. Unset leaves the current setting unchanged.
+    google.protobuf.BoolValue speaker_disable_nr = 10;
 }
 
 message SetSystemParamsResponse {

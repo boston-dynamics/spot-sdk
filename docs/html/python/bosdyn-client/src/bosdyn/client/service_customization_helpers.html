@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Service Customization Helpers &mdash; Spot 5.1.9 documentation</title>
+  <title>Service Customization Helpers &mdash; Spot 5.2.0 documentation</title>
       <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../../../_static/style.css" type="text/css" />
     <link rel="shortcut icon" href="../../../../../_static/bd-favicon.png"/>
@@ -38,7 +38,7 @@
               <img src="../../../../../_static/bd-official-white.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                5.1.9
+                5.2.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
@@ -205,7 +205,8 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/world_object_mutations/README.html">World Object Mutations</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/visualizer/README.html">Visualizer</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/gripper_camera_params/README.html">Gripper Camera Parameters</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../../examples/spot_cam/README.html">Spot CAM</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/spot_cam/README.html">Spot CAM Services</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/spot_cam/README.html#spot-cam-video-core-io-extension-example">Spot Cam Video Core IO Extension Example</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/stitch_front_images/README.html">Stitch Front Images</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/get_depth_plus_visual_image/README.html">Project Depth Data on Visual Images</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/service_customization/custom_parameter_image_server/README.html">Custom Parameter Image Server</a></li>
@@ -249,6 +250,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/graph_nav_command_line/README.html">GraphNav and Recording Service Command Line Interfaces</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/graph_nav_command_line/README.html#example-programs">Example Programs</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/graph_nav_extract_point_cloud/README.html">Graph Nav Extract Point Cloud</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/graph_nav_map_to_usd/README.html">Graph Nav Map to USD</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/graph_nav_view_map/README.html">Graph Nav View Map</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/graph_nav_view_gps/README.html">Graph Nav View GPS Data</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/get_mission_state/README.html">Get Mission State</a></li>
@@ -269,7 +271,8 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../examples/docs/joint_control_examples.html">Joint Control API Examples</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../examples/docs/orbit.html">Orbit</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../../../examples/orbit/hello_orbit/README.html">Hello Orbit</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/orbit/hello_orbit/README.html">Hello Orbit (v0, OrbitClient)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/orbit/orbit_v1_api/README.html">Orbit v1 API (v1, raw HTTP)</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/orbit/export_run_archives/README.html">Export Run Archives</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/orbit/export_site_walk_archives/README.html">Export Sitewalk Archives</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/orbit/anomalies/README.html">Anomalies</a></li>
@@ -324,6 +327,8 @@
 <li class="toctree-l4"><a class="reference internal" href="fault.html">Fault</a></li>
 <li class="toctree-l4"><a class="reference internal" href="frame_helpers.html">Frame Helpers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="graph_nav.html">Graph Nav</a></li>
+<li class="toctree-l4"><a class="reference internal" href="graph_nav_download.html">Graph Nav Download</a></li>
+<li class="toctree-l4"><a class="reference internal" href="graph_nav_upload.html">Graph Nav Upload</a></li>
 <li class="toctree-l4"><a class="reference internal" href="gripper_camera_param.html">Gripper Camera Params</a></li>
 <li class="toctree-l4"><a class="reference internal" href="gps/README.html">GPS</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="gps/aggregator_client.html">Aggregator Client</a></li>
@@ -526,22 +531,22 @@
 <dt class="sig sig-object py" id="bosdyn.client.service_customization_helpers.InvalidCustomParamSpecError">
 <em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bosdyn.client.service_customization_helpers.</span></span><span class="sig-name descname"><span class="pre">InvalidCustomParamSpecError</span></span><a class="reference internal" href="../../../../../_modules/bosdyn/client/service_customization_helpers.html#InvalidCustomParamSpecError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.service_customization_helpers.InvalidCustomParamSpecError" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ValueError</span></code></p>
-<p>Error indicating that the defined custom parameter Spec is invalid,
-with a list of error messages explaining why the spec is invalid</p>
+<p>Error indicating that the defined custom parameter Spec is invalid, with a list of error
+messages explaining why the spec is invalid.</p>
 </dd></dl>
 
 <dl class="py exception">
 <dt class="sig sig-object py" id="bosdyn.client.service_customization_helpers.InvalidCustomParamValueError">
 <em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bosdyn.client.service_customization_helpers.</span></span><span class="sig-name descname"><span class="pre">InvalidCustomParamValueError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">proto_error</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">CustomParamError</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/service_customization_helpers.html#InvalidCustomParamValueError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.service_customization_helpers.InvalidCustomParamValueError" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ValueError</span></code></p>
-<p>Error indicating that the defined custom parameter value does not match
-the associated Spec, with a list of error messages explaining why.</p>
+<p>Error indicating that the defined custom parameter value does not match the associated Spec,
+with a list of error messages explaining why.</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="bosdyn.client.service_customization_helpers.validate_dict_spec">
 <span class="sig-prename descclassname"><span class="pre">bosdyn.client.service_customization_helpers.</span></span><span class="sig-name descname"><span class="pre">validate_dict_spec</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dict_spec</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Spec</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../../../../../_modules/bosdyn/client/service_customization_helpers.html#validate_dict_spec"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.service_customization_helpers.validate_dict_spec" title="Permalink to this definition"></a></dt>
-<dd><p>Checks that a DictParam.Spec is valid</p>
+<dd><p>Checks that a DictParam.Spec is valid.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>dict_spec</strong> (<em>service_customization_pb2.DictParam.Spec</em>) – Spec to be validated</p>
@@ -558,7 +563,8 @@ the associated Spec, with a list of error messages explaining why.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="bosdyn.client.service_customization_helpers.create_value_validator">
 <span class="sig-prename descclassname"><span class="pre">bosdyn.client.service_customization_helpers.</span></span><span class="sig-name descname"><span class="pre">create_value_validator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dict_spec</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Spec</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">DictParam</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">CustomParamError</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../../../../_modules/bosdyn/client/service_customization_helpers.html#create_value_validator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.service_customization_helpers.create_value_validator" title="Permalink to this definition"></a></dt>
-<dd><p>Checks if the DictParam.Spec is value and if so, returns a function that can be used to validate any DictParam value</p>
+<dd><p>Checks if the DictParam.Spec is value and if so, returns a function that can be used to
+validate any DictParam value.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>dict_spec</strong> (<em>service_customization_pb2.DictParam.Spec</em>) – Spec to be validated and validate values against</p>
@@ -597,7 +603,8 @@ with a status besides STATUS_OK for an invalid spec</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="bosdyn.client.service_customization_helpers.custom_spec_to_default">
 <span class="sig-prename descclassname"><span class="pre">bosdyn.client.service_customization_helpers.</span></span><span class="sig-name descname"><span class="pre">custom_spec_to_default</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spec</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/service_customization_helpers.html#custom_spec_to_default"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.service_customization_helpers.custom_spec_to_default" title="Permalink to this definition"></a></dt>
-<dd><p>Create a default service_customization_pb2.CustomParam based off of the service_customization_pb2.CustomParam.Spec argument</p>
+<dd><p>Create a default service_customization_pb2.CustomParam based off of the
+service_customization_pb2.CustomParam.Spec argument.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>spec</strong> (<em>service_customization_pb2.CustomParam.Spec</em>) – spec to which the parameter should be defaulted</p>
@@ -608,7 +615,8 @@ with a status besides STATUS_OK for an invalid spec</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="bosdyn.client.service_customization_helpers.dict_spec_to_default">
 <span class="sig-prename descclassname"><span class="pre">bosdyn.client.service_customization_helpers.</span></span><span class="sig-name descname"><span class="pre">dict_spec_to_default</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spec</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/service_customization_helpers.html#dict_spec_to_default"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.service_customization_helpers.dict_spec_to_default" title="Permalink to this definition"></a></dt>
-<dd><p>Create a default service_customization_pb2.DictParam based off of the service_customization_pb2.DictParam.Spec argument.</p>
+<dd><p>Create a default service_customization_pb2.DictParam based off of the
+service_customization_pb2.DictParam.Spec argument.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>spec</strong> (<em>service_customization_pb2.DictParam.Spec</em>) – spec to which the parameter should be defaulted</p>
@@ -619,7 +627,8 @@ with a status besides STATUS_OK for an invalid spec</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="bosdyn.client.service_customization_helpers.list_spec_to_default">
 <span class="sig-prename descclassname"><span class="pre">bosdyn.client.service_customization_helpers.</span></span><span class="sig-name descname"><span class="pre">list_spec_to_default</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spec</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/service_customization_helpers.html#list_spec_to_default"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.service_customization_helpers.list_spec_to_default" title="Permalink to this definition"></a></dt>
-<dd><p>Create a default service_customization_pb2.ListParam based off of the service_customization_pb2.ListParam.Spec argument</p>
+<dd><p>Create a default service_customization_pb2.ListParam based off of the
+service_customization_pb2.ListParam.Spec argument.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>spec</strong> (<em>service_customization_pb2.ListParam.Spec</em>) – spec to which the parameter should be defaulted</p>
@@ -630,7 +639,8 @@ with a status besides STATUS_OK for an invalid spec</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="bosdyn.client.service_customization_helpers.int_spec_to_default">
 <span class="sig-prename descclassname"><span class="pre">bosdyn.client.service_customization_helpers.</span></span><span class="sig-name descname"><span class="pre">int_spec_to_default</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spec</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/service_customization_helpers.html#int_spec_to_default"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.service_customization_helpers.int_spec_to_default" title="Permalink to this definition"></a></dt>
-<dd><p>Create a default service_customization_pb2.IntParam based off of the service_customization_pb2.IntParam.Spec argument</p>
+<dd><p>Create a default service_customization_pb2.IntParam based off of the
+service_customization_pb2.IntParam.Spec argument.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>spec</strong> (<em>service_customization_pb2.IntParam.Spec</em>) – spec to which the parameter should be defaulted</p>
@@ -641,7 +651,8 @@ with a status besides STATUS_OK for an invalid spec</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="bosdyn.client.service_customization_helpers.double_spec_to_default">
 <span class="sig-prename descclassname"><span class="pre">bosdyn.client.service_customization_helpers.</span></span><span class="sig-name descname"><span class="pre">double_spec_to_default</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spec</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/service_customization_helpers.html#double_spec_to_default"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.service_customization_helpers.double_spec_to_default" title="Permalink to this definition"></a></dt>
-<dd><p>Create a default service_customization_pb2.DoubleParam based off of the service_customization_pb2.DoubleParam.Spec argument</p>
+<dd><p>Create a default service_customization_pb2.DoubleParam based off of the
+service_customization_pb2.DoubleParam.Spec argument.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>spec</strong> (<em>service_customization_pb2.DoubleParam.Spec</em>) – spec to which the parameter should be defaulted</p>
@@ -652,7 +663,8 @@ with a status besides STATUS_OK for an invalid spec</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="bosdyn.client.service_customization_helpers.string_spec_to_default">
 <span class="sig-prename descclassname"><span class="pre">bosdyn.client.service_customization_helpers.</span></span><span class="sig-name descname"><span class="pre">string_spec_to_default</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spec</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/service_customization_helpers.html#string_spec_to_default"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.service_customization_helpers.string_spec_to_default" title="Permalink to this definition"></a></dt>
-<dd><p>Create a default service_customization_pb2.StringParam based off of the service_customization_pb2.StringParam.Spec argument</p>
+<dd><p>Create a default service_customization_pb2.StringParam based off of the
+service_customization_pb2.StringParam.Spec argument.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>spec</strong> (<em>service_customization_pb2.StringParam.Spec</em>) – spec to which the parameter should be defaulted</p>
@@ -663,7 +675,8 @@ with a status besides STATUS_OK for an invalid spec</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="bosdyn.client.service_customization_helpers.roi_spec_to_default">
 <span class="sig-prename descclassname"><span class="pre">bosdyn.client.service_customization_helpers.</span></span><span class="sig-name descname"><span class="pre">roi_spec_to_default</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spec</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/service_customization_helpers.html#roi_spec_to_default"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.service_customization_helpers.roi_spec_to_default" title="Permalink to this definition"></a></dt>
-<dd><p>Create a default service_customization_pb2.RegionOfInterestParam based off of the service_customization_pb2.RegionOfInterestParam.Spec argument</p>
+<dd><p>Create a default service_customization_pb2.RegionOfInterestParam based off of the
+service_customization_pb2.RegionOfInterestParam.Spec argument.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>spec</strong> (<em>service_customization_pb2.RegionOfInterestParam.Spec</em>) – spec to which the parameter should be defaulted</p>
@@ -674,7 +687,8 @@ with a status besides STATUS_OK for an invalid spec</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="bosdyn.client.service_customization_helpers.bool_spec_to_default">
 <span class="sig-prename descclassname"><span class="pre">bosdyn.client.service_customization_helpers.</span></span><span class="sig-name descname"><span class="pre">bool_spec_to_default</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spec</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/service_customization_helpers.html#bool_spec_to_default"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.service_customization_helpers.bool_spec_to_default" title="Permalink to this definition"></a></dt>
-<dd><p>Create a default service_customization_pb2.BoolParam based off of the service_customization_pb2.BoolParam.Spec argument</p>
+<dd><p>Create a default service_customization_pb2.BoolParam based off of the
+service_customization_pb2.BoolParam.Spec argument.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>spec</strong> (<em>service_customization_pb2.BoolParam.Spec</em>) – spec to which the parameter should be defaulted</p>
@@ -685,7 +699,8 @@ with a status besides STATUS_OK for an invalid spec</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="bosdyn.client.service_customization_helpers.one_of_spec_to_default">
 <span class="sig-prename descclassname"><span class="pre">bosdyn.client.service_customization_helpers.</span></span><span class="sig-name descname"><span class="pre">one_of_spec_to_default</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spec</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/service_customization_helpers.html#one_of_spec_to_default"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.service_customization_helpers.one_of_spec_to_default" title="Permalink to this definition"></a></dt>
-<dd><p>Create a default service_customization_pb2.OneOfParam based off of the service_customization_pb2.OneOfParam.Spec argument</p>
+<dd><p>Create a default service_customization_pb2.OneOfParam based off of the
+service_customization_pb2.OneOfParam.Spec argument.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>spec</strong> (<em>service_customization_pb2.OneOfParam.Spec</em>) – spec to which the parameter should be defaulted</p>
@@ -696,7 +711,8 @@ with a status besides STATUS_OK for an invalid spec</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="bosdyn.client.service_customization_helpers.dict_param_coerce_to">
 <span class="sig-prename descclassname"><span class="pre">bosdyn.client.service_customization_helpers.</span></span><span class="sig-name descname"><span class="pre">dict_param_coerce_to</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">param</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spec</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/service_customization_helpers.html#dict_param_coerce_to"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.service_customization_helpers.dict_param_coerce_to" title="Permalink to this definition"></a></dt>
-<dd><p>Coerce a service_customization_pb2.DictParam based off of the spec passed in. The parameter is modified in-place.</p>
+<dd><p>Coerce a service_customization_pb2.DictParam based off of the spec passed in. The parameter
+is modified in-place.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -714,7 +730,8 @@ with a status besides STATUS_OK for an invalid spec</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="bosdyn.client.service_customization_helpers.list_param_coerce_to">
 <span class="sig-prename descclassname"><span class="pre">bosdyn.client.service_customization_helpers.</span></span><span class="sig-name descname"><span class="pre">list_param_coerce_to</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">param</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spec</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/service_customization_helpers.html#list_param_coerce_to"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.service_customization_helpers.list_param_coerce_to" title="Permalink to this definition"></a></dt>
-<dd><p>Coerce a service_customization_pb2.ListParam based off of the spec passed in. The parameter is modified in-place.</p>
+<dd><p>Coerce a service_customization_pb2.ListParam based off of the spec passed in. The parameter
+is modified in-place.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -732,7 +749,8 @@ with a status besides STATUS_OK for an invalid spec</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="bosdyn.client.service_customization_helpers.int_param_coerce_to">
 <span class="sig-prename descclassname"><span class="pre">bosdyn.client.service_customization_helpers.</span></span><span class="sig-name descname"><span class="pre">int_param_coerce_to</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">param</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spec</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/service_customization_helpers.html#int_param_coerce_to"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.service_customization_helpers.int_param_coerce_to" title="Permalink to this definition"></a></dt>
-<dd><p>Coerce a service_customization_pb2.IntParam based off of the spec passed in. The parameter is modified in-place.</p>
+<dd><p>Coerce a service_customization_pb2.IntParam based off of the spec passed in. The parameter is
+modified in-place.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -750,7 +768,8 @@ with a status besides STATUS_OK for an invalid spec</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="bosdyn.client.service_customization_helpers.double_param_coerce_to">
 <span class="sig-prename descclassname"><span class="pre">bosdyn.client.service_customization_helpers.</span></span><span class="sig-name descname"><span class="pre">double_param_coerce_to</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">param</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spec</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/service_customization_helpers.html#double_param_coerce_to"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.service_customization_helpers.double_param_coerce_to" title="Permalink to this definition"></a></dt>
-<dd><p>Coerce a service_customization_pb2.CustomParam based off of the spec passed in. The parameter is modified in-place.</p>
+<dd><p>Coerce a service_customization_pb2.CustomParam based off of the spec passed in. The parameter
+is modified in-place.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -768,7 +787,8 @@ with a status besides STATUS_OK for an invalid spec</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="bosdyn.client.service_customization_helpers.string_param_coerce_to">
 <span class="sig-prename descclassname"><span class="pre">bosdyn.client.service_customization_helpers.</span></span><span class="sig-name descname"><span class="pre">string_param_coerce_to</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">param</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spec</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/service_customization_helpers.html#string_param_coerce_to"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.service_customization_helpers.string_param_coerce_to" title="Permalink to this definition"></a></dt>
-<dd><p>Coerce a service_customization_pb2.StringParam based off of the spec passed in. The parameter is modified in-place.</p>
+<dd><p>Coerce a service_customization_pb2.StringParam based off of the spec passed in. The parameter
+is modified in-place.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -786,8 +806,8 @@ with a status besides STATUS_OK for an invalid spec</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="bosdyn.client.service_customization_helpers.roi_param_coerce_to">
 <span class="sig-prename descclassname"><span class="pre">bosdyn.client.service_customization_helpers.</span></span><span class="sig-name descname"><span class="pre">roi_param_coerce_to</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">param</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spec</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/service_customization_helpers.html#roi_param_coerce_to"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.service_customization_helpers.roi_param_coerce_to" title="Permalink to this definition"></a></dt>
-<dd><p>Coercion is tricky with ROI parameters due to the fact that there is no standard frame size. ROI parameter is not
-modified in place; rather, a boolean value is returned.</p>
+<dd><p>Coercion is tricky with ROI parameters due to the fact that there is no standard frame size.
+ROI parameter is not modified in place; rather, a boolean value is returned.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -805,7 +825,8 @@ modified in place; rather, a boolean value is returned.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="bosdyn.client.service_customization_helpers.one_of_param_coerce_to">
 <span class="sig-prename descclassname"><span class="pre">bosdyn.client.service_customization_helpers.</span></span><span class="sig-name descname"><span class="pre">one_of_param_coerce_to</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">param</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spec</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/service_customization_helpers.html#one_of_param_coerce_to"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.service_customization_helpers.one_of_param_coerce_to" title="Permalink to this definition"></a></dt>
-<dd><p>Coerce a service_customization_pb2.OneOfParam based off of the spec passed in. The parameter is modified in-place.</p>
+<dd><p>Coerce a service_customization_pb2.OneOfParam based off of the spec passed in. The parameter
+is modified in-place.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -823,7 +844,8 @@ modified in place; rather, a boolean value is returned.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="bosdyn.client.service_customization_helpers.custom_param_coerce_to">
 <span class="sig-prename descclassname"><span class="pre">bosdyn.client.service_customization_helpers.</span></span><span class="sig-name descname"><span class="pre">custom_param_coerce_to</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">param</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spec</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/service_customization_helpers.html#custom_param_coerce_to"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.service_customization_helpers.custom_param_coerce_to" title="Permalink to this definition"></a></dt>
-<dd><p>Coerce a service_customization_pb2.CustomParam based off of the spec passed in. The parameter is modified in-place.</p>
+<dd><p>Coerce a service_customization_pb2.CustomParam based off of the spec passed in. The parameter
+is modified in-place.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -841,7 +863,7 @@ modified in place; rather, a boolean value is returned.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="bosdyn.client.service_customization_helpers.make_custom_param_spec">
 <span class="sig-prename descclassname"><span class="pre">bosdyn.client.service_customization_helpers.</span></span><span class="sig-name descname"><span class="pre">make_custom_param_spec</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spec</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Spec</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Spec</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Spec</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Spec</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Spec</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Spec</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Spec</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Spec</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Spec</span></span></span><a class="reference internal" href="../../../../../_modules/bosdyn/client/service_customization_helpers.html#make_custom_param_spec"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.service_customization_helpers.make_custom_param_spec" title="Permalink to this definition"></a></dt>
-<dd><p>Helper function to create a CustomParam.Spec</p>
+<dd><p>Helper function to create a CustomParam.Spec.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>spec</strong> – spec to be wrapped by a CustomParam.Spec</p>
@@ -852,7 +874,7 @@ modified in place; rather, a boolean value is returned.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="bosdyn.client.service_customization_helpers.make_dict_child_spec">
 <span class="sig-prename descclassname"><span class="pre">bosdyn.client.service_customization_helpers.</span></span><span class="sig-name descname"><span class="pre">make_dict_child_spec</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">param_spec</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Spec</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Spec</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Spec</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Spec</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Spec</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Spec</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Spec</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Spec</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ui_info</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">UserInterfaceInfo</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ChildSpec</span></span></span><a class="reference internal" href="../../../../../_modules/bosdyn/client/service_customization_helpers.html#make_dict_child_spec"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.service_customization_helpers.make_dict_child_spec" title="Permalink to this definition"></a></dt>
-<dd><p>Helper function to create a DictParam.ChildSpec</p>
+<dd><p>Helper function to create a DictParam.ChildSpec.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -866,7 +888,7 @@ modified in place; rather, a boolean value is returned.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="bosdyn.client.service_customization_helpers.make_dict_param_spec">
 <span class="sig-prename descclassname"><span class="pre">bosdyn.client.service_customization_helpers.</span></span><span class="sig-name descname"><span class="pre">make_dict_param_spec</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">specs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ChildSpec</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_hidden_by_default</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Spec</span></span></span><a class="reference internal" href="../../../../../_modules/bosdyn/client/service_customization_helpers.html#make_dict_param_spec"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.service_customization_helpers.make_dict_param_spec" title="Permalink to this definition"></a></dt>
-<dd><p>Helper function to create a DictParam.Spec</p>
+<dd><p>Helper function to create a DictParam.Spec.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -880,7 +902,7 @@ modified in place; rather, a boolean value is returned.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="bosdyn.client.service_customization_helpers.make_one_of_child_spec">
 <span class="sig-prename descclassname"><span class="pre">bosdyn.client.service_customization_helpers.</span></span><span class="sig-name descname"><span class="pre">make_one_of_child_spec</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dict_param_spec</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Spec</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ui_info</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">UserInterfaceInfo</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ChildSpec</span></span></span><a class="reference internal" href="../../../../../_modules/bosdyn/client/service_customization_helpers.html#make_one_of_child_spec"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.service_customization_helpers.make_one_of_child_spec" title="Permalink to this definition"></a></dt>
-<dd><p>Helper function to create a OneOfParam.ChildSpec</p>
+<dd><p>Helper function to create a OneOfParam.ChildSpec.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -894,7 +916,7 @@ modified in place; rather, a boolean value is returned.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="bosdyn.client.service_customization_helpers.make_one_of_param_spec">
 <span class="sig-prename descclassname"><span class="pre">bosdyn.client.service_customization_helpers.</span></span><span class="sig-name descname"><span class="pre">make_one_of_param_spec</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">specs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ChildSpec</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Spec</span></span></span><a class="reference internal" href="../../../../../_modules/bosdyn/client/service_customization_helpers.html#make_one_of_param_spec"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.service_customization_helpers.make_one_of_param_spec" title="Permalink to this definition"></a></dt>
-<dd><p>Helper function to create a OneOfParam.Spec</p>
+<dd><p>Helper function to create a OneOfParam.Spec.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -908,7 +930,7 @@ modified in place; rather, a boolean value is returned.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="bosdyn.client.service_customization_helpers.make_list_param_spec">
 <span class="sig-prename descclassname"><span class="pre">bosdyn.client.service_customization_helpers.</span></span><span class="sig-name descname"><span class="pre">make_list_param_spec</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">element_spec</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Spec</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_number_of_values</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_number_of_values</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Spec</span></span></span><a class="reference internal" href="../../../../../_modules/bosdyn/client/service_customization_helpers.html#make_list_param_spec"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.service_customization_helpers.make_list_param_spec" title="Permalink to this definition"></a></dt>
-<dd><p>Helper function to create a ListParam.Spec</p>
+<dd><p>Helper function to create a ListParam.Spec.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -923,7 +945,7 @@ modified in place; rather, a boolean value is returned.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="bosdyn.client.service_customization_helpers.make_int64_param_spec">
 <span class="sig-prename descclassname"><span class="pre">bosdyn.client.service_customization_helpers.</span></span><span class="sig-name descname"><span class="pre">make_int64_param_spec</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">default_value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">units</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Units</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Spec</span></span></span><a class="reference internal" href="../../../../../_modules/bosdyn/client/service_customization_helpers.html#make_int64_param_spec"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.service_customization_helpers.make_int64_param_spec" title="Permalink to this definition"></a></dt>
-<dd><p>Helper function to create an Int64Param.Spec</p>
+<dd><p>Helper function to create an Int64Param.Spec.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -939,7 +961,7 @@ modified in place; rather, a boolean value is returned.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="bosdyn.client.service_customization_helpers.make_double_param_spec">
 <span class="sig-prename descclassname"><span class="pre">bosdyn.client.service_customization_helpers.</span></span><span class="sig-name descname"><span class="pre">make_double_param_spec</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">default_value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">units</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Units</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Spec</span></span></span><a class="reference internal" href="../../../../../_modules/bosdyn/client/service_customization_helpers.html#make_double_param_spec"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.service_customization_helpers.make_double_param_spec" title="Permalink to this definition"></a></dt>
-<dd><p>Helper function to create a DoubleParam.Spec</p>
+<dd><p>Helper function to create a DoubleParam.Spec.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -955,7 +977,7 @@ modified in place; rather, a boolean value is returned.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="bosdyn.client.service_customization_helpers.make_string_param_spec">
 <span class="sig-prename descclassname"><span class="pre">bosdyn.client.service_customization_helpers.</span></span><span class="sig-name descname"><span class="pre">make_string_param_spec</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">options</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">editable</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Spec</span></span></span><a class="reference internal" href="../../../../../_modules/bosdyn/client/service_customization_helpers.html#make_string_param_spec"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.service_customization_helpers.make_string_param_spec" title="Permalink to this definition"></a></dt>
-<dd><p>Helper function to create a StringParam.Spec</p>
+<dd><p>Helper function to create a StringParam.Spec.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -970,7 +992,7 @@ modified in place; rather, a boolean value is returned.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="bosdyn.client.service_customization_helpers.make_bool_param_spec">
 <span class="sig-prename descclassname"><span class="pre">bosdyn.client.service_customization_helpers.</span></span><span class="sig-name descname"><span class="pre">make_bool_param_spec</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">default_value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Spec</span></span></span><a class="reference internal" href="../../../../../_modules/bosdyn/client/service_customization_helpers.html#make_bool_param_spec"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.service_customization_helpers.make_bool_param_spec" title="Permalink to this definition"></a></dt>
-<dd><p>Helper function to create an BoolParam.Spec</p>
+<dd><p>Helper function to create an BoolParam.Spec.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>default_value</strong> – starting value for BoolParam</p>
@@ -981,7 +1003,7 @@ modified in place; rather, a boolean value is returned.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="bosdyn.client.service_customization_helpers.make_region_of_interest_param_spec">
 <span class="sig-prename descclassname"><span class="pre">bosdyn.client.service_customization_helpers.</span></span><span class="sig-name descname"><span class="pre">make_region_of_interest_param_spec</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">service_and_source</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ServiceAndSource</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_area</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">AreaI</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allows_rectangle</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allows_polygon</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Spec</span></span></span><a class="reference internal" href="../../../../../_modules/bosdyn/client/service_customization_helpers.html#make_region_of_interest_param_spec"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.service_customization_helpers.make_region_of_interest_param_spec" title="Permalink to this definition"></a></dt>
-<dd><p>Helper function to create a RegionOfInterestParam.Spec</p>
+<dd><p>Helper function to create a RegionOfInterestParam.Spec.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -997,7 +1019,7 @@ modified in place; rather, a boolean value is returned.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="bosdyn.client.service_customization_helpers.make_user_interface_info">
 <span class="sig-prename descclassname"><span class="pre">bosdyn.client.service_customization_helpers.</span></span><span class="sig-name descname"><span class="pre">make_user_interface_info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">display_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">display_order</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">UserInterfaceInfo</span></span></span><a class="reference internal" href="../../../../../_modules/bosdyn/client/service_customization_helpers.html#make_user_interface_info"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.service_customization_helpers.make_user_interface_info" title="Permalink to this definition"></a></dt>
-<dd><p>Helper function to create UserInterfaceInfo</p>
+<dd><p>Helper function to create UserInterfaceInfo.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -1012,7 +1034,7 @@ modified in place; rather, a boolean value is returned.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="bosdyn.client.service_customization_helpers.make_roi_service_and_source">
 <span class="sig-prename descclassname"><span class="pre">bosdyn.client.service_customization_helpers.</span></span><span class="sig-name descname"><span class="pre">make_roi_service_and_source</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">service</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ServiceAndSource</span></span></span><a class="reference internal" href="../../../../../_modules/bosdyn/client/service_customization_helpers.html#make_roi_service_and_source"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.service_customization_helpers.make_roi_service_and_source" title="Permalink to this definition"></a></dt>
-<dd><p>Helper function to create a RegionOfInterestParam.ServiceAndSource</p>
+<dd><p>Helper function to create a RegionOfInterestParam.ServiceAndSource.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">

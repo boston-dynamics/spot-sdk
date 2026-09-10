@@ -9,8 +9,12 @@
 import collections
 
 from bosdyn.api import network_compute_bridge_pb2, network_compute_bridge_service_pb2_grpc
-from bosdyn.client.common import (BaseClient, error_pair, handle_common_header_errors,
-                                  handle_custom_params_errors)
+from bosdyn.client.common import (
+    BaseClient,
+    error_pair,
+    handle_common_header_errors,
+    handle_custom_params_errors,
+)
 from bosdyn.client.exceptions import ResponseError, UnsetStatusError
 
 
@@ -110,7 +114,6 @@ class NetworkComputeBridgeClient(BaseClient):
                 the set of all models.
             NetworkComputeRotationError: For processed image data, the robot was unable to rotate the
                 image as requested.
-
         """
         return self.call(self._stub.NetworkCompute, network_compute_request, None,
                          _network_compute_error, **kwargs)

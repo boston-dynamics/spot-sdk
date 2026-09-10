@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Animations in Choreography &mdash; Spot 5.1.9 documentation</title>
+  <title>Animations in Choreography &mdash; Spot 5.2.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
     <link rel="shortcut icon" href="../../../_static/bd-favicon.png"/>
@@ -38,7 +38,7 @@
               <img src="../../../_static/bd-official-white.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                5.1.9
+                5.2.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -205,7 +205,8 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/world_object_mutations/README.html">World Object Mutations</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/visualizer/README.html">Visualizer</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/gripper_camera_params/README.html">Gripper Camera Parameters</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_cam/README.html">Spot CAM</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_cam/README.html">Spot CAM Services</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_cam/README.html#spot-cam-video-core-io-extension-example">Spot Cam Video Core IO Extension Example</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/stitch_front_images/README.html">Stitch Front Images</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/get_depth_plus_visual_image/README.html">Project Depth Data on Visual Images</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/service_customization/custom_parameter_image_server/README.html">Custom Parameter Image Server</a></li>
@@ -249,6 +250,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/graph_nav_command_line/README.html">GraphNav and Recording Service Command Line Interfaces</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/graph_nav_command_line/README.html#example-programs">Example Programs</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/graph_nav_extract_point_cloud/README.html">Graph Nav Extract Point Cloud</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/graph_nav_map_to_usd/README.html">Graph Nav Map to USD</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/graph_nav_view_map/README.html">Graph Nav View Map</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/graph_nav_view_gps/README.html">Graph Nav View GPS Data</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/get_mission_state/README.html">Get Mission State</a></li>
@@ -269,7 +271,8 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/joint_control_examples.html">Joint Control API Examples</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/orbit.html">Orbit</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/hello_orbit/README.html">Hello Orbit</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/hello_orbit/README.html">Hello Orbit (v0, OrbitClient)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/orbit_v1_api/README.html">Orbit v1 API (v1, raw HTTP)</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/export_run_archives/README.html">Export Run Archives</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/export_site_walk_archives/README.html">Export Sitewalk Archives</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/anomalies/README.html">Anomalies</a></li>
@@ -324,6 +327,8 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/fault.html">Fault</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/frame_helpers.html">Frame Helpers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/graph_nav.html">Graph Nav</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/graph_nav_download.html">Graph Nav Download</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/graph_nav_upload.html">Graph Nav Upload</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/gripper_camera_param.html">Gripper Camera Params</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/gps/README.html">GPS</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/gps/aggregator_client.html">Aggregator Client</a></li>
@@ -542,24 +547,16 @@ src="https://www.youtube.com/embed/7atZfX85nd4">
 <p>The primary component of the animated move is a set of timestamped key frames which specify the motion of the different tracks (arms, gripper, legs, or body). The timestamped keyframes that specify the animation can be densely spaced, as they would be from a 3D animation software, or they can be very sparse and the robot will interpolate between each key frame.</p>
 <p>Additionally, components of the text file enable different animation-specific options. The text file can also specify the different parameters to be associated with the move. A complete overview of the animation file format can be found on the <a class="reference internal" href="animation_file_specification.html"><span class="doc">Animation files for Choreographer</span></a> page.</p>
 <p>The animated move text files are parsed into <code class="docutils literal notranslate"><span class="pre">Animation</span></code> protobuf messages and uploaded to the robot. Once the animation is uploaded to the robot, it can be referenced by name within choreographies.</p>
-<p>This parsing step (from text file to protobuf message) happens automatically in Choreographer for both animations in the <strong>animations</strong> directory that matches the directory structure shown below and for animations uploaded by selecting <strong>Load Animated Move</strong> from the File menu.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">dance_directory</span><span class="o">/</span>
-	<span class="n">choreographer</span><span class="o">.</span><span class="n">exe</span>
-	<span class="n">animations</span><span class="o">/</span>
-		<span class="n">bourree_arm</span><span class="o">.</span><span class="n">cha</span>
-		<span class="n">my_animation</span><span class="o">.</span><span class="n">cha</span>
-</pre></div>
-</div>
 </section>
+<section id="parsing-and-loading-animations-with-choreographer">
+<h2>Parsing and loading animations with Choreographer<a class="headerlink" href="#parsing-and-loading-animations-with-choreographer" title="Permalink to this heading"></a></h2>
+<p>The <a class="reference internal" href="choreographer.html"><span class="doc">Choreographer application</span></a> has many options to support loading, viewing, and playing animation files on connected robots. Within Choreographer, animations can be parsed and loaded to connected robots using <strong>File</strong>-&gt;<strong>Load Animated Move(s)</strong> or can be configured to load automatically when the application is opened (see <a class="reference external" href="choreographer.html#project-folders">Project Folders</a>). Animations loaded into Choreographer can be used in the regular sequence editing workflow like predefined Choreographer moves.</p>
+<p>A dialog indicates the status of all animations being uploaded. If an animation fails to upload, check the terminal where the Choreographer executable is running. It will likely contain an error message describing why the animation was invalid. You can also verify which animations were successfully uploaded to each robot using the <strong>Check Animated Moves</strong> tool under the <strong>Tools</strong> menu.</p>
+<img src="../../../_images/animation_upload_dialog.png" style="max-width:640px;"></section>
 <section id="python-example-script">
 <h2>Python example script<a class="headerlink" href="#python-example-script" title="Permalink to this heading"></a></h2>
 <p>The <code class="docutils literal notranslate"><span class="pre">animation_file_to_proto.py</span></code> python script file in the <code class="docutils literal notranslate"><span class="pre">bosdyn-choreography-client</span></code> package provides client access to the same functions used by Choreographer to complete the text file to protobuf animation parsing.</p>
 </section>
-<section id="automatic-animation-uploading-in-choreographer">
-<h2>Automatic animation uploading in Choreographer<a class="headerlink" href="#automatic-animation-uploading-in-choreographer" title="Permalink to this heading"></a></h2>
-<p>When Choreographer connects to a robot, it automatically begins uploading all of the animation (.cha) files located in the <strong>animations</strong> folder in the same directory as the application. Loaded animations are also uploaded to each robot connection, including robots connected at startup from command line arguments and robots connected after the application is running.</p>
-<p>A dialog indicates the status of all animations being uploaded (example below). If an animation fails to upload, check the terminal where the Choreographer executable is running. It will likely contain an error message describing why the animation was invalid. You can also verify which animations have successfully loaded to each robot connection using the “Check Animated Moves” tool under the “Tools” Menu.</p>
-<img src="../../../_images/animation_upload_dialog.png" style="max-width:640px;"></section>
 <section id="choreography-logs-for-animations">
 <h2>Choreography logs for animations<a class="headerlink" href="#choreography-logs-for-animations" title="Permalink to this heading"></a></h2>
 <p>To aid in creating animated moves without 3D animation software, we provide choreography logs. These logs can be recorded through the Choreography service at any time, including:</p>

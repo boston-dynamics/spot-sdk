@@ -4,9 +4,7 @@
 # is subject to the terms and conditions of the Boston Dynamics Software
 # Development Kit License (20191101-BDSDK-SL).
 
-"""Client for the data-service.
-
-"""
+"""Client for the data-service."""
 
 import bosdyn.api.data_index_pb2 as data_index_protos
 import bosdyn.api.data_service_pb2_grpc as data_service
@@ -39,7 +37,7 @@ class DataServiceClient(BaseClient):
             pass  # other doesn't have a time_sync accessor
 
     def get_data_index(self, query, **kwargs):
-        """Query for data index
+        """Query for data index.
 
         Args:
           query:  DataQuery
@@ -87,7 +85,7 @@ class DataServiceClient(BaseClient):
                     error_from_response=common_header_errors, **kwargs)
 
     def get_events_comments(self, query, **kwargs):
-        """Query for operator comments and events
+        """Query for operator comments and events.
 
         Args:
           query: EventsCommentsSpec
@@ -109,7 +107,7 @@ class DataServiceClient(BaseClient):
                     error_from_response=common_header_errors, **kwargs)
 
     def get_data_buffer_status(self, get_blob_specs=False, **kwargs):
-        """Query for operator comments and events
+        """Query for operator comments and events.
 
         Args:
           get_blob_specs (bool): whether to list message series.

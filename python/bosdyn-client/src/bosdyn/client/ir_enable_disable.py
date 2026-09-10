@@ -10,7 +10,8 @@ from bosdyn.client.common import BaseClient, common_header_errors
 
 
 class IREnableDisableServiceClient(BaseClient):
-    """Client to enable and/or disable the robot's IR light emitters in the body and hand sensors."""
+    """Client to enable and/or disable the robot's IR light emitters in the body and hand
+    sensors."""
 
     # Name of the service in the robot's directory listing.
     default_service_name = 'ir-enable-disable-service'
@@ -22,7 +23,7 @@ class IREnableDisableServiceClient(BaseClient):
               self).__init__(ir_enable_disable_service_pb2_grpc.IREnableDisableServiceStub)
 
     def set_ir_enabled(self, enable, **kwargs):
-        """ Enable and/or disable the robot's IR light emitters.
+        """Enable and/or disable the robot's IR light emitters.
 
         Args:
             enable (bool): Whether or not to enable the emitters.

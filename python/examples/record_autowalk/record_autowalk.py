@@ -4,17 +4,20 @@
 # is subject to the terms and conditions of the Boston Dynamics Software
 # Development Kit License (20191101-BDSDK-SL).
 
-"""Record Autowalk"""
+"""Record Autowalk."""
 
 import argparse
 import logging
 import os
 import sys
 import time
+import warnings
+from pathlib import Path
 
 import numpy as np
-import PyQt5.QtCore as QtCore
-import PyQt5.QtWidgets as QtWidgets
+import qtpy.QtCore as QtCore
+import qtpy.QtWidgets as QtWidgets
+from qtpy import API_NAME
 
 import bosdyn.api.basic_command_pb2 as basic_command_pb2
 import bosdyn.api.mission
@@ -66,7 +69,13 @@ INITIAL_PANEL, RECORDED_PANEL, ACTION_PANEL, FINAL_PANEL = range(4)
 
 
 def main():
-    """Record autowalks with GUI"""
+    """Record autowalks with GUI."""
+
+    if API_NAME != "PyQt6":
+        warnings.warn(
+            f"RuntimeWarning: Running on {API_NAME}. Backwards compatibility is expected, but "
+            f"this script is optimized for PyQt6. "
+            f"Please run 'export QT_API=pyqt6' to configure qtpy to PyQt6.", stacklevel=2)
 
     # Configure logging
     bosdyn.client.util.setup_logging()
@@ -85,15 +94,15 @@ def main():
     # Power on and get lease
     app = QtWidgets.QApplication(sys.argv)
     gui = AutowalkGUI(robot)
-    gui.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
+    gui.setWindowFlags(QtCore.Qt.WindowType.WindowStaysOnTopHint)
     gui.show()
-    app.exec_()
+    app.exec()
 
     return True
 
 
 def init_robot(hostname):
-    """Initialize robot object"""
+    """Initialize robot object."""
 
     # Initialize SDK
     sdk = bosdyn.client.create_standard_sdk('RecordAutowalk', [bosdyn.mission.client.MissionClient])
@@ -122,16 +131,16 @@ class AsyncRobotState(AsyncPeriodicQuery):
 
 
 class WindowWidget(QtWidgets.QWidget):
-    """Window class to continuously check for key presses"""
+    """Window class to continuously check for key presses."""
 
-    key_pressed = QtCore.pyqtSignal(str)
+    key_pressed = QtCore.Signal(str)
 
     def keyPressEvent(self, key_event):
         self.key_pressed.emit(key_event.text())
 
 
 class AutowalkGUI(QtWidgets.QMainWindow):
-    """GUI for recording autowalk"""
+    """GUI for recording autowalk."""
 
     def __init__(self, robot):
         super(QtWidgets.QMainWindow, self).__init__()
@@ -203,7 +212,7 @@ class AutowalkGUI(QtWidgets.QMainWindow):
         self.format_GUI()
 
     def format_GUI(self):
-        """Create and format GUI window"""
+        """Create and format GUI window."""
 
         # Main window widget
         window_widget = WindowWidget()
@@ -258,13 +267,15 @@ class AutowalkGUI(QtWidgets.QMainWindow):
         self.top_panel_layout = QtWidgets.QHBoxLayout()
         self.top_panel_widget.setLayout(self.top_panel_layout)
 
-        self.power_label = QtWidgets.QLabel('Powered off', self, alignment=QtCore.Qt.AlignCenter)
+        self.power_label = QtWidgets.QLabel('Powered off', self,
+                                            alignment=QtCore.Qt.AlignmentFlag.AlignCenter)
         self.power_label.setStyleSheet('color: red')
-        self.lease_label = QtWidgets.QLabel('Unleased', self, alignment=QtCore.Qt.AlignCenter)
+        self.lease_label = QtWidgets.QLabel('Unleased', self,
+                                            alignment=QtCore.Qt.AlignmentFlag.AlignCenter)
         self.lease_label.setStyleSheet('color: red')
         self.directions_label = QtWidgets.QLabel(
             'Set up and move robot to desired starting position', self)
-        self.directions_label.setAlignment(QtCore.Qt.AlignCenter)
+        self.directions_label.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
         self.record_button = QtWidgets.QPushButton('Start Recording', self)
         self.record_button.setStyleSheet('background-color: green')
 
@@ -276,14 +287,14 @@ class AutowalkGUI(QtWidgets.QMainWindow):
         self.top_panel_layout.addWidget(self.record_button)
 
     def format_left_panel(self):
-        """ Creates left panel widget with available actions, statuses, and speed controls"""
+        """Creates left panel widget with available actions, statuses, and speed controls."""
         self.left_panel_widget = QtWidgets.QWidget()
         self.left_panel_layout = QtWidgets.QVBoxLayout()
         self.left_panel_widget.setLayout(self.left_panel_layout)
 
         self.actions_label_widget = QtWidgets.QLabel(self)
         self.actions_label_widget.setText('Robot Commands')
-        self.actions_label_widget.setAlignment(QtCore.Qt.AlignCenter)
+        self.actions_label_widget.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
         self.actions_list_widget = QtWidgets.QListWidget(self)
         for description in self.command_descriptions:
             QtWidgets.QListWidgetItem(description, self.actions_list_widget)
@@ -294,11 +305,11 @@ class AutowalkGUI(QtWidgets.QMainWindow):
             f'Turning speed: {self.angular_velocity:.2f} rad/s', self)
         self.command_duration_label = QtWidgets.QLabel(
             f'Sensitivity: {self.command_duration:.2f} s', self)
-        self.linear_velocity_slider = QtWidgets.QSlider(QtCore.Qt.Horizontal, self)
+        self.linear_velocity_slider = QtWidgets.QSlider(QtCore.Qt.Orientation.Horizontal, self)
         self.linear_velocity_slider.setValue(SLIDER_MIDDLE_VALUE)
-        self.angular_velocity_slider = QtWidgets.QSlider(QtCore.Qt.Horizontal, self)
+        self.angular_velocity_slider = QtWidgets.QSlider(QtCore.Qt.Orientation.Horizontal, self)
         self.angular_velocity_slider.setValue(SLIDER_MIDDLE_VALUE)
-        self.command_duration_slider = QtWidgets.QSlider(QtCore.Qt.Horizontal, self)
+        self.command_duration_slider = QtWidgets.QSlider(QtCore.Qt.Orientation.Horizontal, self)
         self.command_duration_slider.setValue(SLIDER_MIDDLE_VALUE)
 
         self.left_panel_layout.addWidget(self.actions_label_widget)
@@ -311,7 +322,7 @@ class AutowalkGUI(QtWidgets.QMainWindow):
         self.left_panel_layout.addWidget(self.command_duration_slider)
 
     def format_right_panel(self):
-        """Creates right panel with autowalk actions and save menu"""
+        """Creates right panel with autowalk actions and save menu."""
         self.right_panel_widget = QtWidgets.QWidget()
         self.right_panel_layout = QtWidgets.QVBoxLayout()
         self.right_panel_widget.setLayout(self.right_panel_layout)
@@ -324,7 +335,7 @@ class AutowalkGUI(QtWidgets.QMainWindow):
         self.welcome_message = QtWidgets.QLabel(
             '''Welcome to the Record Autowalk GUI.\n\nMake sure to remove the E-Stop, acquire a lease, and power on the robot.\n\nPosition the robot with a fiducial in view before starting the recording.''',
             self)
-        self.welcome_message.setAlignment(QtCore.Qt.AlignTop)
+        self.welcome_message.setAlignment(QtCore.Qt.AlignmentFlag.AlignTop)
         self.welcome_message.setWordWrap(True)
         self.initial_panel_layout.addWidget(self.welcome_message)
 
@@ -392,7 +403,7 @@ class AutowalkGUI(QtWidgets.QMainWindow):
         self.right_panel_layout.addWidget(self.right_panel_stacked_widget)
 
     def format_pose_panel(self):
-        """Creates pose panel for widgets associated with creating pose action"""
+        """Creates pose panel for widgets associated with creating pose action."""
         self.pose_panel = QtWidgets.QWidget()
         self.pose_panel_layout = QtWidgets.QVBoxLayout()
         self.pose_panel.setLayout(self.pose_panel_layout)
@@ -400,19 +411,19 @@ class AutowalkGUI(QtWidgets.QMainWindow):
         self.pose_name_label = QtWidgets.QLabel('Pose Name', self)
         self.pose_name_line = QtWidgets.QLineEdit()
         self.pose_pitch_label = QtWidgets.QLabel('Pitch', self)
-        self.pose_pitch_slider = QtWidgets.QSlider(QtCore.Qt.Horizontal, self)
+        self.pose_pitch_slider = QtWidgets.QSlider(QtCore.Qt.Orientation.Horizontal, self)
         self.pose_pitch_slider.setValue(SLIDER_MIDDLE_VALUE)
         self.pose_roll_label = QtWidgets.QLabel('Roll', self)
-        self.pose_roll_slider = QtWidgets.QSlider(QtCore.Qt.Horizontal, self)
+        self.pose_roll_slider = QtWidgets.QSlider(QtCore.Qt.Orientation.Horizontal, self)
         self.pose_roll_slider.setValue(SLIDER_MIDDLE_VALUE)
         self.pose_yaw_label = QtWidgets.QLabel('Yaw', self)
-        self.pose_yaw_slider = QtWidgets.QSlider(QtCore.Qt.Horizontal, self)
+        self.pose_yaw_slider = QtWidgets.QSlider(QtCore.Qt.Orientation.Horizontal, self)
         self.pose_yaw_slider.setValue(SLIDER_MIDDLE_VALUE)
         self.pose_height_label = QtWidgets.QLabel('Height', self)
-        self.pose_height_slider = QtWidgets.QSlider(QtCore.Qt.Horizontal, self)
+        self.pose_height_slider = QtWidgets.QSlider(QtCore.Qt.Orientation.Horizontal, self)
         self.pose_height_slider.setValue(SLIDER_MIDDLE_VALUE)
         self.pose_duration_label = QtWidgets.QLabel('Pose Duration: 5 s', self)
-        self.pose_duration_slider = QtWidgets.QSlider(QtCore.Qt.Horizontal, self)
+        self.pose_duration_slider = QtWidgets.QSlider(QtCore.Qt.Orientation.Horizontal, self)
         self.pose_duration_slider.setValue(SLIDER_MIDDLE_VALUE)
         self.pose_panel_layout.addWidget(self.pose_name_label)
         self.pose_panel_layout.addWidget(self.pose_name_line)
@@ -429,7 +440,7 @@ class AutowalkGUI(QtWidgets.QMainWindow):
         self.pose_panel_layout.addStretch()
 
     def format_rcam_panel(self):
-        """Creates robot camera panel for widgets associated with creating a robot camera action"""
+        """Creates robot camera panel for widgets associated with creating a robot camera action."""
         self.rcam_panel = QtWidgets.QWidget()
         self.rcam_layout = QtWidgets.QVBoxLayout()
         self.rcam_panel.setLayout(self.rcam_layout)
@@ -438,16 +449,16 @@ class AutowalkGUI(QtWidgets.QMainWindow):
         self.rcam_label.setText('Picture name:')
         self.rcam_line = QtWidgets.QLineEdit()
         self.rcam_pitch_label = QtWidgets.QLabel('Pitch', self)
-        self.rcam_pitch_slider = QtWidgets.QSlider(QtCore.Qt.Horizontal, self)
+        self.rcam_pitch_slider = QtWidgets.QSlider(QtCore.Qt.Orientation.Horizontal, self)
         self.rcam_pitch_slider.setValue(SLIDER_MIDDLE_VALUE)
         self.rcam_roll_label = QtWidgets.QLabel('Roll', self)
-        self.rcam_roll_slider = QtWidgets.QSlider(QtCore.Qt.Horizontal, self)
+        self.rcam_roll_slider = QtWidgets.QSlider(QtCore.Qt.Orientation.Horizontal, self)
         self.rcam_roll_slider.setValue(SLIDER_MIDDLE_VALUE)
         self.rcam_yaw_label = QtWidgets.QLabel('Yaw', self)
-        self.rcam_yaw_slider = QtWidgets.QSlider(QtCore.Qt.Horizontal, self)
+        self.rcam_yaw_slider = QtWidgets.QSlider(QtCore.Qt.Orientation.Horizontal, self)
         self.rcam_yaw_slider.setValue(SLIDER_MIDDLE_VALUE)
         self.rcam_height_label = QtWidgets.QLabel('Height', self)
-        self.rcam_height_slider = QtWidgets.QSlider(QtCore.Qt.Horizontal, self)
+        self.rcam_height_slider = QtWidgets.QSlider(QtCore.Qt.Orientation.Horizontal, self)
         self.rcam_height_slider.setValue(SLIDER_MIDDLE_VALUE)
         self.rcam_layout.addWidget(self.rcam_label)
         self.rcam_layout.addWidget(self.rcam_line)
@@ -462,7 +473,7 @@ class AutowalkGUI(QtWidgets.QMainWindow):
         self.rcam_layout.addStretch()
 
     def format_docking_panel(self):
-        """Creates docking panel for widgets associated with creating a docking action"""
+        """Creates docking panel for widgets associated with creating a docking action."""
         self.docking_panel = QtWidgets.QWidget()
         self.docking_layout = QtWidgets.QVBoxLayout()
         self.docking_panel.setLayout(self.docking_layout)
@@ -472,7 +483,7 @@ class AutowalkGUI(QtWidgets.QMainWindow):
         self.docking_layout.addStretch()
 
     def _init_walk(self):
-        """Initialize walk object"""
+        """Initialize walk object."""
 
         walk = walks_pb2.Walk()
         walk.global_parameters.self_right_attempts = RETRY_COUNT_DEFAULT
@@ -480,11 +491,12 @@ class AutowalkGUI(QtWidgets.QMainWindow):
         return walk
 
     def _update_tasks(self):
-        """Updates asynchronous robot state captures"""
+        """Updates asynchronous robot state captures."""
         self._async_tasks.update()
 
     def _create_element(self, name, waypoint, isAction=True):
-        """Creates default autowalk Element object, populating everything except Action and ActionWrapper"""
+        """Creates default autowalk Element object, populating everything except Action and
+        ActionWrapper."""
         QtWidgets.QListWidgetItem(name, self.recorded_list)
         element = walks_pb2.Element()
         element.name = name
@@ -504,7 +516,7 @@ class AutowalkGUI(QtWidgets.QMainWindow):
         return element
 
     def _save_action(self):
-        """Save autowalk action by modifying walk object"""
+        """Save autowalk action by modifying walk object."""
         # Create waypoint at action location
         waypoint_response = self._recording_client.create_waypoint()
 
@@ -591,7 +603,7 @@ class AutowalkGUI(QtWidgets.QMainWindow):
         self.right_panel_stacked_widget.setCurrentIndex(RECORDED_PANEL)
 
     def _save_autowalk(self):
-        """Save autowalk in directory"""
+        """Save autowalk in directory."""
         if not self.dock_and_end_recording:
             # Creates end waypoint and action if the last action is not docking
             self._toggle_record()
@@ -622,7 +634,7 @@ class AutowalkGUI(QtWidgets.QMainWindow):
         self._reset_walk()
 
     def _reset_walk(self):
-        """Resets walk parameters and GUI"""
+        """Resets walk parameters and GUI."""
         self.right_panel_stacked_widget.setCurrentIndex(INITIAL_PANEL)
         self.walk = self._init_walk()
         self.directions_label.setText('Set up and move robot to desired starting position')
@@ -633,13 +645,13 @@ class AutowalkGUI(QtWidgets.QMainWindow):
         self._graph_nav_client.clear_graph()
 
     def _drive_command(self, key):
-        """Maps keyboard input to robot commands"""
+        """Maps keyboard input to robot commands."""
         if key and ord(key) in self.command_to_function:
             cmd_function = self.command_to_function[ord(key)]
             cmd_function()
 
     def change_action_panel(self, index):
-        """Looks for fiducials before opening docking panel"""
+        """Looks for fiducials before opening docking panel."""
         self.stack_widget.setCurrentIndex(index)
         if index == DOCK_INDEX:
             # Get all fiducial objects (an object of a specific type).
@@ -651,7 +663,7 @@ class AutowalkGUI(QtWidgets.QMainWindow):
                 QtWidgets.QListWidgetItem(str(fiducial.dock_properties.dock_id), self.docks_list)
 
     def choose_dock(self, item):
-        """Initializes dock selection"""
+        """Initializes dock selection."""
         self.dock = int(item.text())
 
     def _change_pose(self):
@@ -714,25 +726,28 @@ class AutowalkGUI(QtWidgets.QMainWindow):
         future.add_done_callback(on_future_done)
 
     def _choose_directory(self):
-        """Opens directory selection dialog"""
+        """Opens directory selection dialog."""
         self.directory = str(QtWidgets.QFileDialog.getExistingDirectory(self, 'Select Directory'))
 
     def _add_action(self):
-        """Opens action selection panel"""
+        """Opens action selection panel."""
         self.right_panel_stacked_widget.setCurrentIndex(ACTION_PANEL)
 
     def _cancel_action(self):
-        """Goes back to action summary panel"""
+        """Goes back to action summary panel."""
         self.right_panel_stacked_widget.setCurrentIndex(RECORDED_PANEL)
 
     def _quit_program(self):
-        """Settles robot before exiting"""
+        """Settles robot before exiting."""
         if self._lease_keepalive:
             self._lease_keepalive.shutdown()
         self.close()
 
     def _toggle_record(self):
-        """toggle recording on/off. Initial state is OFF"""
+        """Toggle recording on/off.
+
+        Initial state is OFF
+        """
         if self._recording_client is not None:
             recording_status = self._recording_client.get_record_status()
 
@@ -742,16 +757,16 @@ class AutowalkGUI(QtWidgets.QMainWindow):
                 if start_recording_response.status != recording_pb2.StartRecordingResponse.STATUS_OK:
                     print(f'Error starting recording (status = {start_recording_response.status}).')
                     return False
-                else:
-                    self.record_button.setText('Stop Recording')
-                    self.record_button.setStyleSheet('background-color: red')
-                    self.right_panel_stacked_widget.setCurrentIndex(RECORDED_PANEL)
-                    self.directions_label.setText('Create and record actions for Autowalk')
-                    if not self.resumed_recording:
-                        del self.walk.elements[:]
-                        start_element = self._create_element(
-                            'Start', start_recording_response.created_waypoint, isAction=False)
-                        self.elements.append(start_element)
+                self.record_button.setText('Stop Recording')
+                self.record_button.setStyleSheet('background-color: red')
+                self.right_panel_stacked_widget.setCurrentIndex(RECORDED_PANEL)
+                self.directions_label.setText('Create and record actions for Autowalk')
+                if not self.resumed_recording:
+                    del self.walk.elements[:]
+                    start_element = self._create_element('Start',
+                                                         start_recording_response.created_waypoint,
+                                                         isAction=False)
+                    self.elements.append(start_element)
 
             else:
                 # Stop recording map
@@ -775,7 +790,10 @@ class AutowalkGUI(QtWidgets.QMainWindow):
                 self.directions_label.setText('Review and save Autowalk')
 
     def _toggle_lease(self):
-        """toggle lease acquisition. Initial state is acquired"""
+        """Toggle lease acquisition.
+
+        Initial state is acquired
+        """
         if self._lease_client is not None:
             if self._lease_keepalive is None:
                 self._lease_keepalive = LeaseKeepAlive(self._lease_client, must_acquire=True,
@@ -789,7 +807,10 @@ class AutowalkGUI(QtWidgets.QMainWindow):
                 self.lease_label.setStyleSheet('color: red')
 
     def _toggle_power(self):
-        """toggle motor power. Initial state is OFF"""
+        """Toggle motor power.
+
+        Initial state is OFF
+        """
         power_state = self._power_state()
         if power_state is None:
             self.power_label.setText('Unknown')

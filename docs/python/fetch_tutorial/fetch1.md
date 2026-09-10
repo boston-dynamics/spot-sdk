@@ -310,9 +310,9 @@ To label our images, we'll use an <a href="https://github.com/tzutalin/labelImg"
 Use <code>pip</code> to install:
 
 <pre><code class="language-bash">source my_spot_env/bin/activate
-python3 -m pip install labelImg
+python3 -m pip install labelImg PyQt6
 [...]
-Successfully installed PyQt5-sip-12.8.1 labelImg-1.8.4 pyqt5-5.15.2
+Successfully installed PyQt6-6.10.0 labelImg-1.8.4
 </code></pre>
 
 <p>

@@ -12,14 +12,14 @@ _LOGGER = logging.getLogger(__name__)
 
 from google.protobuf.wrappers_pb2 import FloatValue, Int32Value
 
+from bosdyn.api import image_geometry_pb2
 from bosdyn.api.spot_cam import ptz_pb2, service_pb2_grpc
 from bosdyn.client.common import BaseClient, common_header_errors
 from bosdyn.client.math_helpers import recenter_value_mod
 
 
 class PtzClient(BaseClient):
-    """A client calling Spot CAM Ptz service.
-    """
+    """A client calling Spot CAM Ptz service."""
     default_service_name = 'spot-cam-ptz'
     service_type = 'bosdyn.api.spot_cam.PtzService'
 
@@ -27,7 +27,7 @@ class PtzClient(BaseClient):
         super(PtzClient, self).__init__(service_pb2_grpc.PtzServiceStub)
 
     def list_ptz(self, **kwargs):
-        """List all the available ptzs"""
+        """List all the available ptzs."""
         request = ptz_pb2.ListPtzRequest()
         return self.call(self._stub.ListPtz, request, self._list_ptz_from_response,
                          common_header_errors, copy_request=False, **kwargs)
@@ -39,7 +39,7 @@ class PtzClient(BaseClient):
                                common_header_errors, copy_request=False, **kwargs)
 
     def get_ptz_position(self, ptz_desc, **kwargs):
-        """Position of the specified ptz"""
+        """Position of the specified ptz."""
         request = ptz_pb2.GetPtzPositionRequest(ptz=ptz_desc)
         return self.call(self._stub.GetPtzPosition, request, self._get_ptz_position_from_response,
                          common_header_errors, copy_request=False, **kwargs)
@@ -52,7 +52,7 @@ class PtzClient(BaseClient):
                                copy_request=False, **kwargs)
 
     def get_ptz_velocity(self, ptz_desc, **kwargs):
-        """Velocity of the specified ptz"""
+        """Velocity of the specified ptz."""
         request = ptz_pb2.GetPtzVelocityRequest(ptz=ptz_desc)
         return self.call(self._stub.GetPtzVelocity, request, self._get_ptz_velocity_from_response,
                          common_header_errors, copy_request=False, **kwargs)
@@ -65,7 +65,7 @@ class PtzClient(BaseClient):
                                copy_request=False, **kwargs)
 
     def set_ptz_position(self, ptz_desc, pan, tilt, zoom, **kwargs):
-        """Set position of the specified ptz in PTZ-space"""
+        """Set position of the specified ptz in PTZ-space."""
         p = FloatValue(value=pan)
         t = FloatValue(value=tilt)
         z = FloatValue(value=zoom)
@@ -86,7 +86,7 @@ class PtzClient(BaseClient):
                                copy_request=False, **kwargs)
 
     def set_ptz_velocity(self, ptz_desc, pan, tilt, zoom, **kwargs):
-        """Set velocity of the specified ptz in PTZ-space"""
+        """Set velocity of the specified ptz in PTZ-space."""
         p = FloatValue(value=pan)
         t = FloatValue(value=tilt)
         z = FloatValue(value=zoom)
@@ -107,7 +107,7 @@ class PtzClient(BaseClient):
                                copy_request=False, **kwargs)
 
     def initialize_lens(self, **kwargs):
-        """Initializes the PTZ autofocus or resets it if already initialized"""
+        """Initializes the PTZ autofocus or resets it if already initialized."""
         request = ptz_pb2.InitializeLensRequest()
         return self.call(self._stub.InitializeLens, request, self._initialize_lens_from_response,
                          common_header_errors, copy_request=False, **kwargs)
@@ -122,7 +122,7 @@ class PtzClient(BaseClient):
     # Manual Focus RPCs
 
     def get_ptz_focus_state(self, **kwargs):
-        """Retrieve focus of the mechanical ptz
+        """Retrieve focus of the mechanical ptz.
 
         Args:
             focus_mode (PtzFocusMode): Enum indicating whether to autofocus or manually focus
@@ -147,7 +147,7 @@ class PtzClient(BaseClient):
                                copy_request=False, **kwargs)
 
     def set_ptz_focus_state(self, focus_mode, distance=None, focus_position=None, **kwargs):
-        """Set focus of the mechanical ptz
+        """Set focus of the mechanical ptz.
 
         Args:
             focus_mode (PtzFocusMode): Enum indicating whether to autofocus or manually focus
@@ -205,6 +205,7 @@ class PtzClient(BaseClient):
     @staticmethod
     def _set_ptz_focus_state_from_response(response):
         return response
+
 
 
 def shift_pan_angle(pan):

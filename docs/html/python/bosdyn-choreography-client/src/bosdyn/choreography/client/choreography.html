@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Choreography &mdash; Spot 5.1.9 documentation</title>
+  <title>Choreography &mdash; Spot 5.2.0 documentation</title>
       <link rel="stylesheet" href="../../../../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../../../../_static/style.css" type="text/css" />
     <link rel="shortcut icon" href="../../../../../../_static/bd-favicon.png"/>
@@ -38,7 +38,7 @@
               <img src="../../../../../../_static/bd-official-white.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                5.1.9
+                5.2.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../../../../search.html" method="get">
@@ -205,7 +205,8 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../../examples/world_object_mutations/README.html">World Object Mutations</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../../examples/visualizer/README.html">Visualizer</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../../examples/gripper_camera_params/README.html">Gripper Camera Parameters</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../../../examples/spot_cam/README.html">Spot CAM</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../examples/spot_cam/README.html">Spot CAM Services</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../examples/spot_cam/README.html#spot-cam-video-core-io-extension-example">Spot Cam Video Core IO Extension Example</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../../examples/stitch_front_images/README.html">Stitch Front Images</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../../examples/get_depth_plus_visual_image/README.html">Project Depth Data on Visual Images</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../../examples/service_customization/custom_parameter_image_server/README.html">Custom Parameter Image Server</a></li>
@@ -249,6 +250,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../../examples/graph_nav_command_line/README.html">GraphNav and Recording Service Command Line Interfaces</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../../examples/graph_nav_command_line/README.html#example-programs">Example Programs</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../../examples/graph_nav_extract_point_cloud/README.html">Graph Nav Extract Point Cloud</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../examples/graph_nav_map_to_usd/README.html">Graph Nav Map to USD</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../../examples/graph_nav_view_map/README.html">Graph Nav View Map</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../../examples/graph_nav_view_gps/README.html">Graph Nav View GPS Data</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../../examples/get_mission_state/README.html">Get Mission State</a></li>
@@ -269,7 +271,8 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../examples/docs/joint_control_examples.html">Joint Control API Examples</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../examples/docs/orbit.html">Orbit</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../../../../examples/orbit/hello_orbit/README.html">Hello Orbit</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../examples/orbit/hello_orbit/README.html">Hello Orbit (v0, OrbitClient)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../examples/orbit/orbit_v1_api/README.html">Orbit v1 API (v1, raw HTTP)</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../../examples/orbit/export_run_archives/README.html">Export Run Archives</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../../examples/orbit/export_site_walk_archives/README.html">Export Sitewalk Archives</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../../examples/orbit/anomalies/README.html">Anomalies</a></li>
@@ -324,6 +327,8 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../../bosdyn-client/src/bosdyn/client/fault.html">Fault</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../../bosdyn-client/src/bosdyn/client/frame_helpers.html">Frame Helpers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../../bosdyn-client/src/bosdyn/client/graph_nav.html">Graph Nav</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../bosdyn-client/src/bosdyn/client/graph_nav_download.html">Graph Nav Download</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../bosdyn-client/src/bosdyn/client/graph_nav_upload.html">Graph Nav Upload</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../../bosdyn-client/src/bosdyn/client/gripper_camera_param.html">Gripper Camera Params</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../../bosdyn-client/src/bosdyn/client/gps/README.html">GPS</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../../../../bosdyn-client/src/bosdyn/client/gps/aggregator_client.html">Aggregator Client</a></li>
@@ -522,7 +527,7 @@
              
   <section id="module-bosdyn.choreography.client.choreography">
 <span id="choreography"></span><h1>Choreography<a class="headerlink" href="#module-bosdyn.choreography.client.choreography" title="Permalink to this heading"></a></h1>
-<p>For clients to use the choreography service</p>
+<p>For clients to use the choreography service.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="bosdyn.choreography.client.choreography.ChoreographyClient">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bosdyn.choreography.client.choreography.</span></span><span class="sig-name descname"><span class="pre">ChoreographyClient</span></span><a class="reference internal" href="../../../../../../_modules/bosdyn/choreography/client/choreography.html#ChoreographyClient"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.choreography.client.choreography.ChoreographyClient" title="Permalink to this definition"></a></dt>
@@ -638,7 +643,8 @@ was invalid.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="bosdyn.choreography.client.choreography.ChoreographyClient.get_choreography_status">
 <span class="sig-name descname"><span class="pre">get_choreography_status</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../../_modules/bosdyn/choreography/client/choreography.html#ChoreographyClient.get_choreography_status"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.choreography.client.choreography.ChoreographyClient.get_choreography_status" title="Permalink to this definition"></a></dt>
-<dd><p>Get the dance related status information for a robot and the local time for which it was valid.</p>
+<dd><p>Get the dance related status information for a robot and the local time for which it was
+valid.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -672,8 +678,8 @@ included in the <cite>cha</cite> file. (ex. ‘truncatable’)</p></li>
 <dt class="sig sig-object py" id="bosdyn.choreography.client.choreography.ChoreographyClient.choreography_time_adjust">
 <span class="sig-name descname"><span class="pre">choreography_time_adjust</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">override_client_start_time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_difference</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">validity_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../../_modules/bosdyn/choreography/client/choreography.html#ChoreographyClient.choreography_time_adjust"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.choreography.client.choreography.ChoreographyClient.choreography_time_adjust" title="Permalink to this definition"></a></dt>
 <dd><p>Provide a time to execute the choreography sequence instead the value passed in by
-execute_choreography. Useful for when multiple robots are performing a synced
-performance, and all robots should begin dancing at the same time.</p>
+execute_choreography. Useful for when multiple robots are performing a synced performance,
+and all robots should begin dancing at the same time.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -789,8 +795,8 @@ a LegSize message or a list of 4 floats. If None, all config values are set to z
 <dl class="py method">
 <dt class="sig sig-object py" id="bosdyn.choreography.client.choreography.ChoreographyClient.leg_size_configuration_state">
 <span class="sig-name descname"><span class="pre">leg_size_configuration_state</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../../_modules/bosdyn/choreography/client/choreography.html#ChoreographyClient.leg_size_configuration_state"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.choreography.client.choreography.ChoreographyClient.leg_size_configuration_state" title="Permalink to this definition"></a></dt>
-<dd><p>Read the current leg size configuration from the robot. On a robot with the default leg size configuration the
-values for each leg’s LegSize will be:</p>
+<dd><p>Read the current leg size configuration from the robot. On a robot with the default leg
+size configuration the values for each leg’s LegSize will be:</p>
 <blockquote>
 <div><p>distance_inward = 0.02 m
 distance_outward = 0.02 m
@@ -855,10 +861,10 @@ session associated with that ID.</p></li>
 <dl class="py method">
 <dt class="sig sig-object py" id="bosdyn.choreography.client.choreography.ChoreographyClient.get_choreography_sequence">
 <span class="sig-name descname"><span class="pre">get_choreography_sequence</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seq_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_animation_names_only</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../../_modules/bosdyn/choreography/client/choreography.html#ChoreographyClient.get_choreography_sequence"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.choreography.client.choreography.ChoreographyClient.get_choreography_sequence" title="Permalink to this definition"></a></dt>
-<dd><dl>
-<dt>Get a sequence currently known by the robot, response includes</dt><dd><p>the full ChoreographySequence with the given name and any
-Animations used in the sequence.</p>
-<dl>
+<dd><p>Get a sequence currently known by the robot, response includes the full
+ChoreographySequence with the given name and any Animations used in the sequence.</p>
+<blockquote>
+<div><dl>
 <dt>Args:</dt><dd><p>seq_name (string): the name of the sequence to return.
 return_animation_names_only (bool): If True, skip returning a list of the complete</p>
 <blockquote>
@@ -868,8 +874,7 @@ of the names of required animations will still be returned).</p>
 </div></blockquote>
 </dd>
 </dl>
-</dd>
-</dl>
+</div></blockquote>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>The full GetChoreographySequenceResponse proto.</p>
@@ -886,14 +891,14 @@ of the names of required animations will still be returned).</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="bosdyn.choreography.client.choreography.ChoreographyClient.get_animation">
 <span class="sig-name descname"><span class="pre">get_animation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../../_modules/bosdyn/choreography/client/choreography.html#ChoreographyClient.get_animation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.choreography.client.choreography.ChoreographyClient.get_animation" title="Permalink to this definition"></a></dt>
-<dd><dl>
-<dt>Get an animation currently known by the robot, response includes</dt><dd><p>the full Animation proto with the given name.</p>
-<dl class="simple">
+<dd><p>Get an animation currently known by the robot, response includes the full Animation proto
+with the given name.</p>
+<blockquote>
+<div><dl class="simple">
 <dt>Args:</dt><dd><p>name (string): the name of the animation to return.</p>
 </dd>
 </dl>
-</dd>
-</dl>
+</div></blockquote>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>The full GetAnimation proto.</p>
@@ -910,8 +915,8 @@ of the names of required animations will still be returned).</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="bosdyn.choreography.client.choreography.ChoreographyClient.save_sequence">
 <span class="sig-name descname"><span class="pre">save_sequence</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seq_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../../_modules/bosdyn/choreography/client/choreography.html#ChoreographyClient.save_sequence"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.choreography.client.choreography.ChoreographyClient.save_sequence" title="Permalink to this definition"></a></dt>
-<dd><p>Save an uploaded sequence to the robot. Saved sequences are
-automatically uploaded to the robot when it boots.</p>
+<dd><p>Save an uploaded sequence to the robot. Saved sequences are automatically uploaded to the
+robot when it boots.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>The full SaveSequenceResponse proto.</p>
@@ -928,8 +933,8 @@ automatically uploaded to the robot when it boots.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="bosdyn.choreography.client.choreography.ChoreographyClient.delete_sequence">
 <span class="sig-name descname"><span class="pre">delete_sequence</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seq_name</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../../_modules/bosdyn/choreography/client/choreography.html#ChoreographyClient.delete_sequence"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.choreography.client.choreography.ChoreographyClient.delete_sequence" title="Permalink to this definition"></a></dt>
-<dd><p>Delete a sequence from temporary robot memory and
-delete any copies of the sequence saved to disk.</p>
+<dd><p>Delete a sequence from temporary robot memory and delete any copies of the sequence saved
+to disk.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>The full DeleteSequenceResponse proto.</p>
@@ -946,8 +951,8 @@ delete any copies of the sequence saved to disk.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="bosdyn.choreography.client.choreography.ChoreographyClient.modify_choreography_info">
 <span class="sig-name descname"><span class="pre">modify_choreography_info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seq_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_labels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">remove_labels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../../_modules/bosdyn/choreography/client/choreography.html#ChoreographyClient.modify_choreography_info"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.choreography.client.choreography.ChoreographyClient.modify_choreography_info" title="Permalink to this definition"></a></dt>
-<dd><p>Modifies a sequence’s ChoreographyInfo field to remove or
-add any labels attached to the sequence.</p>
+<dd><p>Modifies a sequence’s ChoreographyInfo field to remove or add any labels attached to the
+sequence.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>The full ModifyChoreographyInfoResponse proto.</p>
@@ -964,8 +969,8 @@ add any labels attached to the sequence.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="bosdyn.choreography.client.choreography.ChoreographyClient.clear_all_sequence_files">
 <span class="sig-name descname"><span class="pre">clear_all_sequence_files</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../../_modules/bosdyn/choreography/client/choreography.html#ChoreographyClient.clear_all_sequence_files"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.choreography.client.choreography.ChoreographyClient.clear_all_sequence_files" title="Permalink to this definition"></a></dt>
-<dd><p>Completely clears all choreography files that are saved on the robot,
-including animation proto files.</p>
+<dd><p>Completely clears all choreography files that are saved on the robot, including animation
+proto files.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>The full ClearAllSequenceFilesResponse proto.</p>
@@ -1017,13 +1022,15 @@ the choreography_sequence_pb2.ChoreographyStateLog constructed from the streamin
 <dl class="py method">
 <dt class="sig sig-object py" id="bosdyn.choreography.client.choreography.ChoreographyClient.build_choreography_time_adjust_request">
 <span class="sig-name descname"><span class="pre">build_choreography_time_adjust_request</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">override_client_start_time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_difference</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">validity_time</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../../_modules/bosdyn/choreography/client/choreography.html#ChoreographyClient.build_choreography_time_adjust_request"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.choreography.client.choreography.ChoreographyClient.build_choreography_time_adjust_request" title="Permalink to this definition"></a></dt>
-<dd><p>Generate the ChoreographyTimeAdjustRequest rpc with the timestamp converted into robot time.</p>
+<dd><p>Generate the ChoreographyTimeAdjustRequest rpc with the timestamp converted into robot
+time.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bosdyn.choreography.client.choreography.ChoreographyClient.build_execute_choreography_request">
 <span class="sig-name descname"><span class="pre">build_execute_choreography_request</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">choreography_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">client_start_time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">choreography_starting_slice</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lease</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../../_modules/bosdyn/choreography/client/choreography.html#ChoreographyClient.build_execute_choreography_request"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.choreography.client.choreography.ChoreographyClient.build_execute_choreography_request" title="Permalink to this definition"></a></dt>
-<dd><p>Generate the ExecuteChoreographyRequest rpc with the timestamp converted into robot time.</p>
+<dd><p>Generate the ExecuteChoreographyRequest rpc with the timestamp converted into robot
+time.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -1162,7 +1169,8 @@ it will just be re-uploaded and processed by the robot again.</p>
 <dt class="sig sig-object py" id="bosdyn.choreography.client.choreography.LeaseError">
 <em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bosdyn.choreography.client.choreography.</span></span><span class="sig-name descname"><span class="pre">LeaseError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">response</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">error_message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../../_modules/bosdyn/choreography/client/choreography.html#LeaseError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.choreography.client.choreography.LeaseError" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="../../../../../bosdyn-client/src/bosdyn/client/exceptions.html#bosdyn.client.exceptions.ResponseError" title="bosdyn.client.exceptions.ResponseError"><code class="xref py py-class docutils literal notranslate"><span class="pre">ResponseError</span></code></a></p>
-<p>Incorrect or invalid leases for data acquisition. Check the lease use results.</p>
+<p>Incorrect or invalid leases for data acquisition.</p>
+<p>Check the lease use results.</p>
 </dd></dl>
 
 <dl class="py exception">
@@ -1170,6 +1178,13 @@ it will just be re-uploaded and processed by the robot again.</p>
 <em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bosdyn.choreography.client.choreography.</span></span><span class="sig-name descname"><span class="pre">AnimationValidationFailedError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">response</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">error_message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../../_modules/bosdyn/choreography/client/choreography.html#AnimationValidationFailedError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.choreography.client.choreography.AnimationValidationFailedError" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="../../../../../bosdyn-client/src/bosdyn/client/exceptions.html#bosdyn.client.exceptions.ResponseError" title="bosdyn.client.exceptions.ResponseError"><code class="xref py py-class docutils literal notranslate"><span class="pre">ResponseError</span></code></a></p>
 <p>The uploaded animation file is invalid and cannot be used in choreography sequences.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="bosdyn.choreography.client.choreography.AnimationRejectedDanceActiveError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bosdyn.choreography.client.choreography.</span></span><span class="sig-name descname"><span class="pre">AnimationRejectedDanceActiveError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">response</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">error_message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../../_modules/bosdyn/choreography/client/choreography.html#AnimationRejectedDanceActiveError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.choreography.client.choreography.AnimationRejectedDanceActiveError" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="../../../../../bosdyn-client/src/bosdyn/client/exceptions.html#bosdyn.client.exceptions.ResponseError" title="bosdyn.client.exceptions.ResponseError"><code class="xref py py-class docutils literal notranslate"><span class="pre">ResponseError</span></code></a></p>
+<p>The animation being uploaded was rejected because the robot was actively dancing.</p>
 </dd></dl>
 
 <dl class="py exception">

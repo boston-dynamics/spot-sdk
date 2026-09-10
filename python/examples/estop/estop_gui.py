@@ -14,12 +14,14 @@ import signal
 import sys
 import threading
 import traceback
+import warnings
 from datetime import datetime
 
 try:
-    import PyQt5.QtCore as QtCore
-    import PyQt5.QtWidgets as QtWidgets
-    from PyQt5.QtGui import QIcon
+    import qtpy.QtCore as QtCore
+    import qtpy.QtWidgets as QtWidgets
+    from qtpy import API_NAME
+    from qtpy.QtGui import QIcon
 
 # Enable backwards compatibility with Python2 via PyQt4
 except ImportError:
@@ -43,11 +45,14 @@ ERROR_LABEL_STYLESHEET = 'font: bold 15px'
 
 
 class EstopGui(QtWidgets.QMainWindow):
-    """The GUI for the estop Button. Provides software estop."""
+    """The GUI for the estop Button.
 
-    disable_signal = QtCore.pyqtSignal()
-    checkin_status_signal = QtCore.pyqtSignal('QString')
-    got_status_signal = QtCore.pyqtSignal('QString')
+    Provides software estop.
+    """
+
+    disable_signal = QtCore.Signal()
+    checkin_status_signal = QtCore.Signal(str)
+    got_status_signal = QtCore.Signal(str)
 
     def __init__(self, hostname, client, timeout_sec, name=None, unique_id=None):
         QtWidgets.QMainWindow.__init__(self)
@@ -71,7 +76,7 @@ class EstopGui(QtWidgets.QMainWindow):
         # Configure UI.
         self.setCentralWidget(QtWidgets.QWidget())
         self.center_layout = QtWidgets.QVBoxLayout(self.centralWidget())
-        self.center_layout.setAlignment(QtCore.Qt.AlignTop)
+        self.center_layout.setAlignment(QtCore.Qt.AlignmentFlag.AlignTop)
         self.center_layout.setSpacing(1)
         self.center_layout.setContentsMargins(1, 1, 1, 1)
 
@@ -84,7 +89,7 @@ class EstopGui(QtWidgets.QMainWindow):
         self.center_layout.addWidget(self.stop_button)
 
         self.status_label = QtWidgets.QLabel('Starting...')
-        self.status_label.setAlignment(QtCore.Qt.AlignCenter)
+        self.status_label.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
         self.status_label.setStyleSheet(ERROR_LABEL_STYLESHEET)
         self.center_layout.addWidget(self.status_label)
 
@@ -161,7 +166,7 @@ class EstopGui(QtWidgets.QMainWindow):
         d = QtWidgets.QMessageBox()
         d.setWindowTitle('SW Estop Status')
         d.setText(markup)
-        d.exec_()
+        d.exec()
 
     def quit(self):
         """Shutdown estop keep-alive and all GUI threads."""
@@ -178,10 +183,10 @@ class EstopGui(QtWidgets.QMainWindow):
 
 
 def _level_string(level):
-    """Convert a stop level into a string for the UI"""
+    """Convert a stop level into a string for the UI."""
     if level == estop_protos.ESTOP_LEVEL_NONE:
         return 'Allowed'
-    elif level in (estop_protos.ESTOP_LEVEL_CUT, estop_protos.ESTOP_LEVEL_SETTLE_THEN_CUT):
+    if level in (estop_protos.ESTOP_LEVEL_CUT, estop_protos.ESTOP_LEVEL_SETTLE_THEN_CUT):
         return 'Stopped'
     return ''
 
@@ -214,12 +219,14 @@ def status_response_to_markup(status, my_id=None):
 
 def build_app(hostname, estop_client, timeout_sec):
     """Build the application window and configure the estop.
+
     Args:
       timeout_sec: Timeout of this estop endpoint (seconds)
     """
     qt_app = QtWidgets.QApplication(sys.argv)
 
     icon_path = os.path.join(os.path.dirname(__file__), 'resources', 'stop-sign.png')
+
     icon_path = os.path.normpath(icon_path)
     icon = QIcon(icon_path)
     qt_app.setWindowIcon(icon)
@@ -237,7 +244,7 @@ def run_app(qt_app, button_window):
     """Run the QT application."""
     button_window.show()
 
-    retcode = qt_app.exec_()
+    retcode = qt_app.exec()
     button_window.quit()
     return retcode
 
@@ -249,7 +256,7 @@ def build_and_run_app(hostname, estop_client, options):
 
     # Set some Qt flags for our GUI behavior.
     if options.on_top:
-        button_window.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
+        button_window.setWindowFlags(QtCore.Qt.WindowType.WindowStaysOnTopHint)
     if options.start_minimized:
         button_window.setWindowState(QtCore.Qt.WindowMinimized)
 
@@ -273,6 +280,13 @@ def build_and_run_app(hostname, estop_client, options):
 
 
 def main():
+
+    if API_NAME != "PyQt6":
+        warnings.warn(
+            f"RuntimeWarning: Running on {API_NAME}. Backwards compatibility is expected, but "
+            f"this script is optimized for PyQt6. "
+            f"Please run 'export QT_API=pyqt6' to configure qtpy to PyQt6.", stacklevel=2)
+
     parser = argparse.ArgumentParser()
     bosdyn.client.util.add_base_arguments(parser)
     parser.add_argument('-t', '--timeout', default=5, type=float, help='Timeout in seconds')

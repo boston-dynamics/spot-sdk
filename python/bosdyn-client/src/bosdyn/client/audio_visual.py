@@ -8,8 +8,14 @@ import collections
 import math
 
 from bosdyn.api import audio_visual_pb2, audio_visual_service_pb2_grpc
-from bosdyn.client.common import (BaseClient, common_header_errors, error_factory, error_pair,
-                                  handle_common_header_errors, handle_unset_status_error)
+from bosdyn.client.common import (
+    BaseClient,
+    common_header_errors,
+    error_factory,
+    error_pair,
+    handle_common_header_errors,
+    handle_unset_status_error,
+)
 
 from .exceptions import Error as BaseError
 from .exceptions import ResponseError
@@ -122,7 +128,8 @@ class AudioVisualClient(BaseClient):
 
         Raises:
             RpcError: Problem communicating with the robot.
-            InvalidClientError: A different client is running this behavior."""
+            InvalidClientError: A different client is running this behavior.
+        """
 
         req = audio_visual_pb2.StopBehaviorRequest(behavior_name=name)
 
@@ -137,7 +144,8 @@ class AudioVisualClient(BaseClient):
 
         Raises:
             RpcError: Problem communicating with the robot.
-            InvalidClientError: A different client is running this behavior."""
+            InvalidClientError: A different client is running this behavior.
+        """
 
         req = audio_visual_pb2.StopBehaviorRequest(behavior_name=name)
 
@@ -299,7 +307,8 @@ class AudioVisualClient(BaseClient):
 
     def set_system_params(self, enabled=None, max_brightness=None, buzzer_max_volume=None,
                           speaker_max_volume=None, normal_color_association=None,
-                          warning_color_association=None, danger_color_association=None, **kwargs):
+                          warning_color_association=None, danger_color_association=None,
+                          speaker_disable_agc=None, speaker_disable_nr=None, **kwargs):
         """Set the system params.
 
         Args:
@@ -310,6 +319,8 @@ class AudioVisualClient(BaseClient):
             normal_color_association: [optional] The color to associate with the normal color preset.
             warning_color_association: [optional] The color to associate with the warning color preset.
             danger_color_association: [optional] The color to associate with the danger color preset.
+            speaker_disable_agc: [optional] Disable automatic gain control on speaker audio (boolean).
+            speaker_disable_nr: [optional] Disable noise reduction on speaker audio (boolean).
 
 
         Raises:
@@ -331,13 +342,17 @@ class AudioVisualClient(BaseClient):
             req.warning_color_association.CopyFrom(warning_color_association)
         if (danger_color_association is not None):
             req.danger_color_association.CopyFrom(danger_color_association)
+        if (speaker_disable_agc is not None):
+            req.speaker_disable_agc.value = speaker_disable_agc
+        if (speaker_disable_nr is not None):
+            req.speaker_disable_nr.value = speaker_disable_nr
         return self.call(self._stub.SetSystemParams, req, error_from_response=common_header_errors,
                          copy_request=False, **kwargs)
 
     def set_system_params_async(self, enabled=None, max_brightness=None, buzzer_max_volume=None,
                                 speaker_max_volume=None, normal_color_association=None,
                                 warning_color_association=None, danger_color_association=None,
-                                **kwargs):
+                                speaker_disable_agc=None, speaker_disable_nr=None, **kwargs):
         """Async version of set_system_params().
 
         Args:
@@ -348,6 +363,8 @@ class AudioVisualClient(BaseClient):
             normal_color_association: [optional] The color to associate with the normal color preset.
             warning_color_association: [optional] The color to associate with the warning color preset.
             danger_color_association: [optional] The color to associate with the danger color preset.
+            speaker_disable_agc: [optional] Disable automatic gain control on speaker audio (boolean).
+            speaker_disable_nr: [optional] Disable noise reduction on speaker audio (boolean).
 
         Raises:
             RpcError: Problem communicating with the robot.
@@ -368,6 +385,10 @@ class AudioVisualClient(BaseClient):
             req.warning_color_association.CopyFrom(warning_color_association)
         if (danger_color_association is not None):
             req.danger_color_association.CopyFrom(danger_color_association)
+        if (speaker_disable_agc is not None):
+            req.speaker_disable_agc.value = speaker_disable_agc
+        if (speaker_disable_nr is not None):
+            req.speaker_disable_nr.value = speaker_disable_nr
         return self.call_async(self._stub.SetSystemParams, req,
                                error_from_response=common_header_errors, copy_request=False,
                                **kwargs)

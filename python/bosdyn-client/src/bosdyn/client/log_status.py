@@ -18,13 +18,18 @@ import time
 import bosdyn.util
 from bosdyn.api.log_status import log_status_pb2 as log_status
 from bosdyn.api.log_status import log_status_service_pb2_grpc as log_status_service
-from bosdyn.client.common import (BaseClient, error_factory, error_pair,
-                                  handle_common_header_errors, handle_unset_status_error)
+from bosdyn.client.common import (
+    BaseClient,
+    error_factory,
+    error_pair,
+    handle_common_header_errors,
+    handle_unset_status_error,
+)
 from bosdyn.client.exceptions import ResponseError
 
 
 class LogStatusResponseError(ResponseError):
-    """Error in Log Status RPC"""
+    """Error in Log Status RPC."""
 
 
 class ExperimentAlreadyRunningError(LogStatusResponseError):
@@ -144,7 +149,11 @@ class LogStatusClient(BaseClient):
                                **kwargs)
 
     def start_concurrent_log(self, duration_seconds, event=None, **kwargs):
-        """Start an experiment log that allows concurrency, to run based on a particular data_set, as derived from the recipe corresponding to the provided event. An event must be provided!"""
+        """Start an experiment log that allows concurrency, to run based on a particular data_set,
+        as derived from the recipe corresponding to the provided event.
+
+        An event must be provided!
+        """
         req = log_status.StartConcurrentLogRequest()
         req.keep_alive.CopyFrom(bosdyn.util.seconds_to_duration(duration_seconds))
 
@@ -157,7 +166,11 @@ class LogStatusClient(BaseClient):
 
     def start_concurrent_log_async(self, duration_seconds, data_set_names=None, properties=None,
                                    event=None, **kwargs):
-        """Start an experiment log that allows concurrency, to run based on a particular data_set, as derived from the recipe corresponding to the provided event. An event must be provided!"""
+        """Start an experiment log that allows concurrency, to run based on a particular data_set,
+        as derived from the recipe corresponding to the provided event.
+
+        An event must be provided!
+        """
         req = log_status.StartConcurrentLogRequest()
         req.keep_alive.CopyFrom(bosdyn.util.seconds_to_duration(duration_seconds))
 

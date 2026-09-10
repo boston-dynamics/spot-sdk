@@ -12,7 +12,7 @@ This Orbit API example demonstrates how to create, manage, and retrieve Orbit ba
 
 ## Understanding Orbit Web API
 
-To get started with the Orbit Web API, please begin with the [Quickstart Guide](../../../../docs/python/quickstart.md) to set up your Python programming environment correctly. For details specific to this example, refer to the [Orbit API Docs](../../../../docs/concepts/orbit/about_orbit.md). For a complete list of resources and their methods, see the <a href="../../../../docs/orbit/docs.html">Orbit API Reference</a>.
+To get started with the Orbit Web API, please begin with the [Quickstart Guide](../../../../docs/python/quickstart.md) to set up your Python programming environment correctly. For details specific to this example, refer to the [Orbit API Docs](../../../../docs/concepts/orbit/about_orbit.md).
 
 ## Setup Dependencies
 

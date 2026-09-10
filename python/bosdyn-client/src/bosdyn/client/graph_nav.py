@@ -14,10 +14,17 @@ from deprecated.sphinx import deprecated
 
 from bosdyn.api import data_chunk_pb2, lease_pb2
 from bosdyn.api.graph_nav import graph_nav_pb2, graph_nav_service_pb2_grpc, map_pb2, nav_pb2
-from bosdyn.client.common import (BaseClient, common_header_errors, common_lease_errors,
-                                  error_factory, error_pair, handle_common_header_errors,
-                                  handle_lease_use_result_errors, handle_license_errors_if_present,
-                                  handle_unset_status_error)
+from bosdyn.client.common import (
+    BaseClient,
+    common_header_errors,
+    common_lease_errors,
+    error_factory,
+    error_pair,
+    handle_common_header_errors,
+    handle_lease_use_result_errors,
+    handle_license_errors_if_present,
+    handle_unset_status_error,
+)
 from bosdyn.client.exceptions import ResponseError, UnimplementedError
 from bosdyn.client.lease import add_lease_wallet_processors
 from bosdyn.util import now_sec
@@ -50,9 +57,8 @@ class GraphNavClient(BaseClient):
             fiducial_init=graph_nav_pb2.SetLocalizationRequest.FIDUCIAL_INIT_NEAREST,
             use_fiducial_id=None, refine_fiducial_result_with_icp=False, do_ambiguity_check=False,
             refine_with_visual_features=False, verify_visual_features_quality=False, **kwargs):
-        """Version of set_localization which returns the full response,
-        rather than only the Localization message.
-        """
+        """Version of set_localization which returns the full response, rather than only the
+        Localization message."""
         req = self._build_set_localization_request(
             initial_guess_localization, ko_tform_body, max_distance, max_yaw, fiducial_init,
             use_fiducial_id, refine_fiducial_result_with_icp, do_ambiguity_check,
@@ -823,7 +829,8 @@ class GraphNavClient(BaseClient):
 
     @staticmethod
     def _data_chunk_iterator_upload_graph(serialized_upload_graph, data_chunk_byte_size):
-        """Converts a serialized UploadGraphRequest into a series of UploadGraphStreamingRequests."""
+        """Converts a serialized UploadGraphRequest into a series of
+        UploadGraphStreamingRequests."""
         total_bytes_size = len(serialized_upload_graph)
         num_chunks = math.ceil(total_bytes_size / data_chunk_byte_size)
         for i in range(num_chunks):
@@ -910,7 +917,7 @@ class GraphNavClient(BaseClient):
 
     @staticmethod
     def generate_travel_params(max_distance, max_yaw, velocity_limit=None):
-        """ Generate the API TravelParams for navigation requests.
+        """Generate the API TravelParams for navigation requests.
 
         Args:
             max_distance: Distances (meters) threshold for when we've reached the final waypoint.
@@ -926,7 +933,7 @@ class GraphNavClient(BaseClient):
 
     @staticmethod
     def build_route(waypoint_id_list, edge_id_list):
-        """ Generate the API Route for navigation requests.
+        """Generate the API Route for navigation requests.
 
         Args:
             waypoint_id_list: List of waypoint id strings in which a route should pass through.
@@ -951,7 +958,7 @@ class GraphNavServiceResponseError(ResponseError):
 
 
 class UploadWaypointSnapshotError(GraphNavServiceResponseError):
-    """Errors related to uploading a waypoint snapshot"""
+    """Errors related to uploading a waypoint snapshot."""
 
 
 class UploadGraphError(GraphNavServiceResponseError):
@@ -967,7 +974,8 @@ class InvalidGraphError(UploadGraphError):
 
 
 class IncompatibleSensorsError(GraphNavServiceResponseError):
-    """The map was recorded with using a sensor configuration which is incompatible with the robot (for example, LIDAR configuration)."""
+    """The map was recorded with using a sensor configuration which is incompatible with the robot
+    (for example, LIDAR configuration)."""
 
 
 class AreaCallbackMapError(GraphNavServiceResponseError):
@@ -1015,7 +1023,10 @@ class IsRecordingError(RobotStateError):
 
 
 class CannotModifyMapDuringRecordingError(RobotStateError):
-    """Cannot clear the map during recording. Call StopRecording first."""
+    """Cannot clear the map during recording.
+
+    Call StopRecording first.
+    """
 
 
 class RobotImpairedError(RobotStateError):
@@ -1081,32 +1092,37 @@ class InvalidGPSError(RouteNavigationError):
     def _gps_status_to_string(self, status):
         if status == graph_nav_pb2.NavigateToAnchorResponse.GPS_STATUS_OK:
             return 'OK'
-        elif status == graph_nav_pb2.NavigateToAnchorResponse.GPS_STATUS_NO_COORDS_IN_MAP:
+        if status == graph_nav_pb2.NavigateToAnchorResponse.GPS_STATUS_NO_COORDS_IN_MAP:
             return 'The uploaded map did not contain any valid GPS coordinates.'
-        elif status == graph_nav_pb2.NavigateToAnchorResponse.GPS_STATUS_TOO_FAR_FROM_MAP:
+        if status == graph_nav_pb2.NavigateToAnchorResponse.GPS_STATUS_TOO_FAR_FROM_MAP:
             return 'The given coordinates were too far from any coordinates in the uploaded map.'
-        else:
-            return 'Unknown error'
+        return 'Unknown error'
 
     def __str__(self):
         return f'{self.error_message} (reason: {self._gps_status_to_string(self.response.gps_status)})'
 
 
 class RobotNotLocalizedToRouteError(RouteNavigationError):
-    """The current localization doesn't refer to any waypoint in the route (possibly uninitialized localization)."""
+    """The current localization doesn't refer to any waypoint in the route (possibly uninitialized
+    localization)."""
 
 
 class RobotStuckError(RouteNavigationError):
-    """The robot is stuck or unable to find a way forward. Resend the command with a new ID, or send a different command to try again."""
+    """The robot is stuck or unable to find a way forward.
+
+    Resend the command with a new ID, or send a different command to try again.
+    """
 
 
 @deprecated(reason='Use UnrecognizedCommandError instead', version='3.1.0', action='ignore')
 class UnrecongizedCommandError(RouteNavigationError):
-    """Happens when you try to continue a command that was either expired, or had an unrecognized id."""
+    """Happens when you try to continue a command that was either expired, or had an unrecognized
+    id."""
 
 
 class UnrecognizedCommandError(UnrecongizedCommandError):
-    """Happens when you try to continue a command that was either expired, or had an unrecognized id."""
+    """Happens when you try to continue a command that was either expired, or had an unrecognized
+    id."""
 
 
 def _localization_from_response(response):
@@ -1135,7 +1151,8 @@ def _get_graph(response):
 
 
 def _get_streamed_data(response, data_type):
-    """Given a list of streamed responses, return an instance of the given data type that is parsed from those responses."""
+    """Given a list of streamed responses, return an instance of the given data type that is parsed
+    from those responses."""
     data = bytes()
     for resp in response:
         data += resp.chunk.data
@@ -1145,7 +1162,7 @@ def _get_streamed_data(response, data_type):
 
 
 def _get_streamed_download_graph(response):
-    """Reads a streamed response to recreate a DownloadGraphRequest"""
+    """Reads a streamed response to recreate a DownloadGraphRequest."""
     download_graph = _get_streamed_data(response, graph_nav_pb2.DownloadGraphResponse)
     return download_graph.graph
 
@@ -1409,7 +1426,8 @@ def _download_graph_stream_errors(response):
 @handle_common_header_errors
 @handle_unset_status_error(unset='STATUS_UNKNOWN')
 def _download_waypoint_snapshot_stream_errors(response):
-    """Return a custom exception based on download waypoint snapshot streaming response, None if no error."""
+    """Return a custom exception based on download waypoint snapshot streaming response, None if no
+    error."""
     # Iterate through the response since the download request responds with a stream.
     for resp in response:
         # Handle error statuses from the request.
@@ -1424,7 +1442,8 @@ def _download_waypoint_snapshot_stream_errors(response):
 @handle_common_header_errors
 @handle_unset_status_error(unset='STATUS_UNKNOWN')
 def _download_edge_snapshot_stream_errors(response):
-    """Return a custom exception based on download edge snapshot streaming response, None if no error."""
+    """Return a custom exception based on download edge snapshot streaming response, None if no
+    error."""
     # Iterate through the response since the download request responds with a stream.
     for resp in response:
         # Handle error statuses from the request.

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>bosdyn.client.util &mdash; Spot 5.1.9 documentation</title>
+  <title>bosdyn.client.util &mdash; Spot 5.2.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
     <link rel="shortcut icon" href="../../../_static/bd-favicon.png"/>
@@ -35,7 +35,7 @@
               <img src="../../../_static/bd-official-white.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                5.1.9
+                5.2.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -202,7 +202,8 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/world_object_mutations/README.html">World Object Mutations</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/visualizer/README.html">Visualizer</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/gripper_camera_params/README.html">Gripper Camera Parameters</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_cam/README.html">Spot CAM</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_cam/README.html">Spot CAM Services</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_cam/README.html#spot-cam-video-core-io-extension-example">Spot Cam Video Core IO Extension Example</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/stitch_front_images/README.html">Stitch Front Images</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/get_depth_plus_visual_image/README.html">Project Depth Data on Visual Images</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/service_customization/custom_parameter_image_server/README.html">Custom Parameter Image Server</a></li>
@@ -246,6 +247,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/graph_nav_command_line/README.html">GraphNav and Recording Service Command Line Interfaces</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/graph_nav_command_line/README.html#example-programs">Example Programs</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/graph_nav_extract_point_cloud/README.html">Graph Nav Extract Point Cloud</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/graph_nav_map_to_usd/README.html">Graph Nav Map to USD</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/graph_nav_view_map/README.html">Graph Nav View Map</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/graph_nav_view_gps/README.html">Graph Nav View GPS Data</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/get_mission_state/README.html">Get Mission State</a></li>
@@ -266,7 +268,8 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/joint_control_examples.html">Joint Control API Examples</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/orbit.html">Orbit</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/hello_orbit/README.html">Hello Orbit</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/hello_orbit/README.html">Hello Orbit (v0, OrbitClient)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/orbit_v1_api/README.html">Orbit v1 API (v1, raw HTTP)</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/export_run_archives/README.html">Export Run Archives</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/export_site_walk_archives/README.html">Export Sitewalk Archives</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/anomalies/README.html">Anomalies</a></li>
@@ -321,6 +324,8 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/fault.html">Fault</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/frame_helpers.html">Frame Helpers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/graph_nav.html">Graph Nav</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/graph_nav_download.html">Graph Nav Download</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/graph_nav_upload.html">Graph Nav Upload</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/gripper_camera_param.html">Gripper Camera Params</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/gps/README.html">GPS</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/gps/aggregator_client.html">Aggregator Client</a></li>
@@ -770,8 +775,8 @@
 
 
 <div class="viewcode-block" id="read_payload_credentials"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/util.html#bosdyn.client.util.read_payload_credentials">[docs]</a><span class="k">def</span> <span class="nf">read_payload_credentials</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Read the guid and secret from a file that already exists.  The file should have the guid and secret</span>
-<span class="sd">    as the first and second lines in the file.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Read the guid and secret from a file that already exists.  The file should have the guid and</span>
+<span class="sd">    secret as the first and second lines in the file.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        filename: Name of the file to read.</span>
@@ -783,7 +788,7 @@
 <span class="sd">         OSError if the credential file cannot be read.</span>
 <span class="sd">         ValueError if the guid or secret are missing from the file.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">credentials_file</span><span class="p">:</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span> <span class="k">as</span> <span class="n">credentials_file</span><span class="p">:</span>
         <span class="n">guid</span> <span class="o">=</span> <span class="n">credentials_file</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
         <span class="n">secret</span> <span class="o">=</span> <span class="n">credentials_file</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">guid</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">secret</span><span class="p">:</span>
@@ -792,9 +797,8 @@
 
 
 <div class="viewcode-block" id="read_or_create_payload_credentials"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/util.html#bosdyn.client.util.read_or_create_payload_credentials">[docs]</a><span class="k">def</span> <span class="nf">read_or_create_payload_credentials</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Only for use when attempting to register a payload. If simply trying to authenticate,</span>
-<span class="sd">    use get_guid_or_secret or read_payload_credentials instead.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Only for use when attempting to register a payload. If simply trying to authenticate, use</span>
+<span class="sd">    get_guid_or_secret or read_payload_credentials instead.</span>
 
 <span class="sd">    When registering, attempt to read the payload&#39;s guid and secret from the specified file.</span>
 <span class="sd">    If this file exists, it should have the guid and secret as the first and second lines in the</span>
@@ -826,8 +830,8 @@
 
 
 <div class="viewcode-block" id="get_guid_and_secret"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/util.html#bosdyn.client.util.get_guid_and_secret">[docs]</a><span class="k">def</span> <span class="nf">get_guid_and_secret</span><span class="p">(</span><span class="n">parsed_options</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the guid and secret for a payload, based on the options that were added</span>
-<span class="sd">    via add_payload_credentials_arguments().</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the guid and secret for a payload, based on the options that were added via</span>
+<span class="sd">    add_payload_credentials_arguments().</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        parsed_options: Namespace result of parser.parse_args()</span>
@@ -851,10 +855,9 @@
 
 
 <div class="viewcode-block" id="add_payload_credentials_file_argument"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/util.html#bosdyn.client.util.add_payload_credentials_file_argument">[docs]</a><span class="k">def</span> <span class="nf">add_payload_credentials_file_argument</span><span class="p">(</span><span class="n">parser</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Add argument for payload_credentials_file to an ArgumentParser or argument group.</span>
-<span class="sd">       This file is where the payload&#39;s GUID and secret are stored. The GUID and secret can</span>
-<span class="sd">       be securely generated on a per-robot basis and written to this file with</span>
-<span class="sd">       read_or_create_payload_credentials(filename).</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Add argument for payload_credentials_file to an ArgumentParser or argument group. This file</span>
+<span class="sd">    is where the payload&#39;s GUID and secret are stored. The GUID and secret can be securely generated</span>
+<span class="sd">    on a per-robot basis and written to this file with read_or_create_payload_credentials(filename).</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        parser: Argument parser object</span>
@@ -866,8 +869,8 @@
 
 
 <div class="viewcode-block" id="add_payload_credentials_arguments"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/util.html#bosdyn.client.util.add_payload_credentials_arguments">[docs]</a><span class="k">def</span> <span class="nf">add_payload_credentials_arguments</span><span class="p">(</span><span class="n">parser</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Add arguments common to most payload related applications.</span>
-<span class="sd">    Use get_guid_and_secret() to get the guid and secret from the resulting parse.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Add arguments common to most payload related applications. Use get_guid_and_secret() to get</span>
+<span class="sd">    the guid and secret from the resulting parse.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        parser: Argument parser object.</span>
@@ -904,8 +907,8 @@
 
 
 <div class="viewcode-block" id="safe_pb_enum_to_string"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/util.html#bosdyn.client.util.safe_pb_enum_to_string">[docs]</a><span class="k">def</span> <span class="nf">safe_pb_enum_to_string</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">pb_enum_obj</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Safe wrapper to convert a protobuf enum object to its string representation.</span>
-<span class="sd">    Avoids throwing an exception if the status is unknown by the enum object.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Safe wrapper to convert a protobuf enum object to its string representation. Avoids throwing</span>
+<span class="sd">    an exception if the status is unknown by the enum object.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        value: The enum value to convert</span>

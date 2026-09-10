@@ -18,15 +18,21 @@ import bosdyn.client.lease
 import bosdyn.util
 from bosdyn.api import lease_pb2
 from bosdyn.api.keepalive import keepalive_pb2, keepalive_service_pb2_grpc
-from bosdyn.client.common import (BaseClient, common_header_errors, error_factory, error_pair,
-                                  handle_common_header_errors, handle_unset_status_error)
+from bosdyn.client.common import (
+    BaseClient,
+    common_header_errors,
+    error_factory,
+    error_pair,
+    handle_common_header_errors,
+    handle_unset_status_error,
+)
 from bosdyn.client.error_callback_result import ErrorCallbackResult
 from bosdyn.client.exceptions import ResponseError, RetryableRpcError
 from bosdyn.util import now_sec
 
 
 class KeepaliveResponseError(ResponseError):
-    """Error in Keepalive RPC"""
+    """Error in Keepalive RPC."""
 
 
 class InvalidLeaseError(KeepaliveResponseError):
@@ -41,12 +47,12 @@ class Policy():
     """Helper class for API Policy."""
 
     def __init__(self, proto: Union[None, 'keepalive_pb2.Policy'] = None):
-        """Constructor"""
+        """Constructor."""
         self.policy_proto = proto or keepalive_pb2.Policy()
 
     @property
     def name(self) -> str:
-        """Get or set the name of the Policy"""
+        """Get or set the name of the Policy."""
         return self.policy_proto.name
 
     @name.setter

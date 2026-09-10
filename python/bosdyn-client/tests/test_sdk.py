@@ -29,7 +29,7 @@ class ClientTest(unittest.TestCase):
 
 
 class SdkTest(unittest.TestCase):
-    CA_CERT = """-----BEGIN CERTIFICATE-----
+    CA_CERT = b"""-----BEGIN CERTIFICATE-----
 Lovely Spam! Wonderful Spam!
 Lovely Spam! Wonderful Spam
 Spa-a-a-a-a-a-a-am
@@ -40,7 +40,7 @@ Lovely Spam! (Lovely Spam!)
 Lovely Spam! (Lovely Spam!)
 Lovely Spam!
 Spam, Spam, Spam, Spam!
------END CERTIFICATE-----""".encode()
+-----END CERTIFICATE-----"""
 
     def _create_sdk(self, client_name='sdk-test', cert=None):
         sdk = bosdyn.client.Sdk()

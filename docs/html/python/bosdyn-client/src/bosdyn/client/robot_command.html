@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Robot Command &mdash; Spot 5.1.9 documentation</title>
+  <title>Robot Command &mdash; Spot 5.2.0 documentation</title>
       <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../../../_static/style.css" type="text/css" />
     <link rel="shortcut icon" href="../../../../../_static/bd-favicon.png"/>
@@ -38,7 +38,7 @@
               <img src="../../../../../_static/bd-official-white.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                5.1.9
+                5.2.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
@@ -205,7 +205,8 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/world_object_mutations/README.html">World Object Mutations</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/visualizer/README.html">Visualizer</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/gripper_camera_params/README.html">Gripper Camera Parameters</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../../examples/spot_cam/README.html">Spot CAM</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/spot_cam/README.html">Spot CAM Services</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/spot_cam/README.html#spot-cam-video-core-io-extension-example">Spot Cam Video Core IO Extension Example</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/stitch_front_images/README.html">Stitch Front Images</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/get_depth_plus_visual_image/README.html">Project Depth Data on Visual Images</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/service_customization/custom_parameter_image_server/README.html">Custom Parameter Image Server</a></li>
@@ -249,6 +250,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/graph_nav_command_line/README.html">GraphNav and Recording Service Command Line Interfaces</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/graph_nav_command_line/README.html#example-programs">Example Programs</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/graph_nav_extract_point_cloud/README.html">Graph Nav Extract Point Cloud</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/graph_nav_map_to_usd/README.html">Graph Nav Map to USD</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/graph_nav_view_map/README.html">Graph Nav View Map</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/graph_nav_view_gps/README.html">Graph Nav View GPS Data</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/get_mission_state/README.html">Get Mission State</a></li>
@@ -269,7 +271,8 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../examples/docs/joint_control_examples.html">Joint Control API Examples</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../examples/docs/orbit.html">Orbit</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../../../examples/orbit/hello_orbit/README.html">Hello Orbit</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/orbit/hello_orbit/README.html">Hello Orbit (v0, OrbitClient)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/orbit/orbit_v1_api/README.html">Orbit v1 API (v1, raw HTTP)</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/orbit/export_run_archives/README.html">Export Run Archives</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/orbit/export_site_walk_archives/README.html">Export Sitewalk Archives</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/orbit/anomalies/README.html">Anomalies</a></li>
@@ -324,6 +327,8 @@
 <li class="toctree-l4"><a class="reference internal" href="fault.html">Fault</a></li>
 <li class="toctree-l4"><a class="reference internal" href="frame_helpers.html">Frame Helpers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="graph_nav.html">Graph Nav</a></li>
+<li class="toctree-l4"><a class="reference internal" href="graph_nav_download.html">Graph Nav Download</a></li>
+<li class="toctree-l4"><a class="reference internal" href="graph_nav_upload.html">Graph Nav Upload</a></li>
 <li class="toctree-l4"><a class="reference internal" href="gripper_camera_param.html">Gripper Camera Params</a></li>
 <li class="toctree-l4"><a class="reference internal" href="gps/README.html">GPS</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="gps/aggregator_client.html">Aggregator Client</a></li>
@@ -604,8 +609,8 @@
 <dt class="sig sig-object py" id="bosdyn.client.robot_command.CommandFailedErrorWithFeedback">
 <em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bosdyn.client.robot_command.</span></span><span class="sig-name descname"><span class="pre">CommandFailedErrorWithFeedback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">feedback</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/robot_command.html#CommandFailedErrorWithFeedback"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.robot_command.CommandFailedErrorWithFeedback" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#bosdyn.client.robot_command.CommandFailedError" title="bosdyn.client.robot_command.CommandFailedError"><code class="xref py py-class docutils literal notranslate"><span class="pre">CommandFailedError</span></code></a></p>
-<p>Command indicated it failed in its feedback.
-This subclass contains the feedback response causing the error.</p>
+<p>Command indicated it failed in its feedback.</p>
+<p>This subclass contains the feedback response causing the error.</p>
 </dd></dl>
 
 <dl class="py exception">
@@ -957,8 +962,8 @@ to the returned RobotCommand.</p></li>
 <dt class="sig sig-object py" id="bosdyn.client.robot_command.RobotCommandBuilder.synchro_se2_trajectory_command">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">synchro_se2_trajectory_command</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">goal_se2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frame_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">body_height</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">locomotion_hint</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">build_on_command</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/robot_command.html#RobotCommandBuilder.synchro_se2_trajectory_command"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.robot_command.RobotCommandBuilder.synchro_se2_trajectory_command" title="Permalink to this definition"></a></dt>
 <dd><p>Command robot to move to pose along a 2D plane. Pose can be specified in the world
-(kinematic odometry or vision world) frames. The arguments body_height and
-locomotion_hint are ignored if params argument is passed.</p>
+(kinematic odometry or vision world) frames. The arguments body_height and locomotion_hint
+are ignored if params argument is passed.</p>
 <p>A trajectory command requires an end time. End time is not set in this function, but rather
 is set externally before call to RobotCommandService.</p>
 <dl class="field-list simple">
@@ -984,9 +989,9 @@ to the returned RobotCommand.</p></li>
 <dl class="py method">
 <dt class="sig sig-object py" id="bosdyn.client.robot_command.RobotCommandBuilder.synchro_trajectory_command_in_body_frame">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">synchro_trajectory_command_in_body_frame</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">goal_x_rt_body</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">goal_y_rt_body</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">goal_heading_rt_body</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frame_tree_snapshot</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">body_height</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">locomotion_hint</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">build_on_command</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/robot_command.html#RobotCommandBuilder.synchro_trajectory_command_in_body_frame"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.robot_command.RobotCommandBuilder.synchro_trajectory_command_in_body_frame" title="Permalink to this definition"></a></dt>
-<dd><p>Command robot to move to pose described relative to the robots body along a 2D plane. For example,
-a command to move forward 2 meters at the same heading will have goal_x_rt_body=2.0, goal_y_rt_body=0.0,
-goal_heading_rt_body=0.0.</p>
+<dd><p>Command robot to move to pose described relative to the robots body along a 2D plane. For
+example, a command to move forward 2 meters at the same heading will have
+goal_x_rt_body=2.0, goal_y_rt_body=0.0, goal_heading_rt_body=0.0.</p>
 <p>The arguments body_height and locomotion_hint are ignored if params argument is passed. A trajectory
 command requires an end time. End time is not set in this function, but rather is set externally before
 call to RobotCommandService.</p>
@@ -1046,10 +1051,10 @@ to the returned RobotCommand.</p></li>
 <dt class="sig sig-object py" id="bosdyn.client.robot_command.RobotCommandBuilder.synchro_stand_command">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">synchro_stand_command</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">params=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">body_height=0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">footprint_R_body=&lt;bosdyn.geometry.EulerZXY</span> <span class="pre">object&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">build_on_command=None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/robot_command.html#RobotCommandBuilder.synchro_stand_command"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.robot_command.RobotCommandBuilder.synchro_stand_command" title="Permalink to this definition"></a></dt>
 <dd><p>Command robot to stand. If the robot is sitting, it will stand up. If the robot is
-moving, it will come to a stop. Params can specify a trajectory for the body to follow
-while standing. In the simplest case, this can be a specific position+orientation which the
-body will hold at. The arguments body_height and footprint_R_body are ignored if params
-argument is passed.</p>
+moving, it will come to a stop. Params can specify a trajectory for the body to follow while
+standing. In the simplest case, this can be a specific position+orientation which the body
+will hold at. The arguments body_height and footprint_R_body are ignored if params argument
+is passed.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -1091,11 +1096,11 @@ to the returned RobotCommand.</p></li>
 <dl class="py method">
 <dt class="sig sig-object py" id="bosdyn.client.robot_command.RobotCommandBuilder.stance_command">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">stance_command</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">se2_frame_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pos_fl_rt_frame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pos_fr_rt_frame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pos_hl_rt_frame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pos_hr_rt_frame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">accuracy=0.05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">body_height=0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">footprint_R_body=&lt;bosdyn.geometry.EulerZXY</span> <span class="pre">object&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">build_on_command=None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/robot_command.html#RobotCommandBuilder.stance_command"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.robot_command.RobotCommandBuilder.stance_command" title="Permalink to this definition"></a></dt>
-<dd><p>Command robot to stance with the feet at specified positions.
-This will cause the robot to reposition its feet. This is not intended to be a mobility
-command and will reject commands where the foot position is out of reach without locomoting.
-To stance at a far location, try using SE2TrajectoryCommand to safely put the robot at the
-correct location first.</p>
+<dd><p>Command robot to stance with the feet at specified positions. This will cause the robot
+to reposition its feet. This is not intended to be a mobility command and will reject
+commands where the foot position is out of reach without locomoting. To stance at a far
+location, try using SE2TrajectoryCommand to safely put the robot at the correct location
+first.</p>
 <p>Params can specify a trajectory for the body to follow
 while stancing. In the simplest case, this can be a specific position+orientation which the
 body will hold at. The arguments body_height and footprint_R_body are ignored if params
@@ -1157,15 +1162,19 @@ to the returned RobotCommand.</p></li>
 <dl class="py method">
 <dt class="sig sig-object py" id="bosdyn.client.robot_command.RobotCommandBuilder.arm_gaze_command">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">arm_gaze_command</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frame_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">build_on_command</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frame2_tform_desired_hand</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frame2_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_linear_vel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_angular_vel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_accel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/robot_command.html#RobotCommandBuilder.arm_gaze_command"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.robot_command.RobotCommandBuilder.arm_gaze_command" title="Permalink to this definition"></a></dt>
-<dd><p>Builds a Vec3Trajectory to tell the robot arm to gaze at a point in 3D space.
-:returns: RobotCommand, which can be issued to the robot command service</p>
+<dd><p>Builds a Vec3Trajectory to tell the robot arm to gaze at a point in 3D space.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>RobotCommand, which can be issued to the robot command service</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bosdyn.client.robot_command.RobotCommandBuilder.arm_pose_command_from_pose">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">arm_pose_command_from_pose</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hand_pose</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frame_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seconds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">build_on_command</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/robot_command.html#RobotCommandBuilder.arm_pose_command_from_pose"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.robot_command.RobotCommandBuilder.arm_pose_command_from_pose" title="Permalink to this definition"></a></dt>
-<dd><p>Builds an SE3Trajectory Point to tell robot arm to move to a pose in space
-relative to the frame specified. Wraps it in SynchronizedCommand.</p>
+<dd><p>Builds an SE3Trajectory Point to tell robot arm to move to a pose in space relative to
+the frame specified. Wraps it in SynchronizedCommand.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -1187,8 +1196,8 @@ containing a full_body_command). A mobility_command and gripper_command from
 <dl class="py method">
 <dt class="sig sig-object py" id="bosdyn.client.robot_command.RobotCommandBuilder.arm_pose_command">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">arm_pose_command</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qw</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qy</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qz</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frame_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seconds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">build_on_command</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/robot_command.html#RobotCommandBuilder.arm_pose_command"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.robot_command.RobotCommandBuilder.arm_pose_command" title="Permalink to this definition"></a></dt>
-<dd><p>Builds an SE3Trajectory Point to tell robot arm to move to a pose in space
-relative to the frame specified. Wraps it in SynchronizedCommand.</p>
+<dd><p>Builds an SE3Trajectory Point to tell robot arm to move to a pose in space relative to
+the frame specified. Wraps it in SynchronizedCommand.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>RobotCommand, which can be issued to the robot command service.</p>
@@ -1199,10 +1208,8 @@ relative to the frame specified. Wraps it in SynchronizedCommand.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="bosdyn.client.robot_command.RobotCommandBuilder.arm_wrench_command">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">arm_wrench_command</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">force_x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">force_y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">force_z</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">torque_x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">torque_y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">torque_z</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frame_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seconds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">build_on_command</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/robot_command.html#RobotCommandBuilder.arm_wrench_command"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.robot_command.RobotCommandBuilder.arm_wrench_command" title="Permalink to this definition"></a></dt>
-<dd><dl class="simple">
-<dt>Builds a command to tell robot arm to exhibit a wrench.</dt><dd><p>Wraps it in a SynchronizedCommand.</p>
-</dd>
-</dl>
+<dd><p>Builds a command to tell robot arm to exhibit a wrench. Wraps it in a
+SynchronizedCommand.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>RobotCommand, which can be issued to the robot command service.</p>
@@ -1262,7 +1269,8 @@ unspecified, a default value of 5.5 (Nm) will be used.</p></li>
 <dl class="py method">
 <dt class="sig sig-object py" id="bosdyn.client.robot_command.RobotCommandBuilder.claw_gripper_open_fraction_command">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">claw_gripper_open_fraction_command</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">open_fraction</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">build_on_command</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_acc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_vel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">disable_force_on_contact</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_torque</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/robot_command.html#RobotCommandBuilder.claw_gripper_open_fraction_command"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.robot_command.RobotCommandBuilder.claw_gripper_open_fraction_command" title="Permalink to this definition"></a></dt>
-<dd><p>Builds a command to set the gripper using a fractional input.  Wraps it in SynchronizedCommand.</p>
+<dd><p>Builds a command to set the gripper using a fractional input.  Wraps it in
+SynchronizedCommand.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -1325,7 +1333,7 @@ unspecified, a default value of 5.5 (Nm) will be used.</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bosdyn.client.robot_command.RobotCommandBuilder.arm_joint_move_helper">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">arm_joint_move_helper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">joint_positions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">times</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">joint_velocities</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_acc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_vel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">build_on_command</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/robot_command.html#RobotCommandBuilder.arm_joint_move_helper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.robot_command.RobotCommandBuilder.arm_joint_move_helper" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">arm_joint_move_helper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">joint_positions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">times</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">joint_velocities</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_acc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_vel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">build_on_command</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tracking_mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/robot_command.html#RobotCommandBuilder.arm_joint_move_helper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.robot_command.RobotCommandBuilder.arm_joint_move_helper" title="Permalink to this definition"></a></dt>
 <dd><p>Given a set of joint positions, times, and optional velocity, create a synchro command.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -1357,10 +1365,8 @@ to the returned RobotCommand.</p></li>
 <dl class="py method">
 <dt class="sig sig-object py" id="bosdyn.client.robot_command.RobotCommandBuilder.arm_cartesian_move_helper">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">arm_cartesian_move_helper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">se3_poses</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">times</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root_frame_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wrist_tform_tool</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root_tform_task</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">se3_velocities</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_acc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_linear_vel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_angular_vel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">build_on_command</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/robot_command.html#RobotCommandBuilder.arm_cartesian_move_helper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.robot_command.RobotCommandBuilder.arm_cartesian_move_helper" title="Permalink to this definition"></a></dt>
-<dd><dl class="simple">
-<dt>Given a set of SE3Poses, times, and optional velocities, create a synchro command</dt><dd><p>containing an arm_cartesian_command.</p>
-</dd>
-</dl>
+<dd><p>Given a set of SE3Poses, times, and optional velocities, create a synchro command
+containing an arm_cartesian_command.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -1394,7 +1400,8 @@ robot-synchronized time</p></li>
 <dl class="py method">
 <dt class="sig sig-object py" id="bosdyn.client.robot_command.RobotCommandBuilder.claw_gripper_command_helper">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">claw_gripper_command_helper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gripper_positions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">times</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gripper_velocities</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_acc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_vel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">disable_force_on_contact</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">build_on_command</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_torque</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/robot_command.html#RobotCommandBuilder.claw_gripper_command_helper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.robot_command.RobotCommandBuilder.claw_gripper_command_helper" title="Permalink to this definition"></a></dt>
-<dd><p>Given a set of gripper positions, times, and optional velocities, create a synchro command.</p>
+<dd><p>Given a set of gripper positions, times, and optional velocities, create a synchro
+command.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -1443,10 +1450,10 @@ to the returned RobotCommand.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="bosdyn.client.robot_command.RobotCommandBuilder.mobility_params">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">mobility_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">body_height=0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">footprint_R_body=&lt;bosdyn.geometry.EulerZXY</span> <span class="pre">object&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">locomotion_hint=1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stair_hint=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">external_force_params=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stairs_mode=None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/robot_command.html#RobotCommandBuilder.mobility_params"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.robot_command.RobotCommandBuilder.mobility_params" title="Permalink to this definition"></a></dt>
-<dd><p>Helper to create Mobility params for spot mobility commands. This function is designed
-to help get started issuing commands, but lots of options are not exposed via this
-interface. See spot.robot_command_pb2 for more details. If unset, good defaults will be
-chosen by the robot.</p>
+<dd><p>Helper to create Mobility params for spot mobility commands. This function is designed to
+help get started issuing commands, but lots of options are not exposed via this interface.
+See spot.robot_command_pb2 for more details. If unset, good defaults will be chosen by the
+robot.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -1471,7 +1478,8 @@ parameters.</p></li>
 <dl class="py method">
 <dt class="sig sig-object py" id="bosdyn.client.robot_command.RobotCommandBuilder.body_pose">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">body_pose</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">frame_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">body_pose</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/robot_command.html#RobotCommandBuilder.body_pose"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.robot_command.RobotCommandBuilder.body_pose" title="Permalink to this definition"></a></dt>
-<dd><p>Helper to create a BodyControlParams.BodyPose from a single desired <cite>body_pose</cite> relative to <cite>frame_name</cite>.</p>
+<dd><p>Helper to create a BodyControlParams.BodyPose from a single desired <cite>body_pose</cite> relative
+to <cite>frame_name</cite>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -1514,8 +1522,8 @@ indicator specifies EXTERNAL_FORCE_USE_OVERRIDE</p></li>
 <dl class="py method">
 <dt class="sig sig-object py" id="bosdyn.client.robot_command.RobotCommandBuilder.build_synchro_command">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">build_synchro_command</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/robot_command.html#RobotCommandBuilder.build_synchro_command"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.robot_command.RobotCommandBuilder.build_synchro_command" title="Permalink to this definition"></a></dt>
-<dd><p>Combines multiple commands into one command. There’s no intelligence here on
-duplicate commands.</p>
+<dd><p>Combines multiple commands into one command. There’s no intelligence here on duplicate
+commands.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>commands</strong> (<em>RobotCommand containing only either mobility commands</em><em> or </em><em>synchro</em>) – </p>
@@ -1655,7 +1663,8 @@ arm_command.proto for more information about why a trajectory would succeed or f
 <dl class="py function">
 <dt class="sig sig-object py" id="bosdyn.client.robot_command.block_for_trajectory_cmd">
 <span class="sig-prename descclassname"><span class="pre">bosdyn.client.robot_command.</span></span><span class="sig-name descname"><span class="pre">block_for_trajectory_cmd</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">command_client</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmd_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trajectory_end_statuses</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(1,)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">body_movement_statuses</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">feedback_interval_secs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout_sec</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/robot_command.html#block_for_trajectory_cmd"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.robot_command.block_for_trajectory_cmd" title="Permalink to this definition"></a></dt>
-<dd><p>Helper that blocks until a trajectory command reaches a desired goal state or a timeout is reached.</p>
+<dd><p>Helper that blocks until a trajectory command reaches a desired goal state or a timeout is
+reached.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">

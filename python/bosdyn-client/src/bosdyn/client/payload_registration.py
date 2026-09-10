@@ -16,10 +16,18 @@ import time
 
 import bosdyn.api.payload_registration_pb2 as payload_registration_protos
 import bosdyn.api.payload_registration_service_pb2_grpc as payload_registration_service
-from bosdyn.client import (ResponseError, RetryableUnavailableError, TimedOutError,
-                           TooManyRequestsError)
-from bosdyn.client.common import (BaseClient, error_factory, handle_common_header_errors,
-                                  handle_unset_status_error)
+from bosdyn.client import (
+    ResponseError,
+    RetryableUnavailableError,
+    TimedOutError,
+    TooManyRequestsError,
+)
+from bosdyn.client.common import (
+    BaseClient,
+    error_factory,
+    handle_common_header_errors,
+    handle_unset_status_error,
+)
 from bosdyn.client.error_callback_result import ErrorCallbackResult
 from bosdyn.util import now_sec
 

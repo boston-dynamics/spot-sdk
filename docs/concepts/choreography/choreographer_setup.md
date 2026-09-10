@@ -128,7 +128,7 @@ PortAudio may already be present on your Windows machine. If it is not available
    - In the same directory as the Choreographer executable, OR
    - In a directory added to your **PATH** environment variable (see FFmpeg instructions above for how to modify PATH)
 
-3. Check that PortAudio is correctly installed by relaunching Choreographer and checking that timecode features can be enabled in the timecode settings section of the "Settings"->"Playback and Music" menu.
+3. Check that PortAudio is correctly installed by relaunching Choreographer and checking that timecode features can be enabled in the **Choreography Playback** section of the **Settings**->**Preferences** menu.
 
 ## Contacting Support
 
@@ -145,7 +145,7 @@ When opening choreography-related support cases, please include as much of the i
 #### Choreographer Application Issue
 
 - Description of the issue.
-- Application version and commit id information (found under "Help"->"About").
+- Application version and commit id information (found under **Help**->**About**).
 - Operating system.
 - Terminal or Command Prompt error messages (if available).
 - Any files (sequence, animation, music, etc.) being used at time of failure (if available/relevant).

@@ -155,6 +155,12 @@ message AssociatedMetadata {
 
     // Metadata message to be stored.
     Metadata metadata = 2;
+
+    // True if this metadata has an AutowalkReportEntry embedded in metadata.data at the top-level
+    // key "autowalk_report" (see AutowalkReportEntry in autowalk.proto). This field is populated
+    // by the DataAcquisitionStoreService when the metadata is returned from a query -- it is
+    // ignored if set on a StoreMetadataRequest.
+    bool is_autowalk_report_entry = 3;
 }
 
 // This message can be stored as a DataBlob in the data buffer in order to be recognized as

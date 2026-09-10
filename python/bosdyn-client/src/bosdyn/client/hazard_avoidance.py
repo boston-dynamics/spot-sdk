@@ -4,14 +4,19 @@
 # is subject to the terms and conditions of the Boston Dynamics Software
 # Development Kit License (20191101-BDSDK-SL).
 
-"""For clients to use the hazard_avoidance service"""
+"""For clients to use the hazard_avoidance service."""
 
 import collections
 
 from bosdyn.api import hazard_avoidance_pb2
 from bosdyn.api import hazard_avoidance_service_pb2_grpc as hazard_avoidance_service
-from bosdyn.client.common import (BaseClient, custom_params_error, error_factory, error_pair,
-                                  handle_common_header_errors)
+from bosdyn.client.common import (
+    BaseClient,
+    custom_params_error,
+    error_factory,
+    error_pair,
+    handle_common_header_errors,
+)
 from bosdyn.client.exceptions import InvalidRequestError, ResponseError, UnsetStatusError
 from bosdyn.client.robot_command import NoTimeSyncError
 from bosdyn.client.time_sync import update_timestamp_filter

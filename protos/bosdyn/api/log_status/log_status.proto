@@ -22,6 +22,7 @@ message LogStatus {
         STATUS_RECEIVED = 1;     // Request received, thread is not created for bundling the logs.
         STATUS_IN_PROGRESS = 2;  // Request in progress, thread is actively creating the bundle.
         STATUS_SYNCING = 3;      // Log end_time has passed, server post processing taking place.
+        STATUS_STOPPING = 4;     // Log stop requested, stopping in progress.
         STATUS_DONE =
             100;  // Bundling process is complete with no failures and was terminated by API.
         STATUS_FAILED = 101;      // Failure encountered while generating bundle.
@@ -56,6 +57,9 @@ message LogStatus {
     // Current duration of an experiment log, in robot time. This is not the total runtime, but
     // rather how long it has run as of now.
     google.protobuf.Duration run_time = 6;
+
+    // Associated event, if any. Will be an empty string for retro logs.
+    string event_key = 7;
 }
 
 message GetLogStatusRequest {

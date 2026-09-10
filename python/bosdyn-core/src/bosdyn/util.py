@@ -5,9 +5,13 @@
 # Development Kit License (20191101-BDSDK-SL).
 
 """Common utilities for API Python code."""
+
+import ctypes
 import datetime
 import re
+import sys
 import time
+from ctypes.util import find_library
 from typing import Callable
 
 from google.protobuf.duration_pb2 import Duration
@@ -213,7 +217,7 @@ def timestamp_to_datetime(timestamp_proto, use_nanos=True):
 
 
 def secs_to_hms(seconds):
-    """Format a time in seconds as 'H:MM:SS'
+    """Format a time in seconds as 'H:MM:SS'.
 
     Args:
      seconds:   number of seconds (will be truncated to integer value)
@@ -226,7 +230,7 @@ def secs_to_hms(seconds):
 
 
 def distance_str(meters):
-    """Convert a distance in meters to either xxx.xx m or xxx.xx km
+    """Convert a distance in meters to either xxx.xx m or xxx.xx km.
 
     Args:
       meters (float/int):   distance in meters
@@ -246,13 +250,13 @@ def format_metric(metric):
         if metric.units == 'm':
             return '{:20} {}'.format(metric.label, distance_str(metric.float_value))
         return '{:20} {:.2f} {}'.format(metric.label, metric.float_value, metric.units)
-    elif metric.HasField('int_value'):
+    if metric.HasField('int_value'):
         return '{:20} {} {}'.format(metric.label, metric.int_value, metric.units)
-    elif metric.HasField('bool_value'):
+    if metric.HasField('bool_value'):
         return '{:20} {} {}'.format(metric.label, metric.bool_value, metric.units)
-    elif metric.HasField('duration'):
+    if metric.HasField('duration'):
         return '{:20} {}'.format(metric.label, secs_to_hms(metric.duration.seconds))
-    elif metric.HasField('string'):
+    if metric.HasField('string'):
         return '{:20} {}'.format(metric.label, metric.string_value)
     # ??
     return '{:20} {} {}'.format(metric.label, metric.value, metric.units)
@@ -294,7 +298,7 @@ Time values have one of these formats:
 
 
 def parse_datetime(val):
-    """Parse datetime from string
+    """Parse datetime from string.
 
     Args:
      val: string with format like as described by TIME_FORMAT_DESC.
@@ -383,3 +387,14 @@ class RobotTimeConverter:
           local_time_secs:  Local system time, in seconds from the unix epoch.
         """
         return nsec_to_sec(timestamp_to_nsec(robot_timestamp) - self._clock_skew_nsec)
+
+
+def set_process_name(name):
+    """Set the process name.
+
+    Name must be a max of 16 bytes
+    """
+    if sys.platform != 'win32':
+        PR_SET_NAME = 15
+        libc = ctypes.CDLL(find_library('c'))
+        libc.prctl(PR_SET_NAME, ctypes.c_char_p(name.encode()), 0, 0, 0)

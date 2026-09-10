@@ -12,7 +12,8 @@ The following examples show how to use the different Orbit API calls.
 
 ## Contents
 
-- [Hello Orbit](../orbit/hello_orbit/README.md)
+- [Hello Orbit (v0, OrbitClient)](../orbit/hello_orbit/README.md)
+- [Orbit v1 API (v1, raw HTTP)](../orbit/orbit_v1_api/README.md)
 - [Export Run Archives](../orbit/export_run_archives/README.md)
 - [Export Sitewalk Archives](../orbit/export_site_walk_archives/README.md)
 - [Anomalies](../orbit/anomalies/README.md)

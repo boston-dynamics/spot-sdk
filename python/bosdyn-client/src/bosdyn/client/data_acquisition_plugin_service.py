@@ -86,9 +86,9 @@ def make_error(data_id, error_msg, error_data=None):
 class RequestState(object):
     """Interface for a data collection to update its state as it proceeds.
 
-    Each AcquireData RPC made to the plugin service will create an instance of RequestState
-    to manage the incoming acquisition request's overall state, including if it has been
-    cancelled, any errors that occur, and the current status of the request.
+    Each AcquireData RPC made to the plugin service will create an instance of RequestState to
+    manage the incoming acquisition request's overall state, including if it has been cancelled, any
+    errors that occur, and the current status of the request.
     """
 
     # Statuses for the GetStatus RPC which indicate the data acquisition and saving is still
@@ -143,8 +143,8 @@ class RequestState(object):
             self._status_proto.data_saved.extend(data_ids)
 
     def add_errors(self, data_errors):
-        """Report that some errors have occurred during the data capture.
-        Use the make_error function to simplify creating data errors.
+        """Report that some errors have occurred during the data capture. Use the make_error
+        function to simplify creating data errors.
 
         Args:
             data_errors (Iterable[DataError]): data errors to include as errors in the status.
@@ -242,7 +242,7 @@ class DataAcquisitionStoreHelper(object):
         future = self.store_client.store_data_async(message, data_id, file_extension)
         self.data_id_future_pairs.append((data_id, future))
 
-    def store_data_as_chunks(self, message, data_id, file_extension=None):
+    def store_data_as_chunks(self, message, data_id, file_extension=None, **kwargs):
         """Store a data message by streaming with the data acquisition store service.
 
         Args:
@@ -253,10 +253,11 @@ class DataAcquisitionStoreHelper(object):
         Raises:
             RPCError: Problem communicating with the robot.
         """
-        future = self.store_client.store_data_as_chunks_async(message, data_id, file_extension)
+        future = self.store_client.store_data_as_chunks_async(message, data_id, file_extension,
+                                                              **kwargs)
         self.data_id_future_pairs.append((data_id, future))
 
-    def store_file(self, file_path, data_id, file_extension=None):
+    def store_file(self, file_path, data_id, file_extension=None, **kwargs):
         """Store a file with the data acquisition store service.
 
         Args:
@@ -267,7 +268,7 @@ class DataAcquisitionStoreHelper(object):
         Raises:
             RPCError: Problem communicating with the robot.
         """
-        future = self.store_client.store_file_async(file_path, data_id, file_extension)
+        future = self.store_client.store_file_async(file_path, data_id, file_extension, **kwargs)
         self.data_id_future_pairs.append((data_id, future))
 
     def cancel_check(self):
@@ -300,8 +301,8 @@ class DataAcquisitionStoreHelper(object):
 
 class DataAcquisitionPluginService(
         data_acquisition_plugin_service_pb2_grpc.DataAcquisitionPluginServiceServicer):
-    """Implementation of a data acquisition plugin. It relies on the provided data_collect_fn
-    to implement the heart of the data collection and storage.
+    """Implementation of a data acquisition plugin. It relies on the provided data_collect_fn to
+    implement the heart of the data collection and storage.
 
     Args:
         robot: Authenticated robot object.
@@ -533,9 +534,9 @@ class RequestManager:
     """Manage request lifecycles and status.
 
     The RequestManager manages some internals of the RequestState class, so it will access its
-    protected variables.  We leave those variables protected so that users of the RequestState
-    class are less tempted to fiddle with them incorrectly, but we turn off the linting for the
-    rest of this file.
+    protected variables.  We leave those variables protected so that users of the RequestState class
+    are less tempted to fiddle with them incorrectly, but we turn off the linting for the rest of
+    this file.
     """
 
     def __init__(self):
@@ -544,7 +545,7 @@ class RequestManager:
         self._counter = 0
 
     def add_request(self):
-        """Create a new request to manage"""
+        """Create a new request to manage."""
         with self._lock:
             self._counter += 1
             state = RequestState()

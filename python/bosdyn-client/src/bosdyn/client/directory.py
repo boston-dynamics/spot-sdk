@@ -7,14 +7,19 @@
 """Client for the directory service.
 
 A DirectoryClient allows a client to look-up information about other API services available on a
- robot.
+robot.
 """
 import collections
 
 from bosdyn.api import directory_pb2, directory_service_pb2_grpc
 
-from .common import (BaseClient, common_header_errors, error_factory, handle_common_header_errors,
-                     handle_unset_status_error)
+from .common import (
+    BaseClient,
+    common_header_errors,
+    error_factory,
+    handle_common_header_errors,
+    handle_unset_status_error,
+)
 from .exceptions import ResponseError
 
 

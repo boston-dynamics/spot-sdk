@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>bosdyn.client.gps.ntrip_client &mdash; Spot 5.1.9 documentation</title>
+  <title>bosdyn.client.gps.ntrip_client &mdash; Spot 5.2.0 documentation</title>
       <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../../_static/style.css" type="text/css" />
     <link rel="shortcut icon" href="../../../../_static/bd-favicon.png"/>
@@ -35,7 +35,7 @@
               <img src="../../../../_static/bd-official-white.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                5.1.9
+                5.2.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
@@ -202,7 +202,8 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/world_object_mutations/README.html">World Object Mutations</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/visualizer/README.html">Visualizer</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/gripper_camera_params/README.html">Gripper Camera Parameters</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/spot_cam/README.html">Spot CAM</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/spot_cam/README.html">Spot CAM Services</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/spot_cam/README.html#spot-cam-video-core-io-extension-example">Spot Cam Video Core IO Extension Example</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/stitch_front_images/README.html">Stitch Front Images</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/get_depth_plus_visual_image/README.html">Project Depth Data on Visual Images</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/service_customization/custom_parameter_image_server/README.html">Custom Parameter Image Server</a></li>
@@ -246,6 +247,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/graph_nav_command_line/README.html">GraphNav and Recording Service Command Line Interfaces</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/graph_nav_command_line/README.html#example-programs">Example Programs</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/graph_nav_extract_point_cloud/README.html">Graph Nav Extract Point Cloud</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/graph_nav_map_to_usd/README.html">Graph Nav Map to USD</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/graph_nav_view_map/README.html">Graph Nav View Map</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/graph_nav_view_gps/README.html">Graph Nav View GPS Data</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/get_mission_state/README.html">Get Mission State</a></li>
@@ -266,7 +268,8 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../python/examples/docs/joint_control_examples.html">Joint Control API Examples</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../python/examples/docs/orbit.html">Orbit</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/orbit/hello_orbit/README.html">Hello Orbit</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/orbit/hello_orbit/README.html">Hello Orbit (v0, OrbitClient)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/orbit/orbit_v1_api/README.html">Orbit v1 API (v1, raw HTTP)</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/orbit/export_run_archives/README.html">Export Run Archives</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/orbit/export_site_walk_archives/README.html">Export Sitewalk Archives</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/orbit/anomalies/README.html">Anomalies</a></li>
@@ -321,6 +324,8 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/fault.html">Fault</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/frame_helpers.html">Frame Helpers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/graph_nav.html">Graph Nav</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/graph_nav_download.html">Graph Nav Download</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/graph_nav_upload.html">Graph Nav Upload</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/gripper_camera_param.html">Gripper Camera Params</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/gps/README.html">GPS</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/gps/aggregator_client.html">Aggregator Client</a></li>
@@ -538,15 +543,11 @@
 
 
 <div class="viewcode-block" id="NtripClientParams"><a class="viewcode-back" href="../../../../python/bosdyn-client/src/bosdyn/client/gps/ntrip_client.html#bosdyn.client.gps.ntrip_client.NtripClientParams">[docs]</a><span class="k">class</span> <span class="nc">NtripClientParams</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Class for storing parameters for connecting an NTRIP client to an NTRIP server.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Class for storing parameters for connecting an NTRIP client to an NTRIP server.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">server</span><span class="o">=</span><span class="n">DEFAULT_NTRIP_SERVER</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="n">DEFAULT_NTRIP_PORT</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
                  <span class="n">mountpoint</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">tls</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">reconnect_secs</span><span class="o">=</span><span class="n">SERVER_RECONNECT_DELAY</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Constructor.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">server</span> <span class="o">=</span> <span class="n">server</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">port</span> <span class="o">=</span> <span class="n">port</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">user</span> <span class="o">=</span> <span class="n">user</span>
@@ -557,15 +558,13 @@
 
 
 <div class="viewcode-block" id="NtripClient"><a class="viewcode-back" href="../../../../python/bosdyn-client/src/bosdyn/client/gps/ntrip_client.html#bosdyn.client.gps.ntrip_client.NtripClient">[docs]</a><span class="k">class</span> <span class="nc">NtripClient</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Client used to connect to an NTRIP server to download GPS corrections. These corrections are</span>
-<span class="sd">    then forwarded on to the GPS device using the given stream.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Client used to connect to an NTRIP server to download GPS corrections.</span>
+
+<span class="sd">    These corrections are then forwarded on to the GPS device using the given stream.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">device</span><span class="p">,</span> <span class="n">params</span><span class="p">:</span> <span class="n">NtripClientParams</span><span class="p">,</span> <span class="n">logger</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Constructor.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="n">device</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">host</span> <span class="o">=</span> <span class="n">params</span><span class="o">.</span><span class="n">server</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">port</span> <span class="o">=</span> <span class="n">params</span><span class="o">.</span><span class="n">port</span>
@@ -582,9 +581,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logger</span>
 
 <div class="viewcode-block" id="NtripClient.make_request"><a class="viewcode-back" href="../../../../python/bosdyn-client/src/bosdyn/client/gps/ntrip_client.html#bosdyn.client.gps.ntrip_client.NtripClient.make_request">[docs]</a>    <span class="k">def</span> <span class="nf">make_request</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Make a connection request to an NTRIP server.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Make a connection request to an NTRIP server.&quot;&quot;&quot;</span>
         <span class="n">auth_str</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">password</span><span class="si">}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
         <span class="n">request</span> <span class="o">=</span> <span class="p">(</span><span class="sa">f</span><span class="s2">&quot;GET /</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">mountpoint</span><span class="si">}</span><span class="s2"> HTTP/1.1</span><span class="se">\r\n</span><span class="s2">&quot;</span>
                    <span class="sa">f</span><span class="s2">&quot;Host: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">host</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">port</span><span class="si">}</span><span class="se">\r\n</span><span class="s2">&quot;</span>
@@ -596,33 +593,28 @@
         <span class="k">return</span> <span class="n">request</span><span class="o">.</span><span class="n">encode</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="NtripClient.start_stream"><a class="viewcode-back" href="../../../../python/bosdyn-client/src/bosdyn/client/gps/ntrip_client.html#bosdyn.client.gps.ntrip_client.NtripClient.start_stream">[docs]</a>    <span class="k">def</span> <span class="nf">start_stream</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Start streaming data from an NTRIP server to a GPS receiver.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Start streaming data from an NTRIP server to a GPS receiver.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">streaming</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">stop_stream</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">thread</span> <span class="o">=</span> <span class="n">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">stream_data_worker</span><span class="p">,</span> <span class="n">daemon</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">thread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="NtripClient.stop_stream"><a class="viewcode-back" href="../../../../python/bosdyn-client/src/bosdyn/client/gps/ntrip_client.html#bosdyn.client.gps.ntrip_client.NtripClient.stop_stream">[docs]</a>    <span class="k">def</span> <span class="nf">stop_stream</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Stop streaming NTRIP data.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Stop streaming NTRIP data.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">streaming</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">thread</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">thread</span><span class="o">.</span><span class="n">join</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">thread</span> <span class="o">=</span> <span class="kc">None</span></div>
 
 <div class="viewcode-block" id="NtripClient.is_streaming"><a class="viewcode-back" href="../../../../python/bosdyn-client/src/bosdyn/client/gps/ntrip_client.html#bosdyn.client.gps.ntrip_client.NtripClient.is_streaming">[docs]</a>    <span class="k">def</span> <span class="nf">is_streaming</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Determine if we are streaming NTRIP data.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Determine if we are streaming NTRIP data.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">streaming</span></div>
 
 <div class="viewcode-block" id="NtripClient.send_gga"><a class="viewcode-back" href="../../../../python/bosdyn-client/src/bosdyn/client/gps/ntrip_client.html#bosdyn.client.gps.ntrip_client.NtripClient.send_gga">[docs]</a>    <span class="k">def</span> <span class="nf">send_gga</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gga</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Given a GPGGA message, send it to the NTRIP server. This helps the NTRIP server send</span>
-<span class="sd">        corrections that are applicable to the area in which the receiver is operating.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Given a GPGGA message, send it to the NTRIP server.</span>
+
+<span class="sd">        This helps the NTRIP server send corrections that are applicable to the area in which the</span>
+<span class="sd">        receiver is operating.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sock</span><span class="p">:</span>
             <span class="k">try</span><span class="p">:</span>
@@ -634,8 +626,9 @@
         <span class="k">return</span> <span class="kc">False</span></div>
 
 <div class="viewcode-block" id="NtripClient.create_icy_session"><a class="viewcode-back" href="../../../../python/bosdyn-client/src/bosdyn/client/gps/ntrip_client.html#bosdyn.client.gps.ntrip_client.NtripClient.create_icy_session">[docs]</a>    <span class="k">def</span> <span class="nf">create_icy_session</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        NTRIP Rev1 uses Shoutcast (ICY). Create an ICY session to stream RTCM data.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;NTRIP Rev1 uses Shoutcast (ICY).</span>
+
+<span class="sd">        Create an ICY session to stream RTCM data.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="c1"># Create a socket connection to the host and port.</span>
@@ -690,9 +683,7 @@
             <span class="k">return</span> <span class="kc">False</span></div>
 
 <div class="viewcode-block" id="NtripClient.stream_data"><a class="viewcode-back" href="../../../../python/bosdyn-client/src/bosdyn/client/gps/ntrip_client.html#bosdyn.client.gps.ntrip_client.NtripClient.stream_data">[docs]</a>    <span class="k">def</span> <span class="nf">stream_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Stream NTRIP data from a connected server and send it to a GPS receiver.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Stream NTRIP data from a connected server and send it to a GPS receiver.&quot;&quot;&quot;</span>
 
         <span class="c1"># NTRIP Rev1 uses Shoutcast (ICY), which looks a lot like HTTP but isn&#39;t quite the same.</span>
         <span class="c1"># Create an ICY session here to talk to an NTRIP Rev1 caster.</span>
@@ -732,9 +723,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;NTRIP client finished.&quot;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="NtripClient.stream_data_worker"><a class="viewcode-back" href="../../../../python/bosdyn-client/src/bosdyn/client/gps/ntrip_client.html#bosdyn.client.gps.ntrip_client.NtripClient.stream_data_worker">[docs]</a>    <span class="k">def</span> <span class="nf">stream_data_worker</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        NTRIP client worker thread function.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;NTRIP client worker thread function.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">streaming</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">streaming</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">stream_data</span><span class="p">()</span>
@@ -747,16 +736,12 @@
                 <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">reconnect_secs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="NtripClient.handle_ntrip_data"><a class="viewcode-back" href="../../../../python/bosdyn-client/src/bosdyn/client/gps/ntrip_client.html#bosdyn.client.gps.ntrip_client.NtripClient.handle_ntrip_data">[docs]</a>    <span class="k">def</span> <span class="nf">handle_ntrip_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Callback for handling NTRIP data.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Callback for handling NTRIP data.&quot;&quot;&quot;</span>
         <span class="c1"># Send to receiver as is.</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">data</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="NtripClient.handle_nmea_gga"><a class="viewcode-back" href="../../../../python/bosdyn-client/src/bosdyn/client/gps/ntrip_client.html#bosdyn.client.gps.ntrip_client.NtripClient.handle_nmea_gga">[docs]</a>    <span class="k">def</span> <span class="nf">handle_nmea_gga</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sentence</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Process an NMEA-GGA sentence passed in as a string.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Process an NMEA-GGA sentence passed in as a string.&quot;&quot;&quot;</span>
         <span class="n">fields</span> <span class="o">=</span> <span class="n">sentence</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">fields</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">7</span><span class="p">:</span>
             <span class="k">return</span>

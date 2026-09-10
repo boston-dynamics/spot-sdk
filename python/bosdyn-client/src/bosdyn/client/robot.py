@@ -24,8 +24,11 @@ from .estop import EstopClient
 from .estop import is_estopped as pkg_is_estopped
 from .exceptions import Error
 from .lease import LeaseWallet
-from .payload_registration import (PayloadAlreadyExistsError, PayloadNotAuthorizedError,
-                                   PayloadRegistrationClient)
+from .payload_registration import (
+    PayloadAlreadyExistsError,
+    PayloadNotAuthorizedError,
+    PayloadRegistrationClient,
+)
 from .power import PowerClient
 from .power import is_powered_on as pkg_is_powered_on
 from .power import power_off_motors as pkg_power_off
@@ -84,8 +87,8 @@ class Robot(object):
     Note that any rpc call made to the robot can raise an RpcError subclass if there are errors
     communicating with the robot.  Additionally, ResponseErrors will be raised if there was an error
     acting on the request itself.  An InvalidRequestError indicates a programming error, where the
-    request was malformed in some way.  InvalidRequestErrors will never be thrown except in the
-    case of client bugs.
+    request was malformed in some way.  InvalidRequestErrors will never be thrown except in the case
+    of client bugs.
 
     See also Sdk and BaseClient
     """
@@ -186,12 +189,13 @@ class Robot(object):
     def setup_token_cache(self, token_cache=None, unique_id=None):
         """Instantiates a token cache to persist the user token.
 
-           If the user provides a cache, it will be saved in the robot object for convenience."""
+        If the user provides a cache, it will be saved in the robot object for convenience.
+        """
         self.serial_number = unique_id or self.serial_number or self.get_id().serial_number
         self.token_cache = token_cache or self.token_cache
 
     def update_from(self, other):
-        """Adds to this object's processors, etc. based on other"""
+        """Adds to this object's processors, etc. based on other."""
         self.request_processors = other.request_processors + self.request_processors
         self.response_processors = other.response_processors + self.response_processors
         self.service_client_factories_by_type.update(other.service_client_factories_by_type)
@@ -244,10 +248,50 @@ class Robot(object):
                                           service_endpoint=service_endpoint)
 
         client.channel = channel
+        client._channel_reset_fn = self._make_channel_reset_fn(service_name)
         client.update_from(self)
         # Track service clients that have been created to avoid duplicate clients
         self.service_clients_by_name[service_name] = client
         return client
+
+    def _make_channel_reset_fn(self, service_name):
+        """Create a callback that resets and returns a fresh channel for *service_name*.
+
+        The returned callable is stored on BaseClient instances so they can recover from corrupted
+        gRPC channel state without holding a direct reference back to the Robot.
+        """
+
+        def _reset_and_ensure():
+            self._reset_channel(service_name)
+            return self.ensure_channel(service_name)
+
+        return _reset_and_ensure
+
+    def _reset_channel(self, service_name):
+        """Close and remove the cached channel for the given service, so it is recreated on next
+        use.
+
+        This is useful when a channel enters a bad state (e.g. after a deserialization error
+        corrupts gRPC internal state). The next call to ensure_client() or ensure_channel()
+        for this service will create a fresh channel.
+
+        Also removes the cached service client so it picks up the new channel.
+
+        Args:
+            service_name: Name of the service whose channel should be reset.
+        """
+        # Don't call channel.close() — on-robot, multiple services may share the same
+        # channel (keyed by endpoint or authority). Closing it would break other services
+        # still using it. Instead, just evict from cache so the next ensure_channel() creates
+        # a fresh one. The old channel will be GC'd once no references remain.
+        authority = self.authorities_by_name.get(service_name)
+        if authority:
+            if self.channels_by_authority.pop(authority, None) is not None:
+                self.logger.info('Evicted secure channel for service %s (authority=%s)',
+                                 service_name, authority)
+
+        # Remove cached client so it picks up the new channel on next ensure_client() call.
+        self.service_clients_by_name.pop(service_name, None)
 
     def shutdown(self):
         for channel_from_auth in self.channels_by_authority.values():
@@ -459,8 +503,8 @@ class Robot(object):
         return self.sync_with_services_list(remote_services)
 
     def sync_with_services_list(self, services_list):
-        """Alternate version of sync_with_directory() that takes the list of services
-        directly and does not perform any rpcs.
+        """Alternate version of sync_with_directory() that takes the list of services directly and
+        does not perform any rpcs.
 
         Returns:
             Dict[string, string]: Mapping of service name to service type
@@ -514,7 +558,10 @@ class Robot(object):
 
     @property
     def time_sync(self):
-        """Accessor for the time-sync thread.  Creates and starts thread if not already started."""
+        """Accessor for the time-sync thread.
+
+        Creates and starts thread if not already started.
+        """
         self.start_time_sync()
         return self._time_sync_thread
 
@@ -640,7 +687,7 @@ class Robot(object):
 
     def is_estopped(self, timeout=None):
         """Check if the robot is estopped, usually indicating if an external application has not
-           registered and held an estop endpoint.
+        registered and held an estop endpoint.
 
         Args:
             timeout: Number of seconds to wait for RPC response.
@@ -699,5 +746,6 @@ class Robot(object):
             secure_channel_port: New port to use for creating secure channels.
         """
         self._secure_channel_port = secure_channel_port
+
 
 

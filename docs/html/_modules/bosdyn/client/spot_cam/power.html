@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>bosdyn.client.spot_cam.power &mdash; Spot 5.1.9 documentation</title>
+  <title>bosdyn.client.spot_cam.power &mdash; Spot 5.2.0 documentation</title>
       <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../../_static/style.css" type="text/css" />
     <link rel="shortcut icon" href="../../../../_static/bd-favicon.png"/>
@@ -35,7 +35,7 @@
               <img src="../../../../_static/bd-official-white.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                5.1.9
+                5.2.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
@@ -202,7 +202,8 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/world_object_mutations/README.html">World Object Mutations</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/visualizer/README.html">Visualizer</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/gripper_camera_params/README.html">Gripper Camera Parameters</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/spot_cam/README.html">Spot CAM</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/spot_cam/README.html">Spot CAM Services</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/spot_cam/README.html#spot-cam-video-core-io-extension-example">Spot Cam Video Core IO Extension Example</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/stitch_front_images/README.html">Stitch Front Images</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/get_depth_plus_visual_image/README.html">Project Depth Data on Visual Images</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/service_customization/custom_parameter_image_server/README.html">Custom Parameter Image Server</a></li>
@@ -246,6 +247,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/graph_nav_command_line/README.html">GraphNav and Recording Service Command Line Interfaces</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/graph_nav_command_line/README.html#example-programs">Example Programs</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/graph_nav_extract_point_cloud/README.html">Graph Nav Extract Point Cloud</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/graph_nav_map_to_usd/README.html">Graph Nav Map to USD</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/graph_nav_view_map/README.html">Graph Nav View Map</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/graph_nav_view_gps/README.html">Graph Nav View GPS Data</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/get_mission_state/README.html">Get Mission State</a></li>
@@ -266,7 +268,8 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../python/examples/docs/joint_control_examples.html">Joint Control API Examples</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../python/examples/docs/orbit.html">Orbit</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/orbit/hello_orbit/README.html">Hello Orbit</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/orbit/hello_orbit/README.html">Hello Orbit (v0, OrbitClient)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/orbit/orbit_v1_api/README.html">Orbit v1 API (v1, raw HTTP)</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/orbit/export_run_archives/README.html">Export Run Archives</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/orbit/export_site_walk_archives/README.html">Export Sitewalk Archives</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/orbit/anomalies/README.html">Anomalies</a></li>
@@ -321,6 +324,8 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/fault.html">Fault</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/frame_helpers.html">Frame Helpers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/graph_nav.html">Graph Nav</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/graph_nav_download.html">Graph Nav Download</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/graph_nav_upload.html">Graph Nav Upload</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/gripper_camera_param.html">Gripper Camera Params</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/gps/README.html">GPS</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/gps/aggregator_client.html">Aggregator Client</a></li>
@@ -535,8 +540,7 @@
 
 
 <div class="viewcode-block" id="PowerClient"><a class="viewcode-back" href="../../../../python/bosdyn-client/src/bosdyn/client/spot_cam/power.html#bosdyn.client.spot_cam.power.PowerClient">[docs]</a><span class="k">class</span> <span class="nc">PowerClient</span><span class="p">(</span><span class="n">BaseClient</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;A client calling Spot CAM Power service.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A client calling Spot CAM Power service.&quot;&quot;&quot;</span>
     <span class="n">default_service_name</span> <span class="o">=</span> <span class="s1">&#39;spot-cam-power&#39;</span>
     <span class="n">service_type</span> <span class="o">=</span> <span class="s1">&#39;bosdyn.api.spot_cam.PowerService&#39;</span>
 
@@ -558,9 +562,10 @@
 
 <div class="viewcode-block" id="PowerClient.set_power_status"><a class="viewcode-back" href="../../../../python/bosdyn-client/src/bosdyn/client/spot_cam/power.html#bosdyn.client.spot_cam.power.PowerClient.set_power_status">[docs]</a>    <span class="k">def</span> <span class="nf">set_power_status</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ptz</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">aux1</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">aux2</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">external_mic</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Turn on/off the desire device.</span>
-<span class="sd">        Should not be used on PTZ for non-IR units as it can cause the stream to crash.</span>
-<span class="sd">        If the intent is to reset the PTZ autofocus, try PtzClient.initialize_lens instead.</span>
-<span class="sd">        If the intent is to recover the PTZ stream in another way, you may need to power cycle the robot.</span>
+
+<span class="sd">        Should not be used on PTZ for non-IR units as it can cause the stream to crash. If the</span>
+<span class="sd">        intent is to reset the PTZ autofocus, try PtzClient.initialize_lens instead. If the intent</span>
+<span class="sd">        is to recover the PTZ stream in another way, you may need to power cycle the robot.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">request</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_build_SetPowerStatusRequest</span><span class="p">(</span><span class="n">ptz</span><span class="p">,</span> <span class="n">aux1</span><span class="p">,</span> <span class="n">aux2</span><span class="p">,</span> <span class="n">external_mic</span><span class="p">)</span>
 
@@ -577,9 +582,10 @@
 
 <div class="viewcode-block" id="PowerClient.cycle_power"><a class="viewcode-back" href="../../../../python/bosdyn-client/src/bosdyn/client/spot_cam/power.html#bosdyn.client.spot_cam.power.PowerClient.cycle_power">[docs]</a>    <span class="k">def</span> <span class="nf">cycle_power</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ptz</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">aux1</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">aux2</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">external_mic</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Turn power off then back on for the desired devices.</span>
-<span class="sd">        Should not be used on PTZ for non-IR units as it can cause the stream to crash.</span>
-<span class="sd">        If the intent is to reset the PTZ autofocus, try PtzClient.initialize_lens instead.</span>
-<span class="sd">        If the intent is to recover the PTZ stream in another way, you may need to power cycle the robot.</span>
+
+<span class="sd">        Should not be used on PTZ for non-IR units as it can cause the stream to crash. If the</span>
+<span class="sd">        intent is to reset the PTZ autofocus, try PtzClient.initialize_lens instead. If the intent</span>
+<span class="sd">        is to recover the PTZ stream in another way, you may need to power cycle the robot.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">request</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_build_CyclePowerRequest</span><span class="p">(</span><span class="n">ptz</span><span class="p">,</span> <span class="n">aux1</span><span class="p">,</span> <span class="n">aux2</span><span class="p">,</span> <span class="n">external_mic</span><span class="p">)</span>
 

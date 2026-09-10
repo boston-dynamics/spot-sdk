@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Arm Services &mdash; Spot 5.1.9 documentation</title>
+  <title>Arm Services &mdash; Spot 5.2.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
     <link rel="shortcut icon" href="../../../_static/bd-favicon.png"/>
@@ -38,7 +38,7 @@
               <img src="../../../_static/bd-official-white.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                5.1.9
+                5.2.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -205,7 +205,8 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/world_object_mutations/README.html">World Object Mutations</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/visualizer/README.html">Visualizer</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/gripper_camera_params/README.html">Gripper Camera Parameters</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_cam/README.html">Spot CAM</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_cam/README.html">Spot CAM Services</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_cam/README.html#spot-cam-video-core-io-extension-example">Spot Cam Video Core IO Extension Example</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/stitch_front_images/README.html">Stitch Front Images</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/get_depth_plus_visual_image/README.html">Project Depth Data on Visual Images</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/service_customization/custom_parameter_image_server/README.html">Custom Parameter Image Server</a></li>
@@ -249,6 +250,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/graph_nav_command_line/README.html">GraphNav and Recording Service Command Line Interfaces</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/graph_nav_command_line/README.html#example-programs">Example Programs</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/graph_nav_extract_point_cloud/README.html">Graph Nav Extract Point Cloud</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/graph_nav_map_to_usd/README.html">Graph Nav Map to USD</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/graph_nav_view_map/README.html">Graph Nav View Map</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/graph_nav_view_gps/README.html">Graph Nav View GPS Data</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/get_mission_state/README.html">Get Mission State</a></li>
@@ -269,7 +271,8 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/joint_control_examples.html">Joint Control API Examples</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/orbit.html">Orbit</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/hello_orbit/README.html">Hello Orbit</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/hello_orbit/README.html">Hello Orbit (v0, OrbitClient)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/orbit_v1_api/README.html">Orbit v1 API (v1, raw HTTP)</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/export_run_archives/README.html">Export Run Archives</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/export_site_walk_archives/README.html">Export Sitewalk Archives</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/anomalies/README.html">Anomalies</a></li>
@@ -324,6 +327,8 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/fault.html">Fault</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/frame_helpers.html">Frame Helpers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/graph_nav.html">Graph Nav</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/graph_nav_download.html">Graph Nav Download</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/graph_nav_upload.html">Graph Nav Upload</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/gripper_camera_param.html">Gripper Camera Params</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/gps/README.html">GPS</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/gps/aggregator_client.html">Aggregator Client</a></li>
@@ -529,7 +534,7 @@ Development Kit License (20191101-BDSDK-SL).
 <h1>Arm Services<a class="headerlink" href="#arm-services" title="Permalink to this heading"></a></h1>
 <section id="manipulation-service">
 <h2>Manipulation Service<a class="headerlink" href="#manipulation-service" title="Permalink to this heading"></a></h2>
-<p>This API provides high-level control for walking to and picking up items in the world. The service walks the robot up to the object, not on top of it. The idea being that you want to interact or manipulate the object. For specifying grasps, there are parameters available for</p>
+<p>This API provides high-level control for walking to and picking up items in the world. The service walks the robot up to the object, not on top of it. The idea being that you want to interact with or manipulate the object. For specifying grasps, there are parameters available for</p>
 <ul class="simple">
 <li><p>Specifying the depth of the grasp</p>
 <ul>
@@ -563,13 +568,13 @@ A <a class="reference external" href="https://en.wikipedia.org/wiki/G-code">GCOD
 <h2>Door Service<a class="headerlink" href="#door-service" title="Permalink to this heading"></a></h2>
 <p>The door service is a framework for opening doors. We support three command types:</p>
 <ul class="simple">
-<li><p><strong>AutoGrasp</strong>: This message requires users to specify a location to search for a door handle along with and some door parameters. Spot autonomously grabs the handle, opens the door, and walks through.</p></li>
-<li><p><strong>Warmstart</strong>: In Warmstart, the assumption is the robot is already grasping the door handle. The robot will skip the grasp stage of auto, and immediately begin opening the door and then traverses through the doorway.</p></li>
+<li><p><strong>AutoGrasp</strong>: This message requires users to specify a location to search for a door handle along with some door parameters. Spot autonomously grabs the handle, opens the door, and walks through.</p></li>
+<li><p><strong>Warmstart</strong>: In Warmstart, the assumption is the robot is already grasping the door handle. The robot will skip the grasp stage of auto and immediately begin opening the door, and then traverse through the doorway.</p></li>
 <li><p><strong>AutoPush</strong>: Used for doors that can be opened via a push without requiring a grasp. This includes pushbars, crashbars, and doors without a latching mechanism. The robot will point the hand down and push the door open with its wrist based on a push point supplied over the API.</p></li>
 </ul>
 <p>See the following example for using this service:</p>
 <p><a class="reference internal" href="../../../python/examples/arm_door/README.html"><span class="doc">Door Opening:</span></a>
-This examples uses both the <code class="docutils literal notranslate"><span class="pre">ManipulationAPIService</span></code> and the <code class="docutils literal notranslate"><span class="pre">DoorService</span></code> to have Spot semi-autonomously open a door. It opens an image display and requires the user to select the door handle and the door hinge. After receiving input, it uses the <code class="docutils literal notranslate"><span class="pre">ManipulationAPIService</span></code> to estimate the handles position in 3D space and aligns the robot with the door handle. Then it uses the <code class="docutils literal notranslate"><span class="pre">DoorService</span></code> to issue an automatic door open request.</p>
+This example uses both the <code class="docutils literal notranslate"><span class="pre">ManipulationAPIService</span></code> and the <code class="docutils literal notranslate"><span class="pre">DoorService</span></code> to have Spot semi-autonomously open a door. It opens an image display and requires the user to select the door handle and the door hinge. After receiving input, it uses the <code class="docutils literal notranslate"><span class="pre">ManipulationAPIService</span></code> to estimate the handle’s position in 3D space and aligns the robot with the door handle. Then it uses the <code class="docutils literal notranslate"><span class="pre">DoorService</span></code> to issue an automatic door open request.</p>
 </section>
 <section id="inverse-kinematics-service">
 <h2>Inverse Kinematics Service<a class="headerlink" href="#inverse-kinematics-service" title="Permalink to this heading"></a></h2>
@@ -578,7 +583,7 @@ This examples uses both the <code class="docutils literal notranslate"><span cla
 <li><p><strong>Stance Specifications</strong></p>
 <ul>
 <li><p><strong>Fixed Stance</strong>: A valid solution must place the feet at the specified positions, or at their current positions if unspecified.</p></li>
-<li><p><strong>On Ground Plane Stance</strong>: A valid solution must place the feet on the specified ground plane, or on the robots current estimated ground plane if unspecified.</p></li>
+<li><p><strong>On Ground Plane Stance</strong>: A valid solution must place the feet on the specified ground plane, or on the robot’s current estimated ground plane if unspecified.</p></li>
 </ul>
 </li>
 <li><p><strong>Tool Specifications</strong></p>
@@ -602,7 +607,7 @@ This examples uses both the <code class="docutils literal notranslate"><span cla
 <ul class="simple">
 <li><p><strong>root frame</strong>: The frame relative to which the problem is defined. Must be either “odom” or “vision”.</p></li>
 <li><p><strong>scene frame</strong>: An optional frame at a user-specified pose relative to the root frame. Body and foot related quantities, as well as the task frame are expressed relative to this frame. Identity by default.</p></li>
-<li><p><strong>task frame</strong>: An optional frame at a user-specified pose relative to the scene fame. Task specifications are expressed relative to this frame. Identity by default.</p></li>
+<li><p><strong>task frame</strong>: An optional frame at a user-specified pose relative to the scene frame. Task specifications are expressed relative to this frame. Identity by default.</p></li>
 <li><p><strong>ground frame</strong>: An optional frame at a user-specified pose relative to the scene frame. For an on-ground-plane stance, the feet must lie on the XY-plane of this frame. Defaults to the robot’s current estimated ground plane.</p></li>
 </ul>
 </section>

@@ -46,7 +46,7 @@ A BDDF SeriesIdentifier has a `series_type`, which describes the kind of series,
 
 For example:
 
-- A series containing GRPC robot-id request messages might thus be specified as: `series_type="bosdyn:grpc:requests"` and
+- A series containing gRPC robot-id request messages might thus be specified as: `series_type="bosdyn:grpc:requests"` and
   `spec={"bosdyn:grpc:service": "robot_id", "bosdyn:message-type": "bosdyn.api.RobotIdRequest"}`.
 - A series containing OperatorComment messages might be specified as `series_type="bosdyn:message-channel"` with `spec={"bosdyn:channel": "bosdyn.api.OperatorComment"}`
 
@@ -118,4 +118,4 @@ The first `<block>` in the file should be a `DescriptorBlock` containing a `File
 
 The final `<block>` in the file should be a `DescriptorBlock` containing a `FileIndex`. This structure lists the `SeriesIdentifier` for each series of messages and a list of `(timestamp_nsec, file_offset)` pairs for each message in the series. If `<Offset>` is zero, this means that the file does not have an index block.
 
-The index helps make it easier to find data in the file. The offset at the end of the file shows where start of the index block is. So you can seek 20 bytes from the end of the file, read the index offset, seek to the index block and read it, and then you have a map to the rest of the data in the file. The index offset is at the end of the file to allow the file to be written purely as a stream. You thus never need to seek to the beginning to insert the offset.
+The index helps make it easier to find data in the file. The offset at the end of the file provides the start position of the index block. So you can seek 20 bytes from the end of the file, read the index offset, seek to the index block and read it, and then you have a map to the rest of the data in the file. The index offset is at the end of the file to allow the file to be written purely as a stream. You thus never need to seek to the beginning to insert the offset.

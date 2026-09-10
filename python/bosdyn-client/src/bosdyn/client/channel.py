@@ -8,13 +8,28 @@ import logging
 
 import grpc
 
-from .exceptions import (ClientCancelledOperationError, InvalidClientCertificateError,
-                         NonexistentAuthorityError, NotFoundError, PermissionDeniedError,
-                         ProxyConnectionError, ResponseTooLargeError, RetryableUnavailableError,
-                         RpcError, ServiceFailedDuringExecutionError, ServiceUnavailableError,
-                         TimedOutError, TooManyRequestsError, TransientFailureError,
-                         UnableToConnectToRobotError, UnauthenticatedError, UnimplementedError,
-                         UnknownDnsNameError)
+from .exceptions import (
+    ClientCancelledOperationError,
+    ConnectionResetError,
+    InternalDeserializationError,
+    InvalidClientCertificateError,
+    NonexistentAuthorityError,
+    NotFoundError,
+    PermissionDeniedError,
+    ProxyConnectionError,
+    ResponseTooLargeError,
+    RetryableUnavailableError,
+    RpcError,
+    ServiceFailedDuringExecutionError,
+    ServiceUnavailableError,
+    TimedOutError,
+    TooManyRequestsError,
+    TransientFailureError,
+    UnableToConnectToRobotError,
+    UnauthenticatedError,
+    UnimplementedError,
+    UnknownDnsNameError,
+)
 
 TransportError = grpc.RpcError
 
@@ -49,8 +64,7 @@ class RefreshingAccessTokenAuthMetadataPlugin(grpc.AuthMetadataPlugin):
 
 
 def create_secure_channel_creds(cert, token_cb):
-    """Returns credentials for establishing a secure channel.
-    Uses previously set values on the linked Sdk and self.
+    """Returns credentials for establishing a secure channel. Uses previously set values on the
     """
 
     transport_creds = grpc.ssl_channel_credentials(root_certificates=cert)
@@ -122,50 +136,53 @@ def translate_exception(rpc_error):
     if code is grpc.StatusCode.CANCELLED:
         if str(401) in details:
             return UnauthenticatedError(rpc_error, UnauthenticatedError.__doc__)
-        elif str(404) in details:
+        if str(404) in details:
             return NotFoundError(rpc_error, NotFoundError.__doc__)
-        elif str(429) in details:
+        if str(429) in details:
             return TooManyRequestsError(rpc_error, TooManyRequestsError.__doc__)
-        elif str(502) in details:
+        if str(502) in details:
             return ServiceUnavailableError(rpc_error, ServiceUnavailableError.__doc__)
-        elif str(504) in details:
+        if str(504) in details:
             return TimedOutError(rpc_error, TimedOutError.__doc__)
 
         return ClientCancelledOperationError(rpc_error, ClientCancelledOperationError.__doc__)
-    elif code is grpc.StatusCode.DEADLINE_EXCEEDED:
+    if code is grpc.StatusCode.DEADLINE_EXCEEDED:
         return TimedOutError(rpc_error, TimedOutError.__doc__)
-    elif code is grpc.StatusCode.UNIMPLEMENTED:
+    if code is grpc.StatusCode.UNIMPLEMENTED:
         return UnimplementedError(rpc_error, UnimplementedError.__doc__)
-    elif code is grpc.StatusCode.PERMISSION_DENIED:
+    if code is grpc.StatusCode.PERMISSION_DENIED:
         return PermissionDeniedError(rpc_error, PermissionDeniedError.__doc__)
-    elif code is grpc.StatusCode.RESOURCE_EXHAUSTED:
+    if code is grpc.StatusCode.RESOURCE_EXHAUSTED:
         if "Received message larger than max" in details:
             return ResponseTooLargeError(rpc_error, ResponseTooLargeError.__doc__)
     elif code is grpc.StatusCode.UNAUTHENTICATED:
         return UnauthenticatedError(rpc_error, UnauthenticatedError.__doc__)
 
+    if code is grpc.StatusCode.INTERNAL and details and 'Exception deserializing response!' in details:
+        return InternalDeserializationError(rpc_error, InternalDeserializationError.__doc__)
+
     debug = rpc_error.debug_error_string()
     if debug is not None:
         if 'is not in peer certificate' in debug:
             return NonexistentAuthorityError(rpc_error, NonexistentAuthorityError.__doc__)
-        elif 'Failed to connect to remote host' in debug or 'Failed to create subchannel' in debug:
+        if 'Failed to connect to remote host' in debug or 'Failed to create subchannel' in debug:
             return ProxyConnectionError(rpc_error, ProxyConnectionError.__doc__)
-        elif 'Exception calling application' in debug:
+        if 'Exception calling application' in debug:
             return ServiceFailedDuringExecutionError(rpc_error,
                                                      ServiceFailedDuringExecutionError.__doc__)
-        elif 'Handshake failed' in debug:
+        if 'Handshake failed' in debug:
             return InvalidClientCertificateError(rpc_error, InvalidClientCertificateError.__doc__)
-        elif 'Name resolution failure' in debug:
+        if 'Name resolution failure' in debug:
             return UnknownDnsNameError(rpc_error, UnknownDnsNameError.__doc__)
-        elif 'channel is in state TRANSIENT_FAILURE' in debug:
+        if 'channel is in state TRANSIENT_FAILURE' in debug:
             return TransientFailureError(rpc_error, TransientFailureError.__doc__)
-        elif 'Connect Failed' in debug or 'Failed to pick subchannel' in debug:
+        if 'Connect Failed' in debug or 'Failed to pick subchannel' in debug:
             # This error should be checked last because a lot of grpc errors contain said substrings.
             return UnableToConnectToRobotError(rpc_error, UnableToConnectToRobotError.__doc__)
 
     if code is grpc.StatusCode.UNAVAILABLE:
         if 'Socket closed' in debug or 'Connection reset by peer' in debug:
-            return RetryableUnavailableError(rpc_error, RetryableUnavailableError.__doc__)
+            return ConnectionResetError(rpc_error, ConnectionResetError.__doc__)
         if str(502) in details:
             return ServiceUnavailableError(rpc_error, ServiceUnavailableError.__doc__)
         if str(429) in details:

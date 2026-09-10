@@ -6,7 +6,6 @@
 
 """Common message processors."""
 
-from bosdyn.api.header_pb2 import RequestHeader
 from bosdyn.util import now_nsec, set_timestamp_from_nsec  # bosdyn-core
 
 
@@ -17,22 +16,18 @@ class AddRequestHeader(object):
         """Constructor, takes function to access the client name to insert into request headers."""
         self.get_client_name = client_name_func
 
-    def _create_header(self):
-        header = RequestHeader()
-        header.client_name = self.get_client_name()
-        set_timestamp_from_nsec(header.request_timestamp, now_nsec())
-        return header
-
     def mutate(self, request):
         """Mutate request such that its header contains a client name and a timestamp.
 
         Headers are not required for third party proto requests/responses.
         """
-        header = self._create_header()
         try:
-            request.header.CopyFrom(header)
+            header = request.header
         except AttributeError:
-            pass
+            return
+        else:
+            header.client_name = self.get_client_name()
+            set_timestamp_from_nsec(header.request_timestamp, now_nsec())
 
 
 class DataBufferLoggingProcessor:
@@ -47,6 +42,7 @@ class DataBufferLoggingProcessor:
 
     def mutate(self, proto, **kwargs):
         """Logs the protobuf message to the data buffer.
+
         Args:
             proto: The protobuf request or response to log.
         """
@@ -54,7 +50,8 @@ class DataBufferLoggingProcessor:
 
 
 def log_all_rpcs(client, data_buffer_client):
-    """Attach a DataBufferLoggingProcessor to log all RPC requests and responses for the given client."""
+    """Attach a DataBufferLoggingProcessor to log all RPC requests and responses for the given
+    client."""
     processor = DataBufferLoggingProcessor(data_buffer_client)
     client.request_processors.append(processor)
     client.response_processors.append(processor)

@@ -10,7 +10,7 @@ Development Kit License (20191101-BDSDK-SL).
 
 Robots can either be connected to Choreographer before starting the application or dynamically connected and disconnected from the application once it is running.
 
-### Connecting Robots before starting the Application
+### Connecting robots before starting the Application
 
 To connect your robot, start Choreographer from the command line with arguments:
 
@@ -20,7 +20,7 @@ To connect multiple Spots at once include additional command line arguments, one
 
 `--nickname {description for identifying your Spot}` can also optionally be appended to the above command line argument list for each connection to automatically populate the "Nickname" column.
 
-### Connecting Robots after starting the Application
+### Connecting robots after starting the Application
 
 To connect your robot after the application has been started
 
@@ -40,23 +40,24 @@ Choreographer supports connections to multiple robots. In the Robot Management T
 
 Most buttons in the **Robot Controls** bar are disabled if there are no robots connected to Choreographer. If a robot(s) is connected to Choreographer, the buttons will have the following effects:
 
-| Button                    | Function                                                                                                                                                                            |
-| ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Power Off                 | Powers off Spot's motors. Always press Power Off before approaching the robot.                                                                                                      |
-| Power On                  | Powers on your Spot’s motors. You must activate this before your Spot can stand or start choreography.                                                                              |
-| E-Stop                    | Enables or disables your Spot’s E-Stop. In an emergency, use this to stop the Spot immediately.                                                                                     |
-| Self-Right                | If your Spot has fallen, self-righting causes the robot to attempt to return to the sitting pose.                                                                                   |
-| Sit                       | Sits the Spot in-place. Cancels all current choreography and music. E-Stop and Power Off can still be used in an emergency.                                                         |
-| Roll Over                 | Spot will sit and then roll onto its side and power off, positioning itself so the battery can be easily removed.                                                                   |
-| Stand                     | Brings Spot to a stand. Cancels all current choreography and music. E-Stop and Power Off can still be used in an emergency.                                                         |
-| Start/Stop Experiment Log | Record an experiment log. Experiment logs can be downloaded from Spot's Admin Console on Web and then sent to Boston Dynamics Support for help resolving any issues with your Spot. |
-| Joystick Walk             | Activates joystick controls (see Joystick controls section)                                                                                                                         |
-| Enable WASD Driving       | Activates WASD keyboard driving (see WASD Controls section)                                                                                                                         |
-| Return To Start           | Spot walks from its current location to the last location it started a dance (either a full choreography or the move preview dance).                                                |
-| Start Choreography        | Sends the selected choreography sequence to the robot, with a command to execute the sequence at the set start time in the future (default 3 second delay).                         |
-| Stop                      | Interrupts any active commands and freezes Spot in its current position. Music will also stop. EStop and Power Off can still be used in an emergency.                               |
+| Button                    | Function                                                                                                                                                                                                                                                  |
+| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Power Off                 | Powers off Spot's motors. Always press Power Off before approaching the robot.                                                                                                                                                                            |
+| Power On                  | Powers on your Spot’s motors. You must activate this before your Spot can stand or start choreography.                                                                                                                                                    |
+| E-Stop                    | Enables or disables your Spot’s E-Stop. In an emergency, use this to stop the Spot immediately.                                                                                                                                                           |
+| Self-Right                | If your Spot has fallen, self-righting causes the robot to attempt to return to the sitting pose.                                                                                                                                                         |
+| Sit                       | Sits the Spot in-place. Cancels all current choreography and music. E-Stop and Power Off can still be used in an emergency.                                                                                                                               |
+| Roll Over                 | Spot will sit and then roll onto its side and power off, positioning itself so the battery can be easily removed.                                                                                                                                         |
+| Stand                     | Brings Spot to a stand. Cancels all current choreography and music. E-Stop and Power Off can still be used in an emergency.                                                                                                                               |
+| Retro Log                 | Record a Retro Log. Retro Logs will record data from the previous minute of robot(s) operation. These logs can be downloaded from Spot's Admin Console on Web and then sent to Boston Dynamics Support for help resolving any issues with your Spot.      |
+| Start/Stop Experiment Log | Record an Experiment Log. Experiment Logs will record up to 5 minutes of ongoing robot(s) operation. These logs can be downloaded from Spot's Admin Console on Web and then sent to Boston Dynamics Support for help resolving any issues with your Spot. |
+| Joystick Walk             | Activates joystick controls (see Joystick controls section)                                                                                                                                                                                               |
+| Enable WASD Driving       | Activates WASD keyboard driving (see WASD Controls section)                                                                                                                                                                                               |
+| Return To Start           | Spot walks from its current location to the last location it started a dance (either a full choreography or the move preview dance).                                                                                                                      |
+| Start Choreography        | Sends the selected choreography sequence to the robot, with a command to execute the sequence at the set start time in the future (default 3 second delay).                                                                                               |
+| Stop                      | Interrupts any active commands and freezes Spot in its current position. Music will also stop. EStop and Power Off can still be used in an emergency.                                                                                                     |
 
-Note: **Return to Start** brings all selected robots back to their starting position after completing a choreography. If multiple robots are being controlled, obstacle avoidance is enabled when they are navigating back to the starting position. To adjust this obstacle padding distance (in meters) the command line argument `--obs-padding DIST_IN_METERS` can be added to the Choreographer command line, or the set directly through the "Settings"->"Playback and Music Settings" menu.
+Note: **Return to Start** brings all selected robots back to their starting position after completing a choreography. If multiple robots are being controlled, obstacle avoidance is enabled when they are navigating back to the starting position. To adjust this obstacle padding distance (in meters) the command line argument `--obs-padding DIST_IN_METERS` can be added to the Choreographer command line, or the set directly in the **Robot Operation** section of the **Settings**->**Preferences** menu.
 
 ## Joystick controls
 
@@ -92,24 +93,6 @@ When enabled, the robot can be driven using the WASD keys. Joystick mode is disa
 
 When the robot is controlled through any of the other Robot Controls buttons, WASD driving is disabled. Other keypresses still work.
 
-| Key     | Function                                                                                              |
-| ------- | ----------------------------------------------------------------------------------------------------- |
-| v       | Enable WASD mode                                                                                      |
-| b       | Enable joystick mode                                                                                  |
-| k       | Power on                                                                                              |
-| l       | Power off                                                                                             |
-| y       | Stand                                                                                                 |
-| x       | Start choreography                                                                                    |
-| [       | Sit                                                                                                   |
-| ]       | Self-right                                                                                            |
-| w       | Walk forward                                                                                          |
-| a       | Strafe left                                                                                           |
-| s       | Walk backwards                                                                                        |
-| d       | Strafe right                                                                                          |
-| q       | Turn left                                                                                             |
-| e       | Turn right                                                                                            |
-| shift+s | When a Custom Gait is in progress, finish the active gait and continue on to the rest of the sequence |
-
-Select **Hotkeys Documentation** from the Help menu to view a keystroke mapping table.
+Select **Hotkeys Documentation** from the Help menu to view the full list of Choreographer hotkeys, or see [Hotkey Mapping](choreographer.md##HotKey_Mapping)
 
 _Note: WASD and Joystick input can be used to drive Spot when it is performing a Custom Gait move, though using an XBox Controller is recommended. See the [CustomGait](custom_gait.md) documentation for details._

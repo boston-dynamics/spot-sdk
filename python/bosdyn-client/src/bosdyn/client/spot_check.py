@@ -8,8 +8,13 @@ import collections
 import time
 
 from bosdyn.api.spot import spot_check_pb2, spot_check_service_pb2_grpc
-from bosdyn.client.common import (BaseClient, error_factory, handle_common_header_errors,
-                                  handle_lease_use_result_errors, handle_unset_status_error)
+from bosdyn.client.common import (
+    BaseClient,
+    error_factory,
+    handle_common_header_errors,
+    handle_lease_use_result_errors,
+    handle_unset_status_error,
+)
 from bosdyn.client.exceptions import LeaseUseError, ResponseError, TimedOutError
 from bosdyn.util import now_sec
 

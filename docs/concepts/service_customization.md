@@ -30,11 +30,11 @@ The service customization system supports several different primitive types, and
 
 ### Spec
 
-A specification, or spec, is what services advertises to clients so that the client can build a UI. It's how services encode what parameters that service expects - "I need a slider from 0 to 100" or "I need two sliders and a checkbox". The root level of any service spec is a dictionary so that parameters can be added in the future with ease.
+A specification, or spec, is what services advertise to clients so that the client can build a UI. It's how services encode what parameters that service expects - "I need a slider from 0 to 100" or "I need two sliders and a checkbox". The root level of any service spec is a dictionary so that parameters can be added in the future with ease.
 
 ### Parameter
 
-Parameters are instantiations of Specs. Where a spec says: "I need a slider from 0 to 100 titled threshold", a parameter says "threshold: 58". It's result of a spec after it's been turned into a UI, and a user has wiggled knobs.
+Parameters are instantiations of Specs. Where a spec says: "I need a slider from 0 to 100 titled threshold", a parameter says "threshold: 58". It's the result of a spec after it's been turned into a UI, and a user has wiggled knobs.
 
 ## Parameter Types
 
@@ -64,7 +64,7 @@ The bool parameter allows users to turn things on and off. It is defined by the 
 
 Region of Interest, or ROI, allows users to specify a region of an image. It is defined by the `RegionOfInterestParam` and `RegionOfInterestParam.Spec` protobuf messages. As of 3.3, ROI params are limited to specifying rectangular regions, and really only work well for `Network Compute Bridge Worker` services. The tablet does not allow setting ROI for `Area Callback` services, but that will likely change in the future. Other services have limited ROI functionality.
 
-Region of interest is helpful to narrow down a search space if there is a lot going on in an image, and the camera can't be moved or zoomed in such a way that only the thing the user care's about is in frame. Users will be able to draw regions on live images using the tablet UI, and on images taken at record time when editing parameters in Orbit.
+Region of interest is helpful to narrow down a search space if there is a lot going on in an image, and the camera can't be moved or zoomed in such a way that only the thing the user cares about is in frame. Users will be able to draw regions on live images using the tablet UI, and on images taken at record time when editing parameters in Orbit.
 
 ### Dictionary
 
@@ -80,7 +80,7 @@ Like dictionary children, one-of children also contain a `UserInterfaceInfo`, wh
 
 ### List
 
-List is the final container type, and is defined by the `ListParam` and `ListParam.Spec` protobuf messages. Lists must be homogenous, meaning each child in the list must meet the same spec.
+List is the final container type, and is defined by the `ListParam` and `ListParam.Spec` protobuf messages. Lists must be homogeneous, meaning each child in the list must meet the same spec.
 
 ### Custom Param
 

@@ -504,8 +504,7 @@ class RecorderInterface(object):
     def _desert_str(self):
         if self._desert_mode:
             return '[ FEATURE DESERT MODE ]'
-        else:
-            return ''
+        return ''
 
     def _battery_str(self):
         if not self.robot_state:

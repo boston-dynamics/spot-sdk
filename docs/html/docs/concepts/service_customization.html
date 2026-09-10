@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Service Customization &mdash; Spot 5.1.9 documentation</title>
+  <title>Service Customization &mdash; Spot 5.2.0 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
     <link rel="shortcut icon" href="../../_static/bd-favicon.png"/>
@@ -38,7 +38,7 @@
               <img src="../../_static/bd-official-white.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                5.1.9
+                5.2.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -205,7 +205,8 @@
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/world_object_mutations/README.html">World Object Mutations</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/visualizer/README.html">Visualizer</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/gripper_camera_params/README.html">Gripper Camera Parameters</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../python/examples/spot_cam/README.html">Spot CAM</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/spot_cam/README.html">Spot CAM Services</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/spot_cam/README.html#spot-cam-video-core-io-extension-example">Spot Cam Video Core IO Extension Example</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/stitch_front_images/README.html">Stitch Front Images</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/get_depth_plus_visual_image/README.html">Project Depth Data on Visual Images</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/service_customization/custom_parameter_image_server/README.html">Custom Parameter Image Server</a></li>
@@ -249,6 +250,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/graph_nav_command_line/README.html">GraphNav and Recording Service Command Line Interfaces</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/graph_nav_command_line/README.html#example-programs">Example Programs</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/graph_nav_extract_point_cloud/README.html">Graph Nav Extract Point Cloud</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/graph_nav_map_to_usd/README.html">Graph Nav Map to USD</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/graph_nav_view_map/README.html">Graph Nav View Map</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/graph_nav_view_gps/README.html">Graph Nav View GPS Data</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/get_mission_state/README.html">Get Mission State</a></li>
@@ -269,7 +271,8 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../python/examples/docs/joint_control_examples.html">Joint Control API Examples</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../python/examples/docs/orbit.html">Orbit</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../python/examples/orbit/hello_orbit/README.html">Hello Orbit</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/orbit/hello_orbit/README.html">Hello Orbit (v0, OrbitClient)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/orbit/orbit_v1_api/README.html">Orbit v1 API (v1, raw HTTP)</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/orbit/export_run_archives/README.html">Export Run Archives</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/orbit/export_site_walk_archives/README.html">Export Sitewalk Archives</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/orbit/anomalies/README.html">Anomalies</a></li>
@@ -324,6 +327,8 @@
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/fault.html">Fault</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/frame_helpers.html">Frame Helpers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/graph_nav.html">Graph Nav</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/graph_nav_download.html">Graph Nav Download</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/graph_nav_upload.html">Graph Nav Upload</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/gripper_camera_param.html">Gripper Camera Params</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/gps/README.html">GPS</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/gps/aggregator_client.html">Aggregator Client</a></li>
@@ -546,11 +551,11 @@ Development Kit License (20191101-BDSDK-SL).
 <h2>Service Customization Language<a class="headerlink" href="#service-customization-language" title="Permalink to this heading"></a></h2>
 <section id="spec">
 <h3>Spec<a class="headerlink" href="#spec" title="Permalink to this heading"></a></h3>
-<p>A specification, or spec, is what services advertises to clients so that the client can build a UI. It’s how services encode what parameters that service expects - “I need a slider from 0 to 100” or “I need two sliders and a checkbox”. The root level of any service spec is a dictionary so that parameters can be added in the future with ease.</p>
+<p>A specification, or spec, is what services advertise to clients so that the client can build a UI. It’s how services encode what parameters that service expects - “I need a slider from 0 to 100” or “I need two sliders and a checkbox”. The root level of any service spec is a dictionary so that parameters can be added in the future with ease.</p>
 </section>
 <section id="parameter">
 <h3>Parameter<a class="headerlink" href="#parameter" title="Permalink to this heading"></a></h3>
-<p>Parameters are instantiations of Specs. Where a spec says: “I need a slider from 0 to 100 titled threshold”, a parameter says “threshold: 58”. It’s result of a spec after it’s been turned into a UI, and a user has wiggled knobs.</p>
+<p>Parameters are instantiations of Specs. Where a spec says: “I need a slider from 0 to 100 titled threshold”, a parameter says “threshold: 58”. It’s the result of a spec after it’s been turned into a UI, and a user has wiggled knobs.</p>
 </section>
 </section>
 <section id="parameter-types">
@@ -579,7 +584,7 @@ Development Kit License (20191101-BDSDK-SL).
 <section id="region-of-interest">
 <h3>Region of Interest<a class="headerlink" href="#region-of-interest" title="Permalink to this heading"></a></h3>
 <p>Region of Interest, or ROI, allows users to specify a region of an image. It is defined by the <code class="docutils literal notranslate"><span class="pre">RegionOfInterestParam</span></code> and <code class="docutils literal notranslate"><span class="pre">RegionOfInterestParam.Spec</span></code> protobuf messages. As of 3.3, ROI params are limited to specifying rectangular regions, and really only work well for <code class="docutils literal notranslate"><span class="pre">Network</span> <span class="pre">Compute</span> <span class="pre">Bridge</span> <span class="pre">Worker</span></code> services. The tablet does not allow setting ROI for <code class="docutils literal notranslate"><span class="pre">Area</span> <span class="pre">Callback</span></code> services, but that will likely change in the future. Other services have limited ROI functionality.</p>
-<p>Region of interest is helpful to narrow down a search space if there is a lot going on in an image, and the camera can’t be moved or zoomed in such a way that only the thing the user care’s about is in frame. Users will be able to draw regions on live images using the tablet UI, and on images taken at record time when editing parameters in Orbit.</p>
+<p>Region of interest is helpful to narrow down a search space if there is a lot going on in an image, and the camera can’t be moved or zoomed in such a way that only the thing the user cares about is in frame. Users will be able to draw regions on live images using the tablet UI, and on images taken at record time when editing parameters in Orbit.</p>
 </section>
 <section id="dictionary">
 <h3>Dictionary<a class="headerlink" href="#dictionary" title="Permalink to this heading"></a></h3>
@@ -593,7 +598,7 @@ Development Kit License (20191101-BDSDK-SL).
 </section>
 <section id="list">
 <h3>List<a class="headerlink" href="#list" title="Permalink to this heading"></a></h3>
-<p>List is the final container type, and is defined by the <code class="docutils literal notranslate"><span class="pre">ListParam</span></code> and <code class="docutils literal notranslate"><span class="pre">ListParam.Spec</span></code> protobuf messages. Lists must be homogenous, meaning each child in the list must meet the same spec.</p>
+<p>List is the final container type, and is defined by the <code class="docutils literal notranslate"><span class="pre">ListParam</span></code> and <code class="docutils literal notranslate"><span class="pre">ListParam.Spec</span></code> protobuf messages. Lists must be homogeneous, meaning each child in the list must meet the same spec.</p>
 </section>
 <section id="custom-param">
 <h3>Custom Param<a class="headerlink" href="#custom-param" title="Permalink to this heading"></a></h3>

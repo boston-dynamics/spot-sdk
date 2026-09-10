@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>bosdyn.client.service_customization_helpers &mdash; Spot 5.1.9 documentation</title>
+  <title>bosdyn.client.service_customization_helpers &mdash; Spot 5.2.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
     <link rel="shortcut icon" href="../../../_static/bd-favicon.png"/>
@@ -35,7 +35,7 @@
               <img src="../../../_static/bd-official-white.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                5.1.9
+                5.2.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -202,7 +202,8 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/world_object_mutations/README.html">World Object Mutations</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/visualizer/README.html">Visualizer</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/gripper_camera_params/README.html">Gripper Camera Parameters</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_cam/README.html">Spot CAM</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_cam/README.html">Spot CAM Services</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_cam/README.html#spot-cam-video-core-io-extension-example">Spot Cam Video Core IO Extension Example</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/stitch_front_images/README.html">Stitch Front Images</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/get_depth_plus_visual_image/README.html">Project Depth Data on Visual Images</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/service_customization/custom_parameter_image_server/README.html">Custom Parameter Image Server</a></li>
@@ -246,6 +247,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/graph_nav_command_line/README.html">GraphNav and Recording Service Command Line Interfaces</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/graph_nav_command_line/README.html#example-programs">Example Programs</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/graph_nav_extract_point_cloud/README.html">Graph Nav Extract Point Cloud</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/graph_nav_map_to_usd/README.html">Graph Nav Map to USD</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/graph_nav_view_map/README.html">Graph Nav View Map</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/graph_nav_view_gps/README.html">Graph Nav View GPS Data</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/get_mission_state/README.html">Get Mission State</a></li>
@@ -266,7 +268,8 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/joint_control_examples.html">Joint Control API Examples</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/orbit.html">Orbit</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/hello_orbit/README.html">Hello Orbit</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/hello_orbit/README.html">Hello Orbit (v0, OrbitClient)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/orbit_v1_api/README.html">Orbit v1 API (v1, raw HTTP)</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/export_run_archives/README.html">Export Run Archives</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/export_site_walk_archives/README.html">Export Sitewalk Archives</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/anomalies/README.html">Anomalies</a></li>
@@ -321,6 +324,8 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/fault.html">Fault</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/frame_helpers.html">Frame Helpers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/graph_nav.html">Graph Nav</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/graph_nav_download.html">Graph Nav Download</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/graph_nav_upload.html">Graph Nav Upload</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/gripper_camera_param.html">Gripper Camera Params</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/gps/README.html">GPS</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/gps/aggregator_client.html">Aggregator Client</a></li>
@@ -526,30 +531,38 @@
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
 
 <span class="kn">from</span> <span class="nn">bosdyn.api.image_geometry_pb2</span> <span class="kn">import</span> <span class="n">AreaI</span>
-<span class="kn">from</span> <span class="nn">bosdyn.api.service_customization_pb2</span> <span class="kn">import</span> <span class="p">(</span><span class="n">BoolParam</span><span class="p">,</span> <span class="n">CustomParam</span><span class="p">,</span> <span class="n">CustomParamError</span><span class="p">,</span>
-                                                  <span class="n">DictParam</span><span class="p">,</span> <span class="n">DoubleParam</span><span class="p">,</span> <span class="n">Int64Param</span><span class="p">,</span> <span class="n">ListParam</span><span class="p">,</span>
-                                                  <span class="n">OneOfParam</span><span class="p">,</span> <span class="n">RegionOfInterestParam</span><span class="p">,</span> <span class="n">StringParam</span><span class="p">,</span>
-                                                  <span class="n">UserInterfaceInfo</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">bosdyn.api.service_customization_pb2</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">BoolParam</span><span class="p">,</span>
+    <span class="n">CustomParam</span><span class="p">,</span>
+    <span class="n">CustomParamError</span><span class="p">,</span>
+    <span class="n">DictParam</span><span class="p">,</span>
+    <span class="n">DoubleParam</span><span class="p">,</span>
+    <span class="n">Int64Param</span><span class="p">,</span>
+    <span class="n">ListParam</span><span class="p">,</span>
+    <span class="n">OneOfParam</span><span class="p">,</span>
+    <span class="n">RegionOfInterestParam</span><span class="p">,</span>
+    <span class="n">StringParam</span><span class="p">,</span>
+    <span class="n">UserInterfaceInfo</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">from</span> <span class="nn">bosdyn.api.units_pb2</span> <span class="kn">import</span> <span class="n">Units</span>
 
 
 
 <div class="viewcode-block" id="InvalidCustomParamSpecError"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/service_customization_helpers.html#bosdyn.client.service_customization_helpers.InvalidCustomParamSpecError">[docs]</a><span class="k">class</span> <span class="nc">InvalidCustomParamSpecError</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Error indicating that the defined custom parameter Spec is invalid,</span>
-<span class="sd">    with a list of error messages explaining why the spec is invalid&quot;&quot;&quot;</span></div>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Error indicating that the defined custom parameter Spec is invalid, with a list of error</span>
+<span class="sd">    messages explaining why the spec is invalid.&quot;&quot;&quot;</span></div>
 
 
 <div class="viewcode-block" id="InvalidCustomParamValueError"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/service_customization_helpers.html#bosdyn.client.service_customization_helpers.InvalidCustomParamValueError">[docs]</a><span class="k">class</span> <span class="nc">InvalidCustomParamValueError</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Error indicating that the defined custom parameter value does not match</span>
-<span class="sd">    the associated Spec, with a list of error messages explaining why.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Error indicating that the defined custom parameter value does not match the associated Spec,</span>
+<span class="sd">    with a list of error messages explaining why.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">proto_error</span><span class="p">:</span> <span class="n">CustomParamError</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">proto_error</span> <span class="o">=</span> <span class="n">proto_error</span></div>
 
 
 <div class="viewcode-block" id="validate_dict_spec"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/service_customization_helpers.html#bosdyn.client.service_customization_helpers.validate_dict_spec">[docs]</a><span class="k">def</span> <span class="nf">validate_dict_spec</span><span class="p">(</span><span class="n">dict_spec</span><span class="p">:</span> <span class="n">DictParam</span><span class="o">.</span><span class="n">Spec</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Checks that a DictParam.Spec is valid</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Checks that a DictParam.Spec is valid.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        dict_spec (service_customization_pb2.DictParam.Spec): Spec to be validated</span>
@@ -565,8 +578,8 @@
 
 <div class="viewcode-block" id="create_value_validator"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/service_customization_helpers.html#bosdyn.client.service_customization_helpers.create_value_validator">[docs]</a><span class="k">def</span> <span class="nf">create_value_validator</span><span class="p">(</span>
         <span class="n">dict_spec</span><span class="p">:</span> <span class="n">DictParam</span><span class="o">.</span><span class="n">Spec</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">DictParam</span><span class="p">],</span> <span class="n">Optional</span><span class="p">[</span><span class="n">CustomParamError</span><span class="p">]]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Checks if the DictParam.Spec is value and if so, returns a function that can be used to validate any DictParam value</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Checks if the DictParam.Spec is value and if so, returns a function that can be used to</span>
+<span class="sd">    validate any DictParam value.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        dict_spec (service_customization_pb2.DictParam.Spec): Spec to be validated and validate values against</span>
@@ -679,14 +692,14 @@
 
 
 <span class="k">class</span> <span class="nc">_ParamValidatorInterface</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; Class providing a common structure and interface to validate parameter types.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Class providing a common structure and interface to validate parameter types.</span>
 
-<span class="sd">        Specifically, a &lt;Type&gt;ParamValidator class can be used to validate a service_customization_pb2.&lt;Type&gt;Param.Spec</span>
-<span class="sd">        via a validate_spec function with a consistent signature, and can validate a service_customization_pb2.&lt;Type&gt;Param</span>
-<span class="sd">        against a specific Spec via a validate_value function</span>
+<span class="sd">    Specifically, a &lt;Type&gt;ParamValidator class can be used to validate a service_customization_pb2.&lt;Type&gt;Param.Spec</span>
+<span class="sd">    via a validate_spec function with a consistent signature, and can validate a service_customization_pb2.&lt;Type&gt;Param</span>
+<span class="sd">    against a specific Spec via a validate_value function</span>
 
-<span class="sd">        Args:</span>
-<span class="sd">            param_spec (service_customization_pb2.&lt;Type&gt;Param.Spec): A Spec message for a type of custom parameter</span>
+<span class="sd">    Args:</span>
+<span class="sd">        param_spec (service_customization_pb2.&lt;Type&gt;Param.Spec): A Spec message for a type of custom parameter</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="nd">@abstractmethod</span>
@@ -695,8 +708,7 @@
 
     <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">validate_spec</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Checks if the parameter Spec is valid for its type</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Checks if the parameter Spec is valid for its type.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            None for a valid spec, and raises a CustomParamError with a status besides STATUS_OK for an invalid spec</span>
@@ -704,8 +716,7 @@
 
     <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">validate_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">param_value</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">CustomParamError</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Checks if a parameter value is valid for this class&#39;s self.param_spec</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Checks if a parameter value is valid for this class&#39;s self.param_spec.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            param_value (service_customization.&lt;Type&gt;Param): A custom parameter value to validate against self.param_spec</span>
@@ -716,8 +727,7 @@
 
 
 <span class="k">class</span> <span class="nc">_DictParamValidator</span><span class="p">(</span><span class="n">_ParamValidatorInterface</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    ParamValidator class for a service_customization_pb2.DictParam.Spec</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;ParamValidator class for a service_customization_pb2.DictParam.Spec.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        param_spec (service_customization_pb2.DictParam.Spec): The DictParam Spec this helper instance is being used for</span>
@@ -740,8 +750,7 @@
             <span class="k">raise</span> <span class="n">InvalidCustomParamSpecError</span><span class="p">(</span><span class="n">error_list</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">validate_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">param_value</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Checks if a parameter value is valid for this class&#39;s self.param_spec</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Checks if a parameter value is valid for this class&#39;s self.param_spec.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            param_value (service_customization.DictParam): A custom parameter value to validate against self.param_spec</span>
@@ -775,8 +784,7 @@
 
 
 <span class="k">class</span> <span class="nc">_NumericalParamValidator</span><span class="p">(</span><span class="n">_ParamValidatorInterface</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Generic ParamValidator class for shared logic between numerical Param Specs</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generic ParamValidator class for shared logic between numerical Param Specs.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        param_spec (service_customization_pb2.&lt;Numerical&gt;Param.Spec): The Numerical Spec this helper instance is being used for</span>
@@ -820,8 +828,7 @@
 
 
 <span class="k">class</span> <span class="nc">_Int64ParamValidator</span><span class="p">(</span><span class="n">_NumericalParamValidator</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    ParamValidator class for a service_customization_pb2.Int64Param.Spec</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;ParamValidator class for a service_customization_pb2.Int64Param.Spec.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        param_spec (service_customization_pb2.Int64Param.Spec): The Int64Param Spec this helper instance is being used for</span>
@@ -835,8 +842,7 @@
 
 
 <span class="k">class</span> <span class="nc">_DoubleParamValidator</span><span class="p">(</span><span class="n">_NumericalParamValidator</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    ParamValidator class for a service_customization_pb2.DoubleParam.Spec</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;ParamValidator class for a service_customization_pb2.DoubleParam.Spec.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        param_spec (service_customization_pb2.DoubleParam.Spec): The DoubleParam Spec this helper instance is being used for</span>
@@ -849,8 +855,7 @@
 
 
 <span class="k">class</span> <span class="nc">_StringParamValidator</span><span class="p">(</span><span class="n">_ParamValidatorInterface</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    ParamValidator class for a service_customization_pb2.StringParam.Spec</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;ParamValidator class for a service_customization_pb2.StringParam.Spec.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        param_spec (service_customization_pb2.StringParam.Spec): The StringParam Spec this helper instance is being used for</span>
@@ -883,8 +888,7 @@
 
 
 <span class="k">class</span> <span class="nc">_BoolParamValidator</span><span class="p">(</span><span class="n">_ParamValidatorInterface</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    ParamValidator class for a service_customization_pb2.BoolParam.Spec</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;ParamValidator class for a service_customization_pb2.BoolParam.Spec.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        param_spec (service_customization_pb2.BoolParam.Spec): The BoolParam Spec this helper instance is being used for</span>
@@ -905,8 +909,7 @@
 
 
 <span class="k">class</span> <span class="nc">_RegionOfInterestParamValidator</span><span class="p">(</span><span class="n">_ParamValidatorInterface</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    ParamValidator class for a service_customization_pb2.RegionOfInterestParam.Spec</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;ParamValidator class for a service_customization_pb2.RegionOfInterestParam.Spec.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        param_spec (service_customization_pb2.RegionOfInterestParam.Spec): The RegionOfInterestParam Spec this helper instance is being used for</span>
@@ -953,8 +956,7 @@
 
 
 <span class="k">class</span> <span class="nc">_ListParamValidator</span><span class="p">(</span><span class="n">_ParamValidatorInterface</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    ParamValidator class for a service_customization_pb2.ListParam.Spec</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;ParamValidator class for a service_customization_pb2.ListParam.Spec.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        param_spec (service_customization_pb2.ListParam.Spec): The ListParam Spec this helper instance is being used for</span>
@@ -1032,8 +1034,7 @@
 
 
 <span class="k">class</span> <span class="nc">_OneOfParamValidator</span><span class="p">(</span><span class="n">_ParamValidatorInterface</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    ParamValidator class for a service_customization_pb2.OneOfInterestParam.Spec</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;ParamValidator class for a service_customization_pb2.OneOfInterestParam.Spec.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        param_spec (service_customization_pb2.OneOfInterestParam.Spec): The OneOfInterestParam Spec this helper instance is being used for</span>
@@ -1084,8 +1085,7 @@
 
 
 <span class="k">class</span> <span class="nc">_CustomParamValidator</span><span class="p">(</span><span class="n">_ParamValidatorInterface</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    ParamValidator class for a service_customization_pb2.CustomParam.Spec</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;ParamValidator class for a service_customization_pb2.CustomParam.Spec.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        param_spec (service_customization_pb2.CustomParam.Spec): The CustomParam Spec this helper instance is being used for</span>
@@ -1106,9 +1106,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">sub_param_helper</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_param_helper</span><span class="p">()</span>
 
     <span class="k">def</span> <span class="nf">get_param_helper</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Returns the ParamValidator instance for the defined OneOf spec in self.param_spec (a service_customization_pb2.CustomParam.Spec)</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the ParamValidator instance for the defined OneOf spec in self.param_spec (a</span>
+<span class="sd">        service_customization_pb2.CustomParam.Spec)&quot;&quot;&quot;</span>
         <span class="n">field_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">param_spec</span><span class="o">.</span><span class="n">WhichOneof</span><span class="p">(</span><span class="s1">&#39;spec&#39;</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">custom_param_dict</span><span class="p">[</span><span class="n">field_name</span><span class="p">](</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">param_spec</span><span class="p">,</span> <span class="n">field_name</span><span class="p">))</span>
 
@@ -1121,9 +1120,8 @@
 
 
 <span class="k">def</span> <span class="nf">_nested_error_message_helper</span><span class="p">(</span><span class="n">child_name</span><span class="p">,</span> <span class="n">child_error_messages</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Simple internal string helper function to take a list of errors from a child and return a list of errors</span>
-<span class="sd">    for the parent, with each error specifying which child it came from.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Simple internal string helper function to take a list of errors from a child and return a</span>
+<span class="sd">    list of errors for the parent, with each error specifying which child it came from.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        child_name (string): The human-readable name of the child parameter in the parent&#39;s context.</span>
@@ -1148,8 +1146,8 @@
 
 
 <div class="viewcode-block" id="custom_spec_to_default"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/service_customization_helpers.html#bosdyn.client.service_customization_helpers.custom_spec_to_default">[docs]</a><span class="k">def</span> <span class="nf">custom_spec_to_default</span><span class="p">(</span><span class="n">spec</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Create a default service_customization_pb2.CustomParam based off of the service_customization_pb2.CustomParam.Spec argument</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a default service_customization_pb2.CustomParam based off of the</span>
+<span class="sd">    service_customization_pb2.CustomParam.Spec argument.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        spec (service_customization_pb2.CustomParam.Spec): spec to which the parameter should be defaulted</span>
@@ -1164,27 +1162,26 @@
 
     <span class="k">if</span> <span class="n">which_spec</span> <span class="o">==</span> <span class="s1">&#39;dict_spec&#39;</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">CustomParam</span><span class="p">(</span><span class="n">dict_value</span><span class="o">=</span><span class="n">param_value</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">which_spec</span> <span class="o">==</span> <span class="s1">&#39;list_spec&#39;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">which_spec</span> <span class="o">==</span> <span class="s1">&#39;list_spec&#39;</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">CustomParam</span><span class="p">(</span><span class="n">list_value</span><span class="o">=</span><span class="n">param_value</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">which_spec</span> <span class="o">==</span> <span class="s1">&#39;int_spec&#39;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">which_spec</span> <span class="o">==</span> <span class="s1">&#39;int_spec&#39;</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">CustomParam</span><span class="p">(</span><span class="n">int_value</span><span class="o">=</span><span class="n">param_value</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">which_spec</span> <span class="o">==</span> <span class="s1">&#39;double_spec&#39;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">which_spec</span> <span class="o">==</span> <span class="s1">&#39;double_spec&#39;</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">CustomParam</span><span class="p">(</span><span class="n">double_value</span><span class="o">=</span><span class="n">param_value</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">which_spec</span> <span class="o">==</span> <span class="s1">&#39;string_spec&#39;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">which_spec</span> <span class="o">==</span> <span class="s1">&#39;string_spec&#39;</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">CustomParam</span><span class="p">(</span><span class="n">string_value</span><span class="o">=</span><span class="n">param_value</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">which_spec</span> <span class="o">==</span> <span class="s1">&#39;roi_spec&#39;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">which_spec</span> <span class="o">==</span> <span class="s1">&#39;roi_spec&#39;</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">CustomParam</span><span class="p">(</span><span class="n">roi_value</span><span class="o">=</span><span class="n">param_value</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">which_spec</span> <span class="o">==</span> <span class="s1">&#39;bool_spec&#39;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">which_spec</span> <span class="o">==</span> <span class="s1">&#39;bool_spec&#39;</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">CustomParam</span><span class="p">(</span><span class="n">bool_value</span><span class="o">=</span><span class="n">param_value</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">which_spec</span> <span class="o">==</span> <span class="s1">&#39;one_of_spec&#39;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">which_spec</span> <span class="o">==</span> <span class="s1">&#39;one_of_spec&#39;</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">CustomParam</span><span class="p">(</span><span class="n">one_of_value</span><span class="o">=</span><span class="n">param_value</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">return</span> <span class="kc">None</span></div>
+    <span class="k">return</span> <span class="kc">None</span></div>
 
 
 <div class="viewcode-block" id="dict_spec_to_default"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/service_customization_helpers.html#bosdyn.client.service_customization_helpers.dict_spec_to_default">[docs]</a><span class="k">def</span> <span class="nf">dict_spec_to_default</span><span class="p">(</span><span class="n">spec</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Create a default service_customization_pb2.DictParam based off of the service_customization_pb2.DictParam.Spec argument.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a default service_customization_pb2.DictParam based off of the</span>
+<span class="sd">    service_customization_pb2.DictParam.Spec argument.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        spec (service_customization_pb2.DictParam.Spec): spec to which the parameter should be defaulted</span>
@@ -1198,8 +1195,8 @@
 
 
 <div class="viewcode-block" id="list_spec_to_default"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/service_customization_helpers.html#bosdyn.client.service_customization_helpers.list_spec_to_default">[docs]</a><span class="k">def</span> <span class="nf">list_spec_to_default</span><span class="p">(</span><span class="n">spec</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Create a default service_customization_pb2.ListParam based off of the service_customization_pb2.ListParam.Spec argument</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a default service_customization_pb2.ListParam based off of the</span>
+<span class="sd">    service_customization_pb2.ListParam.Spec argument.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        spec (service_customization_pb2.ListParam.Spec): spec to which the parameter should be defaulted</span>
@@ -1214,8 +1211,8 @@
 
 
 <div class="viewcode-block" id="int_spec_to_default"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/service_customization_helpers.html#bosdyn.client.service_customization_helpers.int_spec_to_default">[docs]</a><span class="k">def</span> <span class="nf">int_spec_to_default</span><span class="p">(</span><span class="n">spec</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Create a default service_customization_pb2.IntParam based off of the service_customization_pb2.IntParam.Spec argument</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a default service_customization_pb2.IntParam based off of the</span>
+<span class="sd">    service_customization_pb2.IntParam.Spec argument.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        spec (service_customization_pb2.IntParam.Spec): spec to which the parameter should be defaulted</span>
@@ -1233,8 +1230,8 @@
 
 
 <div class="viewcode-block" id="double_spec_to_default"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/service_customization_helpers.html#bosdyn.client.service_customization_helpers.double_spec_to_default">[docs]</a><span class="k">def</span> <span class="nf">double_spec_to_default</span><span class="p">(</span><span class="n">spec</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Create a default service_customization_pb2.DoubleParam based off of the service_customization_pb2.DoubleParam.Spec argument</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a default service_customization_pb2.DoubleParam based off of the</span>
+<span class="sd">    service_customization_pb2.DoubleParam.Spec argument.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        spec (service_customization_pb2.DoubleParam.Spec): spec to which the parameter should be defaulted</span>
@@ -1252,8 +1249,8 @@
 
 
 <div class="viewcode-block" id="string_spec_to_default"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/service_customization_helpers.html#bosdyn.client.service_customization_helpers.string_spec_to_default">[docs]</a><span class="k">def</span> <span class="nf">string_spec_to_default</span><span class="p">(</span><span class="n">spec</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Create a default service_customization_pb2.StringParam based off of the service_customization_pb2.StringParam.Spec argument</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a default service_customization_pb2.StringParam based off of the</span>
+<span class="sd">    service_customization_pb2.StringParam.Spec argument.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        spec (service_customization_pb2.StringParam.Spec): spec to which the parameter should be defaulted</span>
@@ -1269,8 +1266,8 @@
 
 
 <div class="viewcode-block" id="roi_spec_to_default"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/service_customization_helpers.html#bosdyn.client.service_customization_helpers.roi_spec_to_default">[docs]</a><span class="k">def</span> <span class="nf">roi_spec_to_default</span><span class="p">(</span><span class="n">spec</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Create a default service_customization_pb2.RegionOfInterestParam based off of the service_customization_pb2.RegionOfInterestParam.Spec argument</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a default service_customization_pb2.RegionOfInterestParam based off of the</span>
+<span class="sd">    service_customization_pb2.RegionOfInterestParam.Spec argument.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        spec (service_customization_pb2.RegionOfInterestParam.Spec): spec to which the parameter should be defaulted</span>
@@ -1286,8 +1283,8 @@
 
 
 <div class="viewcode-block" id="bool_spec_to_default"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/service_customization_helpers.html#bosdyn.client.service_customization_helpers.bool_spec_to_default">[docs]</a><span class="k">def</span> <span class="nf">bool_spec_to_default</span><span class="p">(</span><span class="n">spec</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Create a default service_customization_pb2.BoolParam based off of the service_customization_pb2.BoolParam.Spec argument</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a default service_customization_pb2.BoolParam based off of the</span>
+<span class="sd">    service_customization_pb2.BoolParam.Spec argument.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        spec (service_customization_pb2.BoolParam.Spec): spec to which the parameter should be defaulted</span>
@@ -1298,8 +1295,8 @@
 
 
 <div class="viewcode-block" id="one_of_spec_to_default"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/service_customization_helpers.html#bosdyn.client.service_customization_helpers.one_of_spec_to_default">[docs]</a><span class="k">def</span> <span class="nf">one_of_spec_to_default</span><span class="p">(</span><span class="n">spec</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Create a default service_customization_pb2.OneOfParam based off of the service_customization_pb2.OneOfParam.Spec argument</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a default service_customization_pb2.OneOfParam based off of the</span>
+<span class="sd">    service_customization_pb2.OneOfParam.Spec argument.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        spec (service_customization_pb2.OneOfParam.Spec): spec to which the parameter should be defaulted</span>
@@ -1316,8 +1313,8 @@
 
 
 <div class="viewcode-block" id="dict_param_coerce_to"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/service_customization_helpers.html#bosdyn.client.service_customization_helpers.dict_param_coerce_to">[docs]</a><span class="k">def</span> <span class="nf">dict_param_coerce_to</span><span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="n">spec</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Coerce a service_customization_pb2.DictParam based off of the spec passed in. The parameter is modified in-place.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Coerce a service_customization_pb2.DictParam based off of the spec passed in. The parameter</span>
+<span class="sd">    is modified in-place.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        param (service_customization_pb2.DictParam): parameter that requires coercing</span>
@@ -1346,8 +1343,8 @@
 
 
 <div class="viewcode-block" id="list_param_coerce_to"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/service_customization_helpers.html#bosdyn.client.service_customization_helpers.list_param_coerce_to">[docs]</a><span class="k">def</span> <span class="nf">list_param_coerce_to</span><span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="n">spec</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Coerce a service_customization_pb2.ListParam based off of the spec passed in. The parameter is modified in-place.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Coerce a service_customization_pb2.ListParam based off of the spec passed in. The parameter</span>
+<span class="sd">    is modified in-place.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        param (service_customization_pb2.ListParam): parameter that requires coercing</span>
@@ -1375,8 +1372,8 @@
 
 
 <div class="viewcode-block" id="int_param_coerce_to"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/service_customization_helpers.html#bosdyn.client.service_customization_helpers.int_param_coerce_to">[docs]</a><span class="k">def</span> <span class="nf">int_param_coerce_to</span><span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="n">spec</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Coerce a service_customization_pb2.IntParam based off of the spec passed in. The parameter is modified in-place.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Coerce a service_customization_pb2.IntParam based off of the spec passed in. The parameter is</span>
+<span class="sd">    modified in-place.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        param (service_customization_pb2.IntParam): parameter that requires coercing</span>
@@ -1396,8 +1393,8 @@
 
 
 <div class="viewcode-block" id="double_param_coerce_to"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/service_customization_helpers.html#bosdyn.client.service_customization_helpers.double_param_coerce_to">[docs]</a><span class="k">def</span> <span class="nf">double_param_coerce_to</span><span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="n">spec</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Coerce a service_customization_pb2.CustomParam based off of the spec passed in. The parameter is modified in-place.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Coerce a service_customization_pb2.CustomParam based off of the spec passed in. The parameter</span>
+<span class="sd">    is modified in-place.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        param (service_customization_pb2.DoubleParam): parameter that requires coercing</span>
@@ -1417,8 +1414,8 @@
 
 
 <div class="viewcode-block" id="string_param_coerce_to"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/service_customization_helpers.html#bosdyn.client.service_customization_helpers.string_param_coerce_to">[docs]</a><span class="k">def</span> <span class="nf">string_param_coerce_to</span><span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="n">spec</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Coerce a service_customization_pb2.StringParam based off of the spec passed in. The parameter is modified in-place.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Coerce a service_customization_pb2.StringParam based off of the spec passed in. The parameter</span>
+<span class="sd">    is modified in-place.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        param (service_customization_pb2.StringParam): parameter that requires coercing</span>
@@ -1436,9 +1433,8 @@
 
 
 <div class="viewcode-block" id="roi_param_coerce_to"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/service_customization_helpers.html#bosdyn.client.service_customization_helpers.roi_param_coerce_to">[docs]</a><span class="k">def</span> <span class="nf">roi_param_coerce_to</span><span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="n">spec</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Coercion is tricky with ROI parameters due to the fact that there is no standard frame size. ROI parameter is not</span>
-<span class="sd">    modified in place; rather, a boolean value is returned.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Coercion is tricky with ROI parameters due to the fact that there is no standard frame size.</span>
+<span class="sd">    ROI parameter is not modified in place; rather, a boolean value is returned.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        param (service_customization_pb2.RegionOfInterestParam): parameter that requires coercing</span>
@@ -1453,8 +1449,8 @@
 
 
 <div class="viewcode-block" id="one_of_param_coerce_to"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/service_customization_helpers.html#bosdyn.client.service_customization_helpers.one_of_param_coerce_to">[docs]</a><span class="k">def</span> <span class="nf">one_of_param_coerce_to</span><span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="n">spec</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Coerce a service_customization_pb2.OneOfParam based off of the spec passed in. The parameter is modified in-place.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Coerce a service_customization_pb2.OneOfParam based off of the spec passed in. The parameter</span>
+<span class="sd">    is modified in-place.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        param (service_customization_pb2.OneOfParam): parameter that requires coercing</span>
@@ -1500,8 +1496,8 @@
 
 
 <div class="viewcode-block" id="custom_param_coerce_to"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/service_customization_helpers.html#bosdyn.client.service_customization_helpers.custom_param_coerce_to">[docs]</a><span class="k">def</span> <span class="nf">custom_param_coerce_to</span><span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="n">spec</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Coerce a service_customization_pb2.CustomParam based off of the spec passed in. The parameter is modified in-place.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Coerce a service_customization_pb2.CustomParam based off of the spec passed in. The parameter</span>
+<span class="sd">    is modified in-place.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        param (service_customization_pb2.CustomParam): parameter that requires coercing</span>
@@ -1530,8 +1526,7 @@
     <span class="n">spec</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">DictParam</span><span class="o">.</span><span class="n">Spec</span><span class="p">,</span> <span class="n">ListParam</span><span class="o">.</span><span class="n">Spec</span><span class="p">,</span> <span class="n">Int64Param</span><span class="o">.</span><span class="n">Spec</span><span class="p">,</span> <span class="n">DoubleParam</span><span class="o">.</span><span class="n">Spec</span><span class="p">,</span> <span class="n">StringParam</span><span class="o">.</span><span class="n">Spec</span><span class="p">,</span>
                 <span class="n">RegionOfInterestParam</span><span class="o">.</span><span class="n">Spec</span><span class="p">,</span> <span class="n">BoolParam</span><span class="o">.</span><span class="n">Spec</span><span class="p">,</span> <span class="n">OneOfParam</span><span class="o">.</span><span class="n">Spec</span><span class="p">]</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CustomParam</span><span class="o">.</span><span class="n">Spec</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Helper function to create a CustomParam.Spec</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Helper function to create a CustomParam.Spec.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">         spec: spec to be wrapped by a CustomParam.Spec</span>
@@ -1560,8 +1555,7 @@
                                            <span class="n">RegionOfInterestParam</span><span class="o">.</span><span class="n">Spec</span><span class="p">,</span> <span class="n">BoolParam</span><span class="o">.</span><span class="n">Spec</span><span class="p">,</span>
                                            <span class="n">OneOfParam</span><span class="o">.</span><span class="n">Spec</span><span class="p">],</span>
                          <span class="n">ui_info</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">UserInterfaceInfo</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DictParam</span><span class="o">.</span><span class="n">ChildSpec</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Helper function to create a DictParam.ChildSpec</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Helper function to create a DictParam.ChildSpec.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">         param_spec: spec for DictParam.ChildSpec that is converted into a CustomParam.Spec when forming the ChildSpec</span>
@@ -1572,8 +1566,7 @@
 
 <div class="viewcode-block" id="make_dict_param_spec"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/service_customization_helpers.html#bosdyn.client.service_customization_helpers.make_dict_param_spec">[docs]</a><span class="k">def</span> <span class="nf">make_dict_param_spec</span><span class="p">(</span><span class="n">specs</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">DictParam</span><span class="o">.</span><span class="n">ChildSpec</span><span class="p">],</span>
                          <span class="n">is_hidden_by_default</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DictParam</span><span class="o">.</span><span class="n">Spec</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Helper function to create a DictParam.Spec</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Helper function to create a DictParam.Spec.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">         specs: specs contained by the DictParam</span>
@@ -1584,8 +1577,7 @@
 
 <div class="viewcode-block" id="make_one_of_child_spec"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/service_customization_helpers.html#bosdyn.client.service_customization_helpers.make_one_of_child_spec">[docs]</a><span class="k">def</span> <span class="nf">make_one_of_child_spec</span><span class="p">(</span><span class="n">dict_param_spec</span><span class="p">:</span> <span class="n">DictParam</span><span class="o">.</span><span class="n">Spec</span><span class="p">,</span>
                            <span class="n">ui_info</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">UserInterfaceInfo</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">OneOfParam</span><span class="o">.</span><span class="n">ChildSpec</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Helper function to create a OneOfParam.ChildSpec</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Helper function to create a OneOfParam.ChildSpec.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">         dict_param_spec: spec for OneOfParam.ChildSpec</span>
@@ -1596,8 +1588,7 @@
 
 <div class="viewcode-block" id="make_one_of_param_spec"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/service_customization_helpers.html#bosdyn.client.service_customization_helpers.make_one_of_param_spec">[docs]</a><span class="k">def</span> <span class="nf">make_one_of_param_spec</span><span class="p">(</span><span class="n">specs</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">OneOfParam</span><span class="o">.</span><span class="n">ChildSpec</span><span class="p">],</span>
                            <span class="n">default_key</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">OneOfParam</span><span class="o">.</span><span class="n">Spec</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Helper function to create a OneOfParam.Spec</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Helper function to create a OneOfParam.Spec.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">         specs: specs contained by the OneOfParam</span>
@@ -1608,8 +1599,7 @@
 
 <div class="viewcode-block" id="make_list_param_spec"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/service_customization_helpers.html#bosdyn.client.service_customization_helpers.make_list_param_spec">[docs]</a><span class="k">def</span> <span class="nf">make_list_param_spec</span><span class="p">(</span><span class="n">element_spec</span><span class="p">:</span> <span class="n">CustomParam</span><span class="o">.</span><span class="n">Spec</span><span class="p">,</span> <span class="n">min_number_of_values</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                          <span class="n">max_number_of_values</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ListParam</span><span class="o">.</span><span class="n">Spec</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Helper function to create a ListParam.Spec</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Helper function to create a ListParam.Spec.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">         element_spec: spec for each element of the list</span>
@@ -1627,8 +1617,7 @@
 <div class="viewcode-block" id="make_int64_param_spec"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/service_customization_helpers.html#bosdyn.client.service_customization_helpers.make_int64_param_spec">[docs]</a><span class="k">def</span> <span class="nf">make_int64_param_spec</span><span class="p">(</span><span class="n">default_value</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">units</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Units</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                           <span class="n">min_value</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                           <span class="n">max_value</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Int64Param</span><span class="o">.</span><span class="n">Spec</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Helper function to create an Int64Param.Spec</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Helper function to create an Int64Param.Spec.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">         default_value: starting value for Int64Param</span>
@@ -1649,8 +1638,7 @@
 <div class="viewcode-block" id="make_double_param_spec"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/service_customization_helpers.html#bosdyn.client.service_customization_helpers.make_double_param_spec">[docs]</a><span class="k">def</span> <span class="nf">make_double_param_spec</span><span class="p">(</span><span class="n">default_value</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">units</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Units</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                            <span class="n">min_value</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                            <span class="n">max_value</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DoubleParam</span><span class="o">.</span><span class="n">Spec</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Helper function to create a DoubleParam.Spec</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Helper function to create a DoubleParam.Spec.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">         default_value: starting value for DoubleParam</span>
@@ -1670,8 +1658,7 @@
 
 <div class="viewcode-block" id="make_string_param_spec"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/service_customization_helpers.html#bosdyn.client.service_customization_helpers.make_string_param_spec">[docs]</a><span class="k">def</span> <span class="nf">make_string_param_spec</span><span class="p">(</span><span class="n">options</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">editable</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                            <span class="n">default_value</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">StringParam</span><span class="o">.</span><span class="n">Spec</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Helper function to create a StringParam.Spec</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Helper function to create a StringParam.Spec.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">         options: predetermined options the StringParam may be</span>
@@ -1682,8 +1669,7 @@
 
 
 <div class="viewcode-block" id="make_bool_param_spec"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/service_customization_helpers.html#bosdyn.client.service_customization_helpers.make_bool_param_spec">[docs]</a><span class="k">def</span> <span class="nf">make_bool_param_spec</span><span class="p">(</span><span class="n">default_value</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BoolParam</span><span class="o">.</span><span class="n">Spec</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Helper function to create an BoolParam.Spec</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Helper function to create an BoolParam.Spec.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">         default_value: starting value for BoolParam</span>
@@ -1698,8 +1684,7 @@
     <span class="n">RegionOfInterestParam</span><span class="o">.</span><span class="n">ServiceAndSource</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">default_area</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">AreaI</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                                        <span class="n">allows_rectangle</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
                                        <span class="n">allows_polygon</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RegionOfInterestParam</span><span class="o">.</span><span class="n">Spec</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Helper function to create a RegionOfInterestParam.Spec</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Helper function to create a RegionOfInterestParam.Spec.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">         service_and_source: service and source to which the RegionOfInterestParam should adhere</span>
@@ -1717,8 +1702,7 @@
 
 <div class="viewcode-block" id="make_user_interface_info"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/service_customization_helpers.html#bosdyn.client.service_customization_helpers.make_user_interface_info">[docs]</a><span class="k">def</span> <span class="nf">make_user_interface_info</span><span class="p">(</span><span class="n">display_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                              <span class="n">display_order</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">UserInterfaceInfo</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Helper function to create UserInterfaceInfo</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Helper function to create UserInterfaceInfo.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">         display_name: human-readable name displayed by the UI</span>
@@ -1737,8 +1721,7 @@
 
 <div class="viewcode-block" id="make_roi_service_and_source"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/service_customization_helpers.html#bosdyn.client.service_customization_helpers.make_roi_service_and_source">[docs]</a><span class="k">def</span> <span class="nf">make_roi_service_and_source</span><span class="p">(</span><span class="n">service</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
                                 <span class="n">source</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RegionOfInterestParam</span><span class="o">.</span><span class="n">ServiceAndSource</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Helper function to create a RegionOfInterestParam.ServiceAndSource</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Helper function to create a RegionOfInterestParam.ServiceAndSource.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">         service: the ImageService providing the image</span>

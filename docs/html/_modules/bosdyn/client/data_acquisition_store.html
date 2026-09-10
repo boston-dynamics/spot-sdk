@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>bosdyn.client.data_acquisition_store &mdash; Spot 5.1.9 documentation</title>
+  <title>bosdyn.client.data_acquisition_store &mdash; Spot 5.2.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
     <link rel="shortcut icon" href="../../../_static/bd-favicon.png"/>
@@ -35,7 +35,7 @@
               <img src="../../../_static/bd-official-white.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                5.1.9
+                5.2.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -202,7 +202,8 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/world_object_mutations/README.html">World Object Mutations</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/visualizer/README.html">Visualizer</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/gripper_camera_params/README.html">Gripper Camera Parameters</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_cam/README.html">Spot CAM</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_cam/README.html">Spot CAM Services</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_cam/README.html#spot-cam-video-core-io-extension-example">Spot Cam Video Core IO Extension Example</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/stitch_front_images/README.html">Stitch Front Images</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/get_depth_plus_visual_image/README.html">Project Depth Data on Visual Images</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/service_customization/custom_parameter_image_server/README.html">Custom Parameter Image Server</a></li>
@@ -246,6 +247,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/graph_nav_command_line/README.html">GraphNav and Recording Service Command Line Interfaces</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/graph_nav_command_line/README.html#example-programs">Example Programs</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/graph_nav_extract_point_cloud/README.html">Graph Nav Extract Point Cloud</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/graph_nav_map_to_usd/README.html">Graph Nav Map to USD</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/graph_nav_view_map/README.html">Graph Nav View Map</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/graph_nav_view_gps/README.html">Graph Nav View GPS Data</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/get_mission_state/README.html">Get Mission State</a></li>
@@ -266,7 +268,8 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/joint_control_examples.html">Joint Control API Examples</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/orbit.html">Orbit</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/hello_orbit/README.html">Hello Orbit</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/hello_orbit/README.html">Hello Orbit (v0, OrbitClient)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/orbit_v1_api/README.html">Orbit v1 API (v1, raw HTTP)</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/export_run_archives/README.html">Export Run Archives</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/export_site_walk_archives/README.html">Export Sitewalk Archives</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/anomalies/README.html">Anomalies</a></li>
@@ -321,6 +324,8 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/fault.html">Fault</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/frame_helpers.html">Frame Helpers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/graph_nav.html">Graph Nav</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/graph_nav_download.html">Graph Nav Download</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/graph_nav_upload.html">Graph Nav Upload</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/gripper_camera_param.html">Gripper Camera Params</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/gps/README.html">GPS</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/gps/aggregator_client.html">Aggregator Client</a></li>
@@ -522,8 +527,7 @@
 <span class="c1"># is subject to the terms and conditions of the Boston Dynamics Software</span>
 <span class="c1"># Development Kit License (20191101-BDSDK-SL).</span>
 
-<span class="sd">&quot;&quot;&quot;Client implementation for data acquisition store service.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">&quot;&quot;&quot;Client implementation for data acquisition store service.&quot;&quot;&quot;</span>
 
 <span class="kn">from</span> <span class="nn">os</span> <span class="kn">import</span> <span class="n">fstat</span>
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
@@ -771,7 +775,8 @@
                                <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="DataAcquisitionStoreClient.store_data_as_chunks"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition_store.html#bosdyn.client.data_acquisition_store.DataAcquisitionStoreClient.store_data_as_chunks">[docs]</a>    <span class="k">def</span> <span class="nf">store_data_as_chunks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">data_id</span><span class="p">,</span> <span class="n">file_extension</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Store data using streaming, supports storing of large data that is too large for a single store_data rpc. Note: using this rpc means that the data must be loaded into memory.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Store data using streaming, supports storing of large data that is too large for a single</span>
+<span class="sd">        store_data rpc. Note: using this rpc means that the data must be loaded into memory.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            data (bytes) : Arbitrary data to store.</span>
@@ -794,7 +799,8 @@
             <span class="n">assemble_type</span><span class="o">=</span><span class="n">data_acquisition_store</span><span class="o">.</span><span class="n">StoreStreamResponse</span><span class="p">,</span> <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="DataAcquisitionStoreClient.store_file"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition_store.html#bosdyn.client.data_acquisition_store.DataAcquisitionStoreClient.store_file">[docs]</a>    <span class="k">def</span> <span class="nf">store_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_path</span><span class="p">,</span> <span class="n">data_id</span><span class="p">,</span> <span class="n">file_extension</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Store file using file path, supports storing of large files that are too large for a single store_data rpc.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Store file using file path, supports storing of large files that are too large for a</span>
+<span class="sd">        single store_data rpc.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            file_path (string) : File path to arbitrary data to store.</span>
@@ -849,6 +855,7 @@
 
 <div class="viewcode-block" id="DataAcquisitionStoreClient.query_max_capture_id"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition_store.html#bosdyn.client.data_acquisition_store.DataAcquisitionStoreClient.query_max_capture_id">[docs]</a>    <span class="k">def</span> <span class="nf">query_max_capture_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Query max capture id from the robot.</span>
+
 <span class="sd">        Returns:</span>
 <span class="sd">            QueryMaxCaptureIdResult, which has a max_capture_id uint64, corresponding to the</span>
 <span class="sd">            greatest capture id on the robot.  Used for skipping DAQ synchronization</span>
@@ -869,15 +876,15 @@
 
 
 <span class="k">def</span> <span class="nf">_iterate_store_file</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">data_id</span><span class="p">,</span> <span class="n">file_extension</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Iterator over file data and create multiple StoreStreamRequest</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Iterator over file data and create multiple StoreStreamRequest.</span>
 
-<span class="sd">        Args:</span>
-<span class="sd">            file (BufferedReader) : Reader to the file for arbitrary data to store.</span>
-<span class="sd">            data_id (bosdyn.api.DataIdentifier) : Data identifier to use for storing this data.</span>
-<span class="sd">            file_extension (string) : File extension to use for writing the data to a file.</span>
-<span class="sd">        Returns:</span>
-<span class="sd">            StoreStreamRequests iterates over these requests.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">    Args:</span>
+<span class="sd">        file (BufferedReader) : Reader to the file for arbitrary data to store.</span>
+<span class="sd">        data_id (bosdyn.api.DataIdentifier) : Data identifier to use for storing this data.</span>
+<span class="sd">        file_extension (string) : File extension to use for writing the data to a file.</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        StoreStreamRequests iterates over these requests.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">total_size</span> <span class="o">=</span> <span class="n">fstat</span><span class="p">(</span><span class="n">file</span><span class="o">.</span><span class="n">fileno</span><span class="p">())</span><span class="o">.</span><span class="n">st_size</span>
     <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
         <span class="n">chunk</span> <span class="o">=</span> <span class="n">file</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">DEFAULT_CHUNK_SIZE_BYTES</span><span class="p">)</span>
@@ -891,15 +898,15 @@
 
 
 <span class="k">def</span> <span class="nf">_iterate_data_chunks</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">data_id</span><span class="p">,</span> <span class="n">file_extension</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Iterator over data and create multiple StoreDataRequest</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Iterator over data and create multiple StoreDataRequest.</span>
 
-<span class="sd">        Args:</span>
-<span class="sd">            data (bytes) : Arbitrary data to store.</span>
-<span class="sd">            data_id (bosdyn.api.DataIdentifier) : Data identifier to use for storing this data.</span>
-<span class="sd">            file_extension (string) : File extension to use for writing the data to a file.</span>
-<span class="sd">        Returns:</span>
-<span class="sd">            StoreDataRequests iterates over these requests.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">    Args:</span>
+<span class="sd">        data (bytes) : Arbitrary data to store.</span>
+<span class="sd">        data_id (bosdyn.api.DataIdentifier) : Data identifier to use for storing this data.</span>
+<span class="sd">        file_extension (string) : File extension to use for writing the data to a file.</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        StoreDataRequests iterates over these requests.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">total_size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">split_serialized</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">DEFAULT_CHUNK_SIZE_BYTES</span><span class="p">):</span>
         <span class="n">chunk_data</span> <span class="o">=</span> <span class="n">data_chunk</span><span class="o">.</span><span class="n">DataChunk</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">chunk</span><span class="p">,</span> <span class="n">total_size</span><span class="o">=</span><span class="n">total_size</span><span class="p">)</span>

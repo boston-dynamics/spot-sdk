@@ -128,10 +128,11 @@ message ProcessTopologyRequest {
         // Parameters which control rejecting loop closure candidates which
         // collide with obstacles.
         CollisionCheckingParams collision_check_params = 6;
-        // Causes the processing to time out after this many seconds. If not set, a default of 45
-        // seconds will be used. If this timeout occurs before the overall RPC timeout, a partial
-        // result will be returned with ProcessTopologyResponse.timed_out set to true. Processing
-        // can be continued by calling ProcessTopology again.
+        // Causes the processing to time out after this many seconds. If not set, the RPC time-out
+        // (with some buffer) will be used. If the timeout specified here is longer than the RPC
+        // time-out, it will be ignored and the RPC time-out (with some buffer) will be used
+        // On timeout, a partial result will be returned with ProcessTopologyResponse.timed_out
+        // set to true. Processing an be continued by calling ProcessTopology again.
         double timeout_seconds = 7;
         // Controls whether and how the service performs sparse feature matching.
         FeatureMatchingParams feature_matching_params = 8;
@@ -298,7 +299,11 @@ message ProcessAnchoringRequest {
         message OptimizerParams {
             // Maximum iterations of the optimizer to run.
             google.protobuf.Int32Value max_iters = 1;
-            // Maximum time the optimizer is allowed to run before giving up.
+            // Maximum time the optimizer is allowed to run before giving up. If not set, the RPC
+            // time-out (with some buffer) will be used. If the value specified here is longer
+            // than the RPC time-out, it will be ignored and the RPC time-out (with some buffer)
+            // will be used instead. On timeout, ProcessAnchoringResponse.status will be set to
+            // STATUS_MAX_TIME with whatever anchoring was found so far.
             google.protobuf.DoubleValue max_time_seconds = 2;
         }
         // Parameters which affect the measurements the optimizer uses to process the anchoring.

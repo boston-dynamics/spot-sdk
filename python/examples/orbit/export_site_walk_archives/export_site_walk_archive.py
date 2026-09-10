@@ -4,9 +4,8 @@
 # is subject to the terms and conditions of the Boston Dynamics Software
 # Development Kit License (20191101-BDSDK-SL).
 
-"""
-An example to show how to export SiteWalk archives from Orbit to the ./temp folder in the current directory
-"""
+"""An example to show how to export SiteWalk archives from Orbit to the ./temp folder in the current
+directory."""
 
 import argparse
 import logging
@@ -28,16 +27,16 @@ DOWNLOAD_ALL_CMD = 'all'
 
 
 def export_site_walk_archive(options: argparse.Namespace) -> bool:
-    """ A simple example to show how to use the Orbit client to export SiteWalk archives
-        which represent a collection of graph and mission data from Orbit.
+    """A simple example to show how to use the Orbit client to export SiteWalk archives which
+    represent a collection of graph and mission data from Orbit.
 
-        Args:
-            options(Namespace) : parsed args used for configuration options
-        Raises:
-            RequestExceptions: exceptions thrown by the Requests library
-            UnauthenticatedClientError: indicates that the orbit client is not authenticated properly
-        Returns
-            Boolean to indicate whether the function succeeded or not
+    Args:
+        options(Namespace) : parsed args used for configuration options
+    Raises:
+        RequestExceptions: exceptions thrown by the Requests library
+        UnauthenticatedClientError: indicates that the orbit client is not authenticated properly
+    Returns
+        Boolean to indicate whether the function succeeded or not
     """
 
     # Create Orbit client object
@@ -84,7 +83,7 @@ def export_site_walk_archive(options: argparse.Namespace) -> bool:
 
         # If user types DOWNLOAD_ALL_CMD create a list including all of the indices of available SiteWalks
         if site_walk_selected_indices.lower() == DOWNLOAD_ALL_CMD:
-            site_walk_selected_indices = range(len(available_site_walks) - 1)
+            site_walk_selected_indices = list(range(1, len(available_site_walks) + 1))
             valid_selection = True
         # Parse comma separated indices user input
         else:
@@ -98,7 +97,7 @@ def export_site_walk_archive(options: argparse.Namespace) -> bool:
 
                     # Check if all selected indices are in the range of its Walk indices listed from above
                     if site_walk_selected_indices[i] > len(
-                            available_site_walks) + 1 or site_walk_selected_indices[i] < 0:
+                            available_site_walks) or site_walk_selected_indices[i] < 1:
                         invalid_index = site_walk_selected_indices[i]
                         LOGGER.error(
                             f"Invalid Index Selection - Index {invalid_index} is out of range of available SiteWalk indices listed above. Please type a valid selection of SiteWalk indices from the list above or type {DOWNLOAD_ALL_CMD}"
@@ -116,7 +115,7 @@ def export_site_walk_archive(options: argparse.Namespace) -> bool:
     selected_site_walks = []
 
     for selected_index in site_walk_selected_indices:
-        if selected_index < len(available_site_walks) + 1 and selected_index > 0:
+        if 1 <= selected_index <= len(available_site_walks):
             selected_site_walks.append(available_site_walks[selected_index - 1])
 
     # Download the SiteWalks archives to the ./temp folder

@@ -57,6 +57,10 @@ message ActionAfter {
     // Takes priority over AutoReturn and HaltRobot actions.
     message ControlledMotorsOff {}
 
+    // Robot powers off its motors immediately.
+    // WARNING: If the robot is not prone, this may cause damage to the robot or its payloads.
+    message ImmediateMotorsOff {}
+
     // Robot powers off its computer immediately.
     // WARNING: This will cause loss of recent data, and may damage the robot or its payloads if
     // done while the robot is not sitting.
@@ -68,12 +72,17 @@ message ActionAfter {
         repeated bosdyn.api.Lease leases = 1;
     }
 
+    // Robot comes to a halt, then maintains its position.
+    message HaltRobot {}
+
     oneof action {
         RecordEvent record_event = 2;
         AutoReturn auto_return = 3;
         ControlledMotorsOff controlled_motors_off = 4;
+        ImmediateMotorsOff immediate_motors_off = 8;
         ImmediateRobotOff immediate_robot_off = 5;
         LeaseStale lease_stale = 6;
+        HaltRobot halt_robot = 7;
     }
 
     // Take the specified action after not hearing from the associated policy_id in this long.
@@ -154,7 +163,9 @@ message GetStatusResponse {
         POLICY_CONTROL_ACTION_UNKNOWN = 0;
         POLICY_CONTROL_ACTION_AUTO_RETURN = 1;
         POLICY_CONTROL_ACTION_MOTORS_OFF = 2;
+        POLICY_CONTROL_ACTION_IMMEDIATE_MOTORS_OFF = 5;
         POLICY_CONTROL_ACTION_ROBOT_OFF = 3;
+        POLICY_CONTROL_ACTION_HALT = 4;
     }
     // Is a Policy controlling the robot?
     // An empty field means that no Policy is actively controlling the robot, though other actions

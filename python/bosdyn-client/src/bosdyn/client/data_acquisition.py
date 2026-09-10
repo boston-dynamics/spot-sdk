@@ -10,15 +10,21 @@ import collections
 
 from bosdyn.api import data_acquisition_pb2 as data_acquisition
 from bosdyn.api import data_acquisition_service_pb2_grpc as data_acquisition_service
-from bosdyn.client.common import (BaseClient, common_header_errors, custom_params_error,
-                                  error_factory, error_pair, handle_common_header_errors,
-                                  handle_unset_status_error)
+from bosdyn.client.common import (
+    BaseClient,
+    common_header_errors,
+    custom_params_error,
+    error_factory,
+    error_pair,
+    handle_common_header_errors,
+    handle_unset_status_error,
+)
 from bosdyn.client.exceptions import InternalServerError, ResponseError
 from bosdyn.util import now_sec, now_timestamp, seconds_to_duration
 
 
 class DataAcquisitionResponseError(ResponseError):
-    """Error in Data Acquisition RPC"""
+    """Error in Data Acquisition RPC."""
 
 
 class RequestIdDoesNotExistError(DataAcquisitionResponseError):
@@ -240,8 +246,8 @@ _CAPABILITY_LIVE_DATA_STATUS_TO_ERROR.update({
 
 
 def metadata_to_proto(metadata):
-    """Checks the type to determine if a conversion is required to create a
-    bosdyn.api.Metadata proto message.
+    """Checks the type to determine if a conversion is required to create a bosdyn.api.Metadata
+    proto message.
 
     Args:
         metadata (bosdyn.api.Metadata or dict): The JSON structured metadata to be associated

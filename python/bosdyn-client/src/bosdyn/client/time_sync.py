@@ -6,10 +6,10 @@
 
 """A client for the time-sync service.
 
-The time-sync service helps track the difference between the robot's system clock and the
-system clock of clients, and sends an estimate of this difference to the client.  The client
-uses this information when it needs to send a timestamp to the robot in a request proto.
-Timestamps in request protos generally need to be specified relative to the robot's system clock.
+The time-sync service helps track the difference between the robot's system clock and the system
+clock of clients, and sends an estimate of this difference to the client.  The client uses this
+information when it needs to send a timestamp to the robot in a request proto. Timestamps in request
+protos generally need to be specified relative to the robot's system clock.
 """
 import time
 from threading import Event, Lock, Thread
@@ -19,8 +19,15 @@ from google.protobuf import duration_pb2
 from bosdyn.api import time_sync_pb2, time_sync_service_pb2_grpc
 from bosdyn.api.time_range_pb2 import TimeRange
 from bosdyn.client.robot_command import NoTimeSyncError, _TimeConverter
-from bosdyn.util import (RobotTimeConverter, now_nsec, now_sec, nsec_to_timestamp, parse_timespan,
-                         set_timestamp_from_nsec, timestamp_to_nsec)
+from bosdyn.util import (
+    RobotTimeConverter,
+    now_nsec,
+    now_sec,
+    nsec_to_timestamp,
+    parse_timespan,
+    set_timestamp_from_nsec,
+    timestamp_to_nsec,
+)
 
 from .common import BaseClient, common_header_errors
 from .exceptions import Error
@@ -204,8 +211,8 @@ class TimeSyncEndpoint:
     """A wrapper that uses a TimeSyncClient object to establish and maintain timesync with a robot.
 
     This class manages internal state, including a clock identifier and previous best time sync
-    estimates. This class automatically builds requests passed to the TimeSyncClient, so users
-    don't have to worry about the details of establishing and maintaining timesync.
+    estimates. This class automatically builds requests passed to the TimeSyncClient, so users don't
+    have to worry about the details of establishing and maintaining timesync.
 
     This object is thread-safe.
     """
@@ -437,7 +444,7 @@ class TimeSyncThread:
             return self._locked_should_exit
 
     def wait_for_sync(self, timeout_sec=3.0):
-        """Wait for up to the given timeout for time-sync to be achieved
+        """Wait for up to the given timeout for time-sync to be achieved.
 
         Args:
           timeout_sec (float): Maximum time (seconds) to wait for time-sync to be achieved.
@@ -543,8 +550,8 @@ class TimeSyncThread:
     def _timesync_thread(self):
         """Background thread which communicates with the time-sync service on robot.
 
-        The purpose of this thread is to achieve and maintain time-sync, which is an estimate
-        of the difference between the robot's and client's system clocks.
+        The purpose of this thread is to achieve and maintain time-sync, which is an estimate of the
+        difference between the robot's and client's system clocks.
         """
         try:
             while not self.should_exit:

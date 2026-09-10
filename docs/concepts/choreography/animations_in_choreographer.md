@@ -32,27 +32,17 @@ Additionally, components of the text file enable different animation-specific op
 
 The animated move text files are parsed into `Animation` protobuf messages and uploaded to the robot. Once the animation is uploaded to the robot, it can be referenced by name within choreographies.
 
-This parsing step (from text file to protobuf message) happens automatically in Choreographer for both animations in the **animations** directory that matches the directory structure shown below and for animations uploaded by selecting **Load Animated Move** from the File menu.
+## Parsing and loading animations with Choreographer
 
-```
-dance_directory/
-	choreographer.exe
-	animations/
-		bourree_arm.cha
-		my_animation.cha
-```
+The [Choreographer application](choreographer.md) has many options to support loading, viewing, and playing animation files on connected robots. Within Choreographer, animations can be parsed and loaded to connected robots using **File**->**Load Animated Move(s)** or can be configured to load automatically when the application is opened (see [Project Folders](choreographer.md#project-folders)). Animations loaded into Choreographer can be used in the regular sequence editing workflow like predefined Choreographer moves.
+
+A dialog indicates the status of all animations being uploaded. If an animation fails to upload, check the terminal where the Choreographer executable is running. It will likely contain an error message describing why the animation was invalid. You can also verify which animations were successfully uploaded to each robot using the **Check Animated Moves** tool under the **Tools** menu.
+
+<img src="images/animation_upload_dialog.png" style="max-width:640px;">
 
 ## Python example script
 
 The `animation_file_to_proto.py` python script file in the `bosdyn-choreography-client` package provides client access to the same functions used by Choreographer to complete the text file to protobuf animation parsing.
-
-## Automatic animation uploading in Choreographer
-
-When Choreographer connects to a robot, it automatically begins uploading all of the animation (.cha) files located in the **animations** folder in the same directory as the application. Loaded animations are also uploaded to each robot connection, including robots connected at startup from command line arguments and robots connected after the application is running.
-
-A dialog indicates the status of all animations being uploaded (example below). If an animation fails to upload, check the terminal where the Choreographer executable is running. It will likely contain an error message describing why the animation was invalid. You can also verify which animations have successfully loaded to each robot connection using the "Check Animated Moves" tool under the "Tools" Menu.
-
-<img src="images/animation_upload_dialog.png" style="max-width:640px;">
 
 ## Choreography logs for animations
 

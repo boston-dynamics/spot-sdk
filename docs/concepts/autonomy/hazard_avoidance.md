@@ -8,7 +8,7 @@ Development Kit License (20191101-BDSDK-SL).
 
 # Hazard Avoidance
 
-Spot provides the ability to specifiy "hazards" in Spot's vicinity, which modify both where Spot can walk and where Spot will prefer to walk during autonomous navigation. This service is the same used by Spot's [hazard avoidance capabilities based on foundation models](https://bostondynamics.com/blog/put-it-in-context-with-visual-foundation-models/), which were introduced in the 4.1 software release.
+Spot provides the ability to specify "hazards" in Spot's vicinity, which modify both where Spot can walk and where Spot will prefer to walk during autonomous navigation. This service is the same one used by Spot's [hazard avoidance capabilities based on foundation models](https://bostondynamics.com/blog/put-it-in-context-with-visual-foundation-models/), which were introduced in the 4.1 software release.
 
 Note that this service only provides the means to communicate to Spot the locations and properties of hazards. To take advantage of this service, the user needs to implement a separate application for detecting hazards from raw sensor data (or otherwise determining the existence of hazards).
 
@@ -18,17 +18,17 @@ Conceptually, a "hazard" is an object or area that a user desires Spot to avoid.
 
 ### When might a user want to add hazards?
 
-This API provides a flexible way to modify where Spot will or will not navigate, which can be used for many different reasons. There are three major cases why a user might want to though:
+This API provides a flexible way to modify where Spot will or will not navigate, which can be used for many different reasons. There are three major reasons a user might want to:
 
 1. To identify obstacles Spot may not otherwise see. For example, thin wires and glass walls might be missed by Spot's ordinary obstacle detection system.
 2. To identify dangers to Spot that cannot be inferred from geometry alone. For example, the shape of a wheeled cart may resemble a stable platform Spot could traverse, when in reality it would be dangerous for Spot to attempt to do so.
 3. To identify objects or regions that are not directly dangerous to Spot but which should still be avoided. For example, preventing Spot from walking under a ladder or telling Spot not to step on specific pieces of equipment that could be damaged.
 
-Generally, this service can be used when a user desires Spot to avoid walking over something that it would otherwise.
+Generally, this service can be used when a user desires Spot to avoid walking over something that it would otherwise walk over.
 
 ### What are some considerations when adding hazards?
 
-The primary consideration will be the tradeoff between avoiding the hazard and sucessfully navigating to a location. If hazard observations are added too aggressively, it may become impossible for Spot to reach its destination, or perhaps even move at all. One aspect of this is the type associated to the hazard. Types that enforce strict avoidance (`TYPE_NEVER_STEP_ON`, `TYPE_NEVER_STEP_ACROSS`, and similar) will block potential paths for Spot; too many of these can lead to all paths being blocked. On the other hand, types that only encourage avoidance (`TYPE_PREFER_AVOID_WEAK` and `TYPE_PREFER_AVOID_STRONG`) will never prevent Spot from navigating to a location but also may not prevent Spot from avoiding the hazard. Another consideration is the size of the hazard. If the geometry specified in the hazard observation is large, Spot will need to avoid a wider region. This could lead to large deviations from the desired path or cause Spot to become stuck.
+The primary consideration will be the tradeoff between avoiding the hazard and successfully navigating to a location. If hazard observations are added too aggressively, it may become impossible for Spot to reach its destination, or perhaps even move at all. One aspect of this is the type associated with the hazard. Types that enforce strict avoidance (`TYPE_NEVER_STEP_ON`, `TYPE_NEVER_STEP_ACROSS`, and similar) will block potential paths for Spot; too many of these can lead to all paths being blocked. On the other hand, types that only encourage avoidance (`TYPE_PREFER_AVOID_WEAK` and `TYPE_PREFER_AVOID_STRONG`) will never prevent Spot from navigating to a location but also may not prevent Spot from avoiding the hazard. Another consideration is the size of the hazard. If the geometry specified in the hazard observation is large, Spot will need to avoid a wider region. This could lead to large deviations from the desired path or cause Spot to become stuck.
 
 It is important for a user to observe and assess Spot's behavior after adding a hazard. If Spot appears to be behaving too cautiously and/or is unable to navigate to a desired location, the user may need to specify a smaller size for the hazard or a more permissive type. If Spot is too aggressive and fails to avoid the hazard, the user may need to specify a more restrictive type or increase the size of the hazard. Furthermore, always verify that the frames and associated transforms provided in a `HazardObservation` are correct, as otherwise Spot will believe the hazard to be at an incorrect location.
 
@@ -38,7 +38,7 @@ The [Hazard Avoidance Service](../../../protos/bosdyn/api/hazard_avoidance_servi
 
 ## Hazard Observations
 
-An instance of a `AddHazardsRequest` contains a list of `HazardObservation`s. Each hazard observation specifies the geometry and location of a hazard, as well as how Spot should treat the region occupied by that geometry. The observation may also optionally specify a margin around the hazard. A `HazardObservation` will expire over time, causing Spot to "forget" about it unless a new observation is submitted. Therefore `AddHazardsRequest`s should continue to be submitted as long as the hazard remains present in the world. It is recommended to submit these requests at a rate of 2Hz to 10Hz.
+An instance of a `AddHazardsRequest` contains a list of `HazardObservation`s. Each hazard observation specifies the geometry and location of a hazard, as well as how Spot should treat the region occupied by that geometry. The observation may also optionally specify a margin around the hazard. A `HazardObservation` will expire over time, causing Spot to "forget" about it unless a new observation is submitted. Therefore, `AddHazardsRequest`s should continue to be submitted as long as the hazard remains present in the world. It is recommended to submit these requests at a rate of 2Hz to 10Hz.
 
 ### How to specify observation data
 
@@ -93,5 +93,5 @@ There are currently seven "types" that can be specified to determine how Spot sh
 In addition to the geometry and type of the hazard, an observation will also specify:
 
 1. The `likelihood` of the observation, a value from 0 to 1 representing the confidence that the hazard exists. This affects how strongly and for how long a hazard observation will influence Spot's behavior, with larger values corresponding to stronger influence that persists for longer durations.
-2. A `semantic_label` that provides a human-interpetable label for the kind of hazard encountered (e.g., `wires`, `spill`). This is just for debugging convenience and has no impact on Spot's behavior.
+2. A `semantic_label` that provides a human-interpretable label for the kind of hazard encountered (e.g., `wires`, `spill`). This is just for debugging convenience and has no impact on Spot's behavior.
 3. A `margin` around the hazard, in meters. A positive margin will expand the region covered by the observation, with the region covered by the margin handled as described above. A negative margin will shrink the region covered by the observation.

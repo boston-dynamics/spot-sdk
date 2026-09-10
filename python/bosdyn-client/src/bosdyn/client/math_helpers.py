@@ -78,7 +78,7 @@ class Vec2(object):
         if idx == 0:
             self.x = data
             return
-        elif idx == 1:
+        if idx == 1:
             self.y = data
             return
         raise IndexError("Invalid index {}".format(idx))
@@ -87,7 +87,7 @@ class Vec2(object):
         # pylint: disable=no-else-return
         if idx == 0:
             return self.x
-        elif idx == 1:
+        if idx == 1:
             return self.y
         raise IndexError("Invalid index {}".format(idx))
 
@@ -158,10 +158,10 @@ class Vec3(object):
         if idx == 0:
             self.x = data
             return
-        elif idx == 1:
+        if idx == 1:
             self.y = data
             return
-        elif idx == 2:
+        if idx == 2:
             self.z = data
             return
         raise IndexError("Invalid index {}".format(idx))
@@ -170,9 +170,9 @@ class Vec3(object):
         # pylint: disable=no-else-return
         if idx == 0:
             return self.x
-        elif idx == 1:
+        if idx == 1:
             return self.y
-        elif idx == 2:
+        if idx == 2:
             return self.z
         raise IndexError("Invalid index {}".format(idx))
 
@@ -223,10 +223,9 @@ class SE2Pose(object):
 
     @staticmethod
     def flatten(se3pose):
-        """
-        Flatten a given SE3Pose to an SE2Pose. This will lose height information
-        if the se3pose provided is not gravity aligned. The common gravity aligned
-        frames are odom, vision, and flat_body.
+        """Flatten a given SE3Pose to an SE2Pose. This will lose height information if the se3pose
+        provided is not gravity aligned. The common gravity aligned frames are odom, vision, and
+        flat_body.
 
         Inputs:
             se3pose (math_helpers.SE3Pose)
@@ -251,8 +250,7 @@ class SE2Pose(object):
                                     angle=self.angle)
 
     def inverse(self):
-        """
-        Compute the inverse of the math_helpers.SE2Pose.
+        """Compute the inverse of the math_helpers.SE2Pose.
 
         For example, if the SE(2) pose represented a_tform_b, then the inverse pose is b_tform_a.
 
@@ -264,8 +262,8 @@ class SE2Pose(object):
         return SE2Pose(-self.x * c - self.y * s, self.x * s - self.y * c, -self.angle)
 
     def mult(self, se2pose):
-        """
-        Computes the multiplication between the current math_helpers.SE2Pose and the input se2pose.
+        """Computes the multiplication between the current math_helpers.SE2Pose and the input
+        se2pose.
 
         For example, if the 'self' SE2Pose represents a_tform_b and the input se2pose represents b_tform_c,
         then the output will represent the transform a_tform_c.
@@ -282,8 +280,8 @@ class SE2Pose(object):
                        recenter_angle_mod(self.angle + se2pose.angle, 0.0))
 
     def __mul__(self, other):
-        """Overrides the '*' symbol to compute the multiplication between two SE(2) poses,
-        or between an SE(2) pose and a Vec2"""
+        """Overrides the '*' symbol to compute the multiplication between two SE(2) poses, or
+        between an SE(2) pose and a Vec2."""
         if isinstance(other, Vec2):
             rotation_matrix = self.to_rot_matrix()
             rotated_pos = rotation_matrix.dot((other.x, other.y))
@@ -293,8 +291,7 @@ class SE2Pose(object):
             rotated_pos = rotation_matrix.dot((other.x, other.y))
             return SE2Pose(self.x + rotated_pos[0], self.y + rotated_pos[1],
                            recenter_angle_mod(self.angle + other.angle, 0.0))
-        else:
-            raise TypeError("Can't multiply types %s and %s." % (type(self), type(other)))
+        raise TypeError("Can't multiply types %s and %s." % (type(self), type(other)))
 
     def to_rot_matrix(self):
         """Returns the rotation matrix generate from the angle of the current SE(2) Pose."""
@@ -332,7 +329,7 @@ class SE2Pose(object):
 
     @staticmethod
     def from_matrix(mat):
-        """Extract SE2Pose from a 3x3 matrix"""
+        """Extract SE2Pose from a 3x3 matrix."""
         # Extract separately to get float type, instead of single-element matrix type.
         x = mat[0, 2]
         y = mat[1, 2]
@@ -371,13 +368,15 @@ class SE2Velocity(object):
             self.linear_velocity_x, self.linear_velocity_y, self.angular_velocity)
 
     def to_obj(self, proto):
-        """Adds the math_helpers.SE2Velocity properties into the geometry_pb2.SE2Velocity 'proto'."""
+        """Adds the math_helpers.SE2Velocity properties into the geometry_pb2.SE2Velocity
+        'proto'."""
         proto.linear.x = self.linear_velocity_x
         proto.linear.y = self.linear_velocity_y
         proto.angular = self.angular_velocity
 
     def to_proto(self):
-        """Converts the math_helpers.SE2Velocity into an output of the protobuf geometry_pb2.SE2Velocity."""
+        """Converts the math_helpers.SE2Velocity into an output of the protobuf
+        geometry_pb2.SE2Velocity."""
         return geometry_pb2.SE2Velocity(
             linear=geometry_pb2.Vec2(x=self.linear_velocity_x, y=self.linear_velocity_y),
             angular=self.angular_velocity)
@@ -390,16 +389,15 @@ class SE2Velocity(object):
 
     @staticmethod
     def from_vector(se2_vel_vector):
-        """Converts a 3x1 velocity vector (of either a numpy array or a list) into a math_helpers.SE2Velocity object."""
+        """Converts a 3x1 velocity vector (of either a numpy array or a list) into a
+        math_helpers.SE2Velocity object."""
         if isinstance(se2_vel_vector, list):
             if len(se2_vel_vector) != 3:
                 # Must have 3 elements to be a complete SE2Velocity
                 print("Velocity list must have 3 elements. The input has the wrong dimension of: " +
                       str(len(se2_vel_vector)))
                 return None
-            else:
-                return SE2Velocity(x=se2_vel_vector[0], y=se2_vel_vector[1],
-                                   angular=se2_vel_vector[2])
+            return SE2Velocity(x=se2_vel_vector[0], y=se2_vel_vector[1], angular=se2_vel_vector[2])
         if isinstance(se2_vel_vector, numpy.ndarray):
             if se2_vel_vector.shape[0] != 3:
                 # Must have 3 elements to be a complete SE2Velocity
@@ -407,24 +405,22 @@ class SE2Velocity(object):
                     "Velocity numpy array must have 3 elements. The input has the wrong dimension of: "
                     + str(se2_vel_vector.shape[0]))
                 return None
-            else:
-                if (isinstance(se2_vel_vector[0], numpy.ndarray)):
-                    return SE2Velocity(x=se2_vel_vector[0][0], y=se2_vel_vector[1][0],
-                                       angular=se2_vel_vector[2][0])
+            if (isinstance(se2_vel_vector[0], numpy.ndarray)):
+                return SE2Velocity(x=se2_vel_vector[0][0], y=se2_vel_vector[1][0],
+                                   angular=se2_vel_vector[2][0])
 
-                return SE2Velocity(x=se2_vel_vector[0], y=se2_vel_vector[1],
-                                   angular=se2_vel_vector[2])
+            return SE2Velocity(x=se2_vel_vector[0], y=se2_vel_vector[1], angular=se2_vel_vector[2])
 
     @property
     def linear(self):
-        """Property to allow attribute access of the protobuf message field 'linear' similar to the geometry_pb2.SE2Velocity
-           for the math_helper.SE2Velocity."""
+        """Property to allow attribute access of the protobuf message field 'linear' similar to the
+        geometry_pb2.SE2Velocity for the math_helper.SE2Velocity."""
         return geometry_pb2.Vec2(x=self.linear_velocity_x, y=self.linear_velocity_y)
 
     @property
     def angular(self):
-        """Property to allow attribute access of the protobuf message field 'angular' similar to the geometry_pb2.SE2Velocity
-           for the math_helper.SE2Velocity."""
+        """Property to allow attribute access of the protobuf message field 'angular' similar to the
+        geometry_pb2.SE2Velocity for the math_helper.SE2Velocity."""
         return self.angular_velocity
 
     @staticmethod
@@ -455,7 +451,8 @@ class SE3Velocity(object):
             self.angular_velocity_x, self.angular_velocity_y, self.angular_velocity_z)
 
     def to_obj(self, proto):
-        """Adds the math_helpers.SE3Velocity properties into the geometry_pb2.SE3Velocity 'proto'."""
+        """Adds the math_helpers.SE3Velocity properties into the geometry_pb2.SE3Velocity
+        'proto'."""
         proto.linear.x = self.linear_velocity_x
         proto.linear.y = self.linear_velocity_y
         proto.linear.z = self.linear_velocity_z
@@ -464,7 +461,8 @@ class SE3Velocity(object):
         proto.angular.z = self.angular_velocity_z
 
     def to_proto(self):
-        """Converts the math_helpers.SE3Velocity into an output of the protobuf geometry_pb2.SE3Velocity."""
+        """Converts the math_helpers.SE3Velocity into an output of the protobuf
+        geometry_pb2.SE3Velocity."""
         return geometry_pb2.SE3Velocity(
             linear=geometry_pb2.Vec3(x=self.linear_velocity_x, y=self.linear_velocity_y,
                                      z=self.linear_velocity_z),
@@ -481,15 +479,15 @@ class SE3Velocity(object):
 
     @property
     def linear(self):
-        """Property to allow attribute access of the protobuf message field 'linear' similar to the geometry_pb2.SE3Velocity
-           for the math_helper.SE3Velocity."""
+        """Property to allow attribute access of the protobuf message field 'linear' similar to the
+        geometry_pb2.SE3Velocity for the math_helper.SE3Velocity."""
         return geometry_pb2.Vec3(x=self.linear_velocity_x, y=self.linear_velocity_y,
                                  z=self.linear_velocity_z)
 
     @property
     def angular(self):
-        """Property to allow attribute access of the protobuf message field 'angular' similar to the geometry_pb2.SE3Velocity
-           for the math_helper.SE3Velocity."""
+        """Property to allow attribute access of the protobuf message field 'angular' similar to the
+        geometry_pb2.SE3Velocity for the math_helper.SE3Velocity."""
         return geometry_pb2.Vec3(x=self.angular_velocity_x, y=self.angular_velocity_y,
                                  z=self.angular_velocity_z)
 
@@ -506,17 +504,17 @@ class SE3Velocity(object):
 
     @staticmethod
     def from_vector(se3_vel_vector):
-        """Converts a 6x1 velocity vector (of either a numpy array or a list) into a math_helpers.SE3Velocity object."""
+        """Converts a 6x1 velocity vector (of either a numpy array or a list) into a
+        math_helpers.SE3Velocity object."""
         if isinstance(se3_vel_vector, list):
             if len(se3_vel_vector) != 6:
                 # Must have 6 elements to be a complete SE3Velocity
                 print("Velocity list must have 6 elements. The input has the wrong dimension of: " +
                       str(len(se3_vel_vector)))
                 return None
-            else:
-                return SE3Velocity(lin_x=se3_vel_vector[0], lin_y=se3_vel_vector[1],
-                                   lin_z=se3_vel_vector[2], ang_x=se3_vel_vector[3],
-                                   ang_y=se3_vel_vector[4], ang_z=se3_vel_vector[5])
+            return SE3Velocity(lin_x=se3_vel_vector[0], lin_y=se3_vel_vector[1],
+                               lin_z=se3_vel_vector[2], ang_x=se3_vel_vector[3],
+                               ang_y=se3_vel_vector[4], ang_z=se3_vel_vector[5])
         if isinstance(se3_vel_vector, numpy.ndarray):
             if se3_vel_vector.shape[0] != 6:
                 # Must have 6 elements to be a complete SE3Velocity
@@ -524,15 +522,14 @@ class SE3Velocity(object):
                     "Velocity numpy array must have 6 elements. The input has the wrong dimension of: "
                     + str(se3_vel_vector.shape[0]))
                 return None
-            else:
-                if (isinstance(se3_vel_vector[0], numpy.ndarray)):
-                    return SE3Velocity(lin_x=se3_vel_vector[0][0], lin_y=se3_vel_vector[1][0],
-                                       lin_z=se3_vel_vector[2][0], ang_x=se3_vel_vector[3][0],
-                                       ang_y=se3_vel_vector[4][0], ang_z=se3_vel_vector[5][0])
+            if (isinstance(se3_vel_vector[0], numpy.ndarray)):
+                return SE3Velocity(lin_x=se3_vel_vector[0][0], lin_y=se3_vel_vector[1][0],
+                                   lin_z=se3_vel_vector[2][0], ang_x=se3_vel_vector[3][0],
+                                   ang_y=se3_vel_vector[4][0], ang_z=se3_vel_vector[5][0])
 
-                return SE3Velocity(lin_x=se3_vel_vector[0], lin_y=se3_vel_vector[1],
-                                   lin_z=se3_vel_vector[2], ang_x=se3_vel_vector[3],
-                                   ang_y=se3_vel_vector[4], ang_z=se3_vel_vector[5])
+            return SE3Velocity(lin_x=se3_vel_vector[0], lin_y=se3_vel_vector[1],
+                               lin_z=se3_vel_vector[2], ang_x=se3_vel_vector[3],
+                               ang_y=se3_vel_vector[4], ang_z=se3_vel_vector[5])
 
 
 class SE3Pose(object):
@@ -589,8 +586,7 @@ class SE3Pose(object):
                                              z=self.rot.z))
 
     def inverse(self):
-        """
-        Compute the inverse of the math_helpers.SE3Pose.
+        """Compute the inverse of the math_helpers.SE3Pose.
 
         For example, if the SE(3) pose represented a_tform_b, then the inverse pose is b_tform_a.
 
@@ -602,8 +598,7 @@ class SE3Pose(object):
         return SE3Pose(-x, -y, -z, inv_rot)
 
     def transform_point(self, x, y, z):
-        """
-        Compute the transformation (translation and rotation) of a (x,y,z) vector using the
+        """Compute the transformation (translation and rotation) of a (x,y,z) vector using the
         current SE(3) pose.
 
         Returns:
@@ -613,8 +608,7 @@ class SE3Pose(object):
         return (out_x + self.x, out_y + self.y, out_z + self.z)
 
     def transform_vec3(self, vec3):
-        """
-        Compute the transformation (translation and rotation) of a (x,y,z) vector using the
+        """Compute the transformation (translation and rotation) of a (x,y,z) vector using the
         current SE(3) pose.
 
         Returns:
@@ -624,8 +618,7 @@ class SE3Pose(object):
         return geometry_pb2.Vec3(x=out_x + self.x, y=out_y + self.y, z=out_z + self.z)
 
     def transform_cloud(self, points):
-        """
-        Compute the transformation (translation and rotation) of multiple vector/points using the
+        """Compute the transformation (translation and rotation) of multiple vector/points using the
         current math_helpers.SE3Pose.
 
         Inputs:
@@ -638,8 +631,7 @@ class SE3Pose(object):
 
     @staticmethod
     def transform_cloud_from_matrix(transform, points):
-        """
-        Compute the transformation (translation and rotation) of multiple vector/points using the
+        """Compute the transformation (translation and rotation) of multiple vector/points using the
         input SE(3) pose.
 
         Inputs:
@@ -665,8 +657,8 @@ class SE3Pose(object):
         return math.sqrt(self.x**2 + self.y**2 + self.z**2)
 
     def mult(self, se3pose):
-        """
-        Computes the multiplication between the current math_helpers.SE3Pose and the input se3pose.
+        """Computes the multiplication between the current math_helpers.SE3Pose and the input
+        se3pose.
 
         For example, if the 'self' SE3Pose represents a_tform_b and the input se3pose represents b_tform_c,
         then the output will represent the transform a_tform_c.
@@ -681,28 +673,27 @@ class SE3Pose(object):
         return SE3Pose(self.x + x, self.y + y, self.z + z, self.rot.mult(se3pose.rot))
 
     def __mul__(self, other):
-        """Overrides the '*' symbol to compute the multiplication between two SE(3) poses,
-        or between an SE(3) pose and a Vec3."""
+        """Overrides the '*' symbol to compute the multiplication between two SE(3) poses, or
+        between an SE(3) pose and a Vec3."""
         if isinstance(other, Vec3):
             (x, y, z) = self.transform_point(other.x, other.y, other.z)
             return Vec3(x, y, z)
         if isinstance(other, SE3Pose):
             (x, y, z) = self.rot.transform_point(other.x, other.y, other.z)
             return SE3Pose(self.x + x, self.y + y, self.z + z, self.rot.mult(other.rot))
-        else:
-            raise TypeError("Can't multiply types %s and %s." % (type(self), type(other)))
+        raise TypeError("Can't multiply types %s and %s." % (type(self), type(other)))
 
     @property
     def position(self):
-        """Property to allow attribute access of the protobuf message field 'position' similar to the geometry_pb2.SE3Pose
-           for the math_helper.SE3Pose."""
+        """Property to allow attribute access of the protobuf message field 'position' similar to
+        the geometry_pb2.SE3Pose for the math_helper.SE3Pose."""
         return geometry_pb2.Vec3(x=self.x, y=self.y, z=self.z)
 
 
     @property
     def rotation(self):
-        """Property to allow attribute access of the protobuf message field 'rotation' similar to the geometry_pb2.SE3Pose
-           for the math_helper.SE3Pose."""
+        """Property to allow attribute access of the protobuf message field 'rotation' similar to
+        the geometry_pb2.SE3Pose for the math_helper.SE3Pose."""
         return self.rot
 
     @staticmethod
@@ -782,8 +773,8 @@ class Quat(object):
         return Quat(self.w, -self.x, -self.y, -self.z)
 
     def transform_point(self, x, y, z):
-        """Computes the transformation (rotation by the quaternion) of a single (x,y,z)
-            point using the current math_helpers.Quat."""
+        """Computes the transformation (rotation by the quaternion) of a single (x,y,z) point using
+        the current math_helpers.Quat."""
         inv = self.inverse()
         q = Quat(0, x, y, z)
         q = q.mult(inv)
@@ -791,13 +782,13 @@ class Quat(object):
         return (q.x, q.y, q.z)
 
     def transform_vec3(self, vec3):
-        """Computes the transformation (rotation by the quaternion) of a Vec3
-            point using the current math_helpers.Quat."""
+        """Computes the transformation (rotation by the quaternion) of a Vec3 point using the
+        current math_helpers.Quat."""
         x, y, z = self.transform_point(vec3.x, vec3.y, vec3.z)
         return geometry_pb2.Vec3(x=x, y=y, z=z)
 
     def to_matrix(self):
-        """Creates the 3x3 numpy rotation matrix from the current math_helpers.Quat"""
+        """Creates the 3x3 numpy rotation matrix from the current math_helpers.Quat."""
         ret = numpy.eye(3)
         ret[0, 0] = 1.0 - 2.0 * self.y * self.y - 2.0 * self.z * self.z
         ret[0, 1] = 2.0 * self.x * self.y - 2.0 * self.z * self.w
@@ -880,7 +871,7 @@ class Quat(object):
         return Quat(w=math.cos(angle / 2.0), z=math.sin(angle / 2.0))
 
     def to_roll(self):
-        """Computes the Euler angle roll from the current math_helpers.Quat"""
+        """Computes the Euler angle roll from the current math_helpers.Quat."""
         if (self.w * self.w + self.x * self.x + self.y * self.y + self.z * self.z == 0.0):
             return 0.0
         t0 = 2.0 * (self.w * self.x + self.y * self.z)
@@ -888,7 +879,7 @@ class Quat(object):
         return math.atan2(t0, t1)
 
     def to_pitch(self):
-        """Computes the Euler angle pitch from the current math_helpers.Quat"""
+        """Computes the Euler angle pitch from the current math_helpers.Quat."""
         if (self.w * self.w + self.x * self.x + self.y * self.y + self.z * self.z == 0.0):
             return 0.0
         t2 = 2.0 * (self.w * self.y - self.z * self.x)
@@ -899,12 +890,12 @@ class Quat(object):
         return math.asin(t2)
 
     def to_yaw(self):
-        """Computes the Euler angle yaw from the current math_helpers.Quat"""
+        """Computes the Euler angle yaw from the current math_helpers.Quat."""
         yaw_only_quat = self.closest_yaw_only_quaternion()
         return recenter_angle_mod(2 * math.atan2(yaw_only_quat.z, yaw_only_quat.w), 0.0)
 
     def to_axis_angle(self):
-        """Computes the angle and the respective axis from the math_helpers.Quat"""
+        """Computes the angle and the respective axis from the math_helpers.Quat."""
         if (self.w * self.w + self.x * self.x + self.y * self.y + self.z * self.z == 0.0):
             return (0.0, [0, 0, 1])
 
@@ -952,8 +943,8 @@ class Quat(object):
             self.z * other_quat.w)
 
     def __mul__(self, other):
-        """Overrides the '*' symbol to compute the multiplication between two math_helpers.Quats
-        or between a Quat and a Vec3."""
+        """Overrides the '*' symbol to compute the multiplication between two math_helpers.Quats or
+        between a Quat and a Vec3."""
         if isinstance(other, Vec3):
             (x, y, z) = self.transform_point(other.x, other.y, other.z)
             return Vec3(x, y, z)
@@ -976,14 +967,14 @@ class Quat(object):
         return self
 
     def closest_yaw_only_quaternion(self):
-        """Computes a yaw-only math_helpers.Quat from the current roll/pitch/yaw math_helpers.Quat"""
+        """Computes a yaw-only math_helpers.Quat from the current roll/pitch/yaw
+        math_helpers.Quat."""
         mag = math.sqrt(self.w * self.w + self.z * self.z)
         if mag > 0:
             return Quat(w=self.w / mag, x=0, y=0, z=self.z / mag)
-        else:
-            # If the problem is ill posed (i.e. z-axis of quaternion is [0, 0, -1]), then preserve old
-            # behavior and always rotate 180 degrees around the y-axis.
-            return Quat(w=0, x=0, y=1, z=0) * self
+        # If the problem is ill posed (i.e. z-axis of quaternion is [0, 0, -1]), then preserve old
+        # behavior and always rotate 180 degrees around the y-axis.
+        return Quat(w=0, x=0, y=1, z=0) * self
 
     @staticmethod
     def slerp(a, b, fraction):
@@ -1020,7 +1011,7 @@ class Quat(object):
 
     @staticmethod
     def from_two_vectors(u_in: Vec3, v_in: Vec3):
-        """ Returns a quaternion representing the rotation from u to v."""
+        """Returns a quaternion representing the rotation from u to v."""
         # Normalizing by max avoids all sorts of underflow and overflow issues when we multiply
         # terms together, including any issues in calculating the norm itself.
         max_u = max([math.fabs(u_in[0]), math.fabs(u_in[1]), math.fabs(u_in[2])])
@@ -1050,24 +1041,21 @@ class Quat(object):
                     if abs(u[1]) > abs(u[2]):
                         q = Quat(0, -u[1], u[0], 0)
                         return q.normalize()
-                    else:
-                        q = Quat(0, u[2], 0, -u[0])
-                        return q.normalize()
-                elif abs(u[0]) > abs(u[2]):
+                    q = Quat(0, u[2], 0, -u[0])
+                    return q.normalize()
+                if abs(u[0]) > abs(u[2]):
                     q = Quat(0, -u[1], u[0], 0)
                     return q.normalize()
-                else:
-                    q = Quat(0, 0, -u[2], u[1])
-                    return q.normalize()
+                q = Quat(0, 0, -u[2], u[1])
+                return q.normalize()
             c_scl = (1 / max_c) * c
             norm2_c_scl = c_scl.dot(c_scl)
             tmp = (norm_u_norm_v - u_dot_v) * c_scl
             q = Quat(norm2_c_scl * max_c, tmp[0], tmp[1], tmp[2])
             return q.normalize()
-        else:
-            c = u.cross(v)
-            q = Quat(norm_u_norm_v + u_dot_v, c[0], c[1], c[2])
-            return q.normalize()
+        c = u.cross(v)
+        q = Quat(norm_u_norm_v + u_dot_v, c[0], c[1], c[2])
+        return q.normalize()
 
     def conj(self):
         return Quat(self.w, -self.x, -self.y, -self.z)
@@ -1102,14 +1090,18 @@ def recenter_angle(q, lower_limit, upper_limit):
 
 def skew_matrix_3d(vec3_proto):
     """Creates a 3x3 numpy matrix representing the skew symmetric matrix for a vec3.
-       These are used to create the adjoint matrices for SE3Pose's, among other things."""
+
+    These are used to create the adjoint matrices for SE3Pose's, among other things.
+    """
     return numpy.array([[0, -vec3_proto.z, vec3_proto.y], [vec3_proto.z, 0, -vec3_proto.x],
                         [-vec3_proto.y, vec3_proto.x, 0]])
 
 
 def skew_matrix_2d(vec2_proto):
     """Creates a 2x1 numpy matrix representing the skew symmetric matrix for a vec2.
-       These are used to create the adjoint matrices for SE2Pose's, among other things."""
+
+    These are used to create the adjoint matrices for SE2Pose's, among other things.
+    """
     return numpy.array([[vec2_proto.y, -vec2_proto.x]])
 
 
@@ -1119,8 +1111,7 @@ def matrix_from_proto(proto):
 
 
 def transform_se2velocity(a_adjoint_b_matrix, se2_velocity_in_b):
-    """
-    Changes the frame that the SE(2) Velocity is expressed in. More specifically, it converts the
+    """Changes the frame that the SE(2) Velocity is expressed in. More specifically, it converts the
     SE(2) Velocity in frame b to a SE(2) Velocity in frame c using the adjoint matrix a_adjoint_b.
 
     Inputs:
@@ -1143,8 +1134,7 @@ def transform_se2velocity(a_adjoint_b_matrix, se2_velocity_in_b):
 
 
 def transform_se3velocity(a_adjoint_b_matrix, se3_velocity_in_b):
-    """
-    Changes the frame that the SE(3) Velocity is expressed in. More specifically, it converts the
+    """Changes the frame that the SE(3) Velocity is expressed in. More specifically, it converts the
     SE(3) Velocity in frame b to a SE(3) Velocity in frame c using the adjoint matrix a_adjoint_b.
 
     Inputs:

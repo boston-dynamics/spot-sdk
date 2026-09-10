@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Networking &mdash; Spot 5.1.9 documentation</title>
+  <title>Networking &mdash; Spot 5.2.0 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
     <link rel="shortcut icon" href="../../_static/bd-favicon.png"/>
@@ -38,7 +38,7 @@
               <img src="../../_static/bd-official-white.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                5.1.9
+                5.2.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -205,7 +205,8 @@
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/world_object_mutations/README.html">World Object Mutations</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/visualizer/README.html">Visualizer</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/gripper_camera_params/README.html">Gripper Camera Parameters</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../python/examples/spot_cam/README.html">Spot CAM</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/spot_cam/README.html">Spot CAM Services</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/spot_cam/README.html#spot-cam-video-core-io-extension-example">Spot Cam Video Core IO Extension Example</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/stitch_front_images/README.html">Stitch Front Images</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/get_depth_plus_visual_image/README.html">Project Depth Data on Visual Images</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/service_customization/custom_parameter_image_server/README.html">Custom Parameter Image Server</a></li>
@@ -249,6 +250,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/graph_nav_command_line/README.html">GraphNav and Recording Service Command Line Interfaces</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/graph_nav_command_line/README.html#example-programs">Example Programs</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/graph_nav_extract_point_cloud/README.html">Graph Nav Extract Point Cloud</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/graph_nav_map_to_usd/README.html">Graph Nav Map to USD</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/graph_nav_view_map/README.html">Graph Nav View Map</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/graph_nav_view_gps/README.html">Graph Nav View GPS Data</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/get_mission_state/README.html">Get Mission State</a></li>
@@ -269,7 +271,8 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../python/examples/docs/joint_control_examples.html">Joint Control API Examples</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../python/examples/docs/orbit.html">Orbit</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../python/examples/orbit/hello_orbit/README.html">Hello Orbit</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/orbit/hello_orbit/README.html">Hello Orbit (v0, OrbitClient)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/orbit/orbit_v1_api/README.html">Orbit v1 API (v1, raw HTTP)</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/orbit/export_run_archives/README.html">Export Run Archives</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/orbit/export_site_walk_archives/README.html">Export Sitewalk Archives</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/orbit/anomalies/README.html">Anomalies</a></li>
@@ -324,6 +327,8 @@
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/fault.html">Fault</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/frame_helpers.html">Frame Helpers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/graph_nav.html">Graph Nav</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/graph_nav_download.html">Graph Nav Download</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/graph_nav_upload.html">Graph Nav Upload</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/gripper_camera_param.html">Gripper Camera Params</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/gps/README.html">GPS</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/gps/aggregator_client.html">Aggregator Client</a></li>
@@ -638,7 +643,7 @@ Development Kit License (20191101-BDSDK-SL).
 </div>
 <p>The networking errors are not defined in the message and happen lower in the gRPC stack. The Specific RPC errors are handled by the <code class="docutils literal notranslate"><span class="pre">Status</span></code> enum shown above. Throughout the API, the <code class="docutils literal notranslate"><span class="pre">Status</span></code> enum follows the pattern of 0 being undefined (due to how Protocol Buffers represent unset data), 1 representing an <code class="docutils literal notranslate"><span class="pre">OK</span></code> or success response, and 2+ representing error codes specific to the RPC. For example, <code class="docutils literal notranslate"><span class="pre">STATUS_TEMPORARILY_LOCKED_OUT</span></code> is used if there have been too many password attempts for a user and the account is locked out for a short period.</p>
 <p>Common RPC errors such as invalid input are not directly shown above. A case of invalid input would be a <code class="docutils literal notranslate"><span class="pre">GetAuthTokenRequest</span></code> which includes no username or password at all, which indicates buggy client code rather than bad user input. Common RPC errors are shown in the <code class="docutils literal notranslate"><span class="pre">ResponseHeader</span></code> message below which all Spot API responses include:</p>
-<div class="highlight-protobuf notranslate"><div class="highlight"><pre><span></span><span class="c1">/// Standard header attached to all GRPC responses from services.</span>
+<div class="highlight-protobuf notranslate"><div class="highlight"><pre><span></span><span class="c1">/// Standard header attached to all gRPC responses from services.</span>
 <span class="kd">message</span><span class="w"> </span><span class="nc">ResponseHeader</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="c1">/// Echo-back the RequestHeader for timing information, etc....</span>
 <span class="w">    </span><span class="n">RequestHeader</span><span class="w"> </span><span class="na">request_header</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
@@ -668,7 +673,7 @@ Development Kit License (20191101-BDSDK-SL).
 <img src="../../_images/network_protocol_stack.png" alt="Network protocol stack" style="width:350px"><p>This protocol stack has a few implications:</p>
 <ul class="simple">
 <li><p>HTTP/2 supports multiplexing multiple gRPC calls over the same network connection. Responses can come back in a different order than received, and a low priority response can be interrupted by a higher priority response and then resumed later. gRPC requests map directly to HTTP/2 requests.</p></li>
-<li><p>All communication is over a secure, encrypted TLS channel (TLS1.2 or TLS1.3 are supported). Network attackers can not read or manipulate data between the application and Spot. Client libraries should also verify that the certificate presented by a server chains up to a Boston Dynamics root certificate to prevent active MITM attacks. The Python client library automatically does this certificate verification approach.</p></li>
+<li><p>All communication is over a secure, encrypted TLS channel (TLS1.2 or TLS1.3 are supported). Network attackers cannot read or manipulate data between the application and Spot. Client libraries should also verify that the certificate presented by a server chains up to a Boston Dynamics root certificate to prevent active MITM attacks. The Python client library automatically does this certificate verification approach.</p></li>
 <li><p>Communication is over a reliable transport layer with TCP. Reliable transport is a good approach for non-real-time RPCs such as authenticating to Spot, and is also not problematic for real-time cases where there is a strong networking link such as through the RJ45 or DB-25 connectors. However, it can be problematic when handling real-time RPCs over a spotty network connection. There are some short-term mitigation approaches around this such as maintaining a socket pool to round-robin requests over. In the longer term, Boston Dynamics is exploring other approaches (such as gRPC over QUIC or HTTP/3) to improve communications over poor network links.</p></li>
 <li><p>The protocol stack is a very common one for the Internet at large. This has two benefits. First, Spot is able to use battle-tested implementations of the protocols which can withstand adversarial attackers. Second, there is a very high likelihood that an application can reach Spot over a diverse set of networks without being blocked by intermediate firewalls.</p></li>
 </ul>

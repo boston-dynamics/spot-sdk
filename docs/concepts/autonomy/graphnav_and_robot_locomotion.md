@@ -28,7 +28,7 @@ Clients that maintain contact with the robot are encouraged to continuously rese
 
 ## NavigateToAnchor
 
-The `NavigateToAnchor` RPC allows the client to command the robot go to an approximate `x, y, z` position relative to the seed frame. This position can also be specified in a global coordinate system (like GPS coordinates, for example).
+The `NavigateToAnchor` RPC allows the client to command the robot to go to an approximate `x, y, z` position relative to the seed frame. This position can also be specified in a global coordinate system (like GPS coordinates, for example).
 
 ## Status and feedback
 

@@ -10,7 +10,7 @@ Development Kit License (20191101-BDSDK-SL).
 
 ## Manipulation Service
 
-This API provides high-level control for walking to and picking up items in the world. The service walks the robot up to the object, not on top of it. The idea being that you want to interact or manipulate the object. For specifying grasps, there are parameters available for
+This API provides high-level control for walking to and picking up items in the world. The service walks the robot up to the object, not on top of it. The idea being that you want to interact with or manipulate the object. For specifying grasps, there are parameters available for
 
 - Specifying the depth of the grasp
   - Item pressed tightly against the palm of the gripper or squeezed with just the tip of the finger.
@@ -43,14 +43,14 @@ A [GCODE](https://en.wikipedia.org/wiki/G-code) interpreter that can be used to 
 
 The door service is a framework for opening doors. We support three command types:
 
-- **AutoGrasp**: This message requires users to specify a location to search for a door handle along with and some door parameters. Spot autonomously grabs the handle, opens the door, and walks through.
-- **Warmstart**: In Warmstart, the assumption is the robot is already grasping the door handle. The robot will skip the grasp stage of auto, and immediately begin opening the door and then traverses through the doorway.
+- **AutoGrasp**: This message requires users to specify a location to search for a door handle along with some door parameters. Spot autonomously grabs the handle, opens the door, and walks through.
+- **Warmstart**: In Warmstart, the assumption is the robot is already grasping the door handle. The robot will skip the grasp stage of auto and immediately begin opening the door, and then traverse through the doorway.
 - **AutoPush**: Used for doors that can be opened via a push without requiring a grasp. This includes pushbars, crashbars, and doors without a latching mechanism. The robot will point the hand down and push the door open with its wrist based on a push point supplied over the API.
 
 See the following example for using this service:
 
 [**Door Opening:**](../../../python/examples/arm_door/README.md)
-This examples uses both the `ManipulationAPIService` and the `DoorService` to have Spot semi-autonomously open a door. It opens an image display and requires the user to select the door handle and the door hinge. After receiving input, it uses the `ManipulationAPIService` to estimate the handles position in 3D space and aligns the robot with the door handle. Then it uses the `DoorService` to issue an automatic door open request.
+This example uses both the `ManipulationAPIService` and the `DoorService` to have Spot semi-autonomously open a door. It opens an image display and requires the user to select the door handle and the door hinge. After receiving input, it uses the `ManipulationAPIService` to estimate the handle's position in 3D space and aligns the robot with the door handle. Then it uses the `DoorService` to issue an automatic door open request.
 
 ## Inverse Kinematics Service
 
@@ -58,7 +58,7 @@ The inverse kinematics (IK) service allows users to request robot configurations
 
 - **Stance Specifications**
   - **Fixed Stance**: A valid solution must place the feet at the specified positions, or at their current positions if unspecified.
-  - **On Ground Plane Stance**: A valid solution must place the feet on the specified ground plane, or on the robots current estimated ground plane if unspecified.
+  - **On Ground Plane Stance**: A valid solution must place the feet on the specified ground plane, or on the robot's current estimated ground plane if unspecified.
 - **Tool Specifications**
   - **Wrist-Mounted Tool**: The tool frame is fixed at a specified pose relative to the final arm link. If that pose is unspecified, the tool frame defaults to the [hand frame](./arm_concepts.md#hand-frame).
   - **Body-Mounted Tool**: The tool frame is fixed at a specified pose relative to the body frame. If that pose is unspecified, the tool frame defaults to the [body frame](../geometry_and_frames.md#frames-in-the-spot-robot-world).
@@ -76,5 +76,5 @@ Along with the [usual frames](../geometry_and_frames.md#frames-in-the-spot-robot
 
 - **root frame**: The frame relative to which the problem is defined. Must be either "odom" or "vision".
 - **scene frame**: An optional frame at a user-specified pose relative to the root frame. Body and foot related quantities, as well as the task frame are expressed relative to this frame. Identity by default.
-- **task frame**: An optional frame at a user-specified pose relative to the scene fame. Task specifications are expressed relative to this frame. Identity by default.
+- **task frame**: An optional frame at a user-specified pose relative to the scene frame. Task specifications are expressed relative to this frame. Identity by default.
 - **ground frame**: An optional frame at a user-specified pose relative to the scene frame. For an on-ground-plane stance, the feet must lie on the XY-plane of this frame. Defaults to the robot's current estimated ground plane.

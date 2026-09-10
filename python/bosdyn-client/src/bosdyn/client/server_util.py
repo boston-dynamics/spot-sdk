@@ -16,8 +16,13 @@ from concurrent import futures
 import grpc
 
 import bosdyn.util
-from bosdyn.api import (data_acquisition_store_pb2, data_buffer_pb2, header_pb2, image_pb2,
-                        local_grid_pb2)
+from bosdyn.api import (
+    data_acquisition_store_pb2,
+    data_buffer_pb2,
+    header_pb2,
+    image_pb2,
+    local_grid_pb2,
+)
 from bosdyn.client.channel import generate_channel_options
 
 _LOGGER = logging.getLogger(__name__)
@@ -130,7 +135,8 @@ class GrpcServiceRunner(object):
         shutdown_complete.wait(self.timeout_secs)
 
     def run_until_interrupt(self):
-        """Spin the thread until a SIGINT, SIGTERM, or SIGQUIT is received and then shut down cleanly."""
+        """Spin the thread until a SIGINT, SIGTERM, or SIGQUIT is received and then shut down
+        cleanly."""
         if self.force_sigint_capture:
             # Ensure that KeyboardInterrupt is raised on a SIGINT.
             signal.signal(signal.SIGINT, signal.default_int_handler)

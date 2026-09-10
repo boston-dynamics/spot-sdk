@@ -23,9 +23,9 @@ def write_pgm(filename, width, height, max_val, data):
     """ Helper function to supplement PIL with writing a 16-bit PGM from the IR camera
     """
     with open(filename, 'wb') as f:
-        f.write('P5\n'.encode('utf-8'))
-        f.write(f'{width} {height}\n'.encode('utf-8'))
-        f.write(f'{max_val}\n'.encode('utf-8'))
+        f.write(b'P5\n')
+        f.write(f'{width} {height}\n'.encode())
+        f.write(f'{max_val}\n'.encode())
         f.write(data)
 
 

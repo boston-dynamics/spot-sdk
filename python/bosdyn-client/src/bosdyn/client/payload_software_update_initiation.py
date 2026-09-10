@@ -6,14 +6,17 @@
 
 """Payload software update initiation gRPC client.
 
-This client uses an insecure channel for signaling to a payload that it should
-send its version information or initiate a software update.
+This client uses an insecure channel for signaling to a payload that it should send its version
+information or initiate a software update.
 """
 
 from bosdyn.api.payload_software_update_initiation_pb2 import (
-    TriggerInitiateUpdateRequest, TriggerSendPayloadSoftwareInfoRequest)
-from bosdyn.api.payload_software_update_initiation_service_pb2_grpc import \
-    PayloadSoftwareUpdateInitiationServiceStub
+    TriggerInitiateUpdateRequest,
+    TriggerSendPayloadSoftwareInfoRequest,
+)
+from bosdyn.api.payload_software_update_initiation_service_pb2_grpc import (
+    PayloadSoftwareUpdateInitiationServiceStub,
+)
 from bosdyn.client.common import BaseClient
 
 

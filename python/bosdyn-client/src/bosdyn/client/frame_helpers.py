@@ -198,8 +198,8 @@ def get_se2_a_tform_b(frame_tree_snapshot, frame_a, frame_b, validate=True):
 
 def express_se2_velocity_in_new_frame(frame_tree_snapshot, frame_b, frame_c, vel_of_a_in_b,
                                       validate=True):
-    """Convert the SE2 Velocity in frame b to a SE2 Velocity in frame c using
-       the frame tree snapshot.
+    """Convert the SE2 Velocity in frame b to a SE2 Velocity in frame c using the frame tree
+    snapshot.
 
     Args:
         frame_tree_snapshot (dict) dictionary representing the child_to_parent_edge_map
@@ -232,8 +232,8 @@ def express_se2_velocity_in_new_frame(frame_tree_snapshot, frame_b, frame_c, vel
 
 def express_se3_velocity_in_new_frame(frame_tree_snapshot, frame_b, frame_c, vel_of_a_in_b,
                                       validate=True):
-    """Convert the SE(3) Velocity in frame b to an SE(3) Velocity in frame c using
-       the frame tree snapshot.
+    """Convert the SE(3) Velocity in frame b to an SE(3) Velocity in frame c using the frame tree
+    snapshot.
 
     Args:
         frame_tree_snapshot (dict) dictionary representing the child_to_parent_edge_map
@@ -278,11 +278,11 @@ class ChildFrameInTree(GenerateTreeError):
 def add_edge_to_tree(frame_tree_snapshot, parent_tform_child, parent_frame_name, child_frame_name):
     """Appends a child/parent and the transform to the FrameTreeSnapshot.
 
-       Args:
-            frame_tree_snapshot (dict) dictionary representing the child_to_parent_edge_map
-            parent_tform_child (SE3Pose proto)
-            parent_frame_name (string)
-            child_frame_name (string)
+    Args:
+         frame_tree_snapshot (dict) dictionary representing the child_to_parent_edge_map
+         parent_tform_child (SE3Pose proto)
+         parent_frame_name (string)
+         child_frame_name (string)
     """
     if child_frame_name in frame_tree_snapshot:
         raise ChildFrameInTree

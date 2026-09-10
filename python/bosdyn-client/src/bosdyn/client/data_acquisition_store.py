@@ -4,8 +4,7 @@
 # is subject to the terms and conditions of the Boston Dynamics Software
 # Development Kit License (20191101-BDSDK-SL).
 
-"""Client implementation for data acquisition store service.
-"""
+"""Client implementation for data acquisition store service."""
 
 from os import fstat
 from pathlib import Path
@@ -253,7 +252,8 @@ class DataAcquisitionStoreClient(BaseClient):
                                **kwargs)
 
     def store_data_as_chunks(self, data, data_id, file_extension=None, **kwargs):
-        """Store data using streaming, supports storing of large data that is too large for a single store_data rpc. Note: using this rpc means that the data must be loaded into memory.
+        """Store data using streaming, supports storing of large data that is too large for a single
+        store_data rpc. Note: using this rpc means that the data must be loaded into memory.
 
         Args:
             data (bytes) : Arbitrary data to store.
@@ -276,7 +276,8 @@ class DataAcquisitionStoreClient(BaseClient):
             assemble_type=data_acquisition_store.StoreStreamResponse, copy_request=False, **kwargs)
 
     def store_file(self, file_path, data_id, file_extension=None, **kwargs):
-        """Store file using file path, supports storing of large files that are too large for a single store_data rpc.
+        """Store file using file path, supports storing of large files that are too large for a
+        single store_data rpc.
 
         Args:
             file_path (string) : File path to arbitrary data to store.
@@ -331,6 +332,7 @@ class DataAcquisitionStoreClient(BaseClient):
 
     def query_max_capture_id(self, **kwargs):
         """Query max capture id from the robot.
+
         Returns:
             QueryMaxCaptureIdResult, which has a max_capture_id uint64, corresponding to the
             greatest capture id on the robot.  Used for skipping DAQ synchronization
@@ -351,15 +353,15 @@ class DataAcquisitionStoreClient(BaseClient):
 
 
 def _iterate_store_file(file, data_id, file_extension=None):
-    """Iterator over file data and create multiple StoreStreamRequest
+    """Iterator over file data and create multiple StoreStreamRequest.
 
-        Args:
-            file (BufferedReader) : Reader to the file for arbitrary data to store.
-            data_id (bosdyn.api.DataIdentifier) : Data identifier to use for storing this data.
-            file_extension (string) : File extension to use for writing the data to a file.
-        Returns:
-            StoreStreamRequests iterates over these requests.
-        """
+    Args:
+        file (BufferedReader) : Reader to the file for arbitrary data to store.
+        data_id (bosdyn.api.DataIdentifier) : Data identifier to use for storing this data.
+        file_extension (string) : File extension to use for writing the data to a file.
+    Returns:
+        StoreStreamRequests iterates over these requests.
+    """
     total_size = fstat(file.fileno()).st_size
     while True:
         chunk = file.read(DEFAULT_CHUNK_SIZE_BYTES)
@@ -373,15 +375,15 @@ def _iterate_store_file(file, data_id, file_extension=None):
 
 
 def _iterate_data_chunks(data, data_id, file_extension=None):
-    """Iterator over data and create multiple StoreDataRequest
+    """Iterator over data and create multiple StoreDataRequest.
 
-        Args:
-            data (bytes) : Arbitrary data to store.
-            data_id (bosdyn.api.DataIdentifier) : Data identifier to use for storing this data.
-            file_extension (string) : File extension to use for writing the data to a file.
-        Returns:
-            StoreDataRequests iterates over these requests.
-        """
+    Args:
+        data (bytes) : Arbitrary data to store.
+        data_id (bosdyn.api.DataIdentifier) : Data identifier to use for storing this data.
+        file_extension (string) : File extension to use for writing the data to a file.
+    Returns:
+        StoreDataRequests iterates over these requests.
+    """
     total_size = len(data)
     for chunk in split_serialized(data, DEFAULT_CHUNK_SIZE_BYTES):
         chunk_data = data_chunk.DataChunk(data=chunk, total_size=total_size)

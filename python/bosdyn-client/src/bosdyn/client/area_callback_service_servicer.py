@@ -160,8 +160,10 @@ class AreaCallbackServiceServicer(area_callback_service_pb2_grpc.AreaCallbackSer
         return response
 
     def RouteChange(self, request, context):
-        """Called when we re-route within the callback.  Most callbacks do not need to know about
-        changes in the route, and can ignore this."""
+        """Called when we re-route within the callback.
+
+        Most callbacks do not need to know about changes in the route, and can ignore this.
+        """
         _LOGGER.info('Received RouteChange for command %d', request.command_id)
         response = area_callback_pb2.RouteChangeResponse()
         with ResponseContext(response, request, self._rpc_logger):

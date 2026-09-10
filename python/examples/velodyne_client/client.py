@@ -4,8 +4,8 @@
 # is subject to the terms and conditions of the Boston Dynamics Software
 # Development Kit License (20191101-BDSDK-SL).
 
-"""
-This is a test application for communicating with the velodyne over the API.
+"""This is a test application for communicating with the velodyne over the API.
+
 It should only be used to test the API connection.
 """
 
@@ -15,11 +15,12 @@ import logging
 import sys
 import threading
 import time
+import warnings
 
 import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
-from mpl_toolkits.mplot3d import Axes3D
+from qtpy import API_NAME
 
 import bosdyn
 import bosdyn.client
@@ -29,7 +30,7 @@ from bosdyn.client.frame_helpers import get_odom_tform_body
 from bosdyn.client.math_helpers import Quat, SE3Pose
 from bosdyn.client.robot_state import RobotStateClient
 
-matplotlib.use('Qt5agg')
+matplotlib.use('QtAgg')
 LOGGER = logging.getLogger(__name__)
 TEXT_SIZE = 10
 SPOT_YELLOW = '#FBD403'
@@ -70,9 +71,9 @@ def window_closed(ax):
 
 
 def set_axes_equal(ax):
-    """Make axes of 3D plot have equal scale so that spheres appear as spheres,
-    cubes as cubes, etc.  This is one possible solution to Matplotlib's
-    ax.set_aspect('equal') and ax.axis('equal') not working for 3D.
+    """Make axes of 3D plot have equal scale so that spheres appear as spheres, cubes as cubes, etc.
+    This is one possible solution to Matplotlib's ax.set_aspect('equal') and ax.axis('equal') not
+    working for 3D.
 
     Args
       ax: a matplotlib axis, e.g., as output from plt.gca().
@@ -99,6 +100,13 @@ def set_axes_equal(ax):
 
 
 def main():
+
+    if API_NAME != "PyQt6":
+        warnings.warn(
+            f"RuntimeWarning: Running on {API_NAME}. Backwards compatibility is expected, but "
+            f"this script is optimized for PyQt6. "
+            f"Please run 'export QT_API=pyqt6' to configure qtpy to PyQt6.", stacklevel=2)
+
     # The last argument should be the IP address of the robot. The app will use the directory to find
     # the velodyne and start getting data from it.
     parser = argparse.ArgumentParser()

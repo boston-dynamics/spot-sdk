@@ -92,8 +92,7 @@ class MetricFileGroup:
         # Convert filenames to integers and get the file with the largest number
         if latest:
             return max(files, key=lambda f: int(f.split('.')[0]))
-        else:
-            return min(files, key=lambda f: int(f.split('.')[0]))
+        return min(files, key=lambda f: int(f.split('.')[0]))
 
     def getSequenceRangeToDownload(self, sequence_range: List[int]) -> List[int]:
         """  A helper function to get the sequence range to download from the robot.  It checks for data on the core first and

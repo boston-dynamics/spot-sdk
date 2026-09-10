@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>World Object &mdash; Spot 5.1.9 documentation</title>
+  <title>World Object &mdash; Spot 5.2.0 documentation</title>
       <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../../../_static/style.css" type="text/css" />
     <link rel="shortcut icon" href="../../../../../_static/bd-favicon.png"/>
@@ -38,7 +38,7 @@
               <img src="../../../../../_static/bd-official-white.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                5.1.9
+                5.2.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
@@ -205,7 +205,8 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/world_object_mutations/README.html">World Object Mutations</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/visualizer/README.html">Visualizer</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/gripper_camera_params/README.html">Gripper Camera Parameters</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../../examples/spot_cam/README.html">Spot CAM</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/spot_cam/README.html">Spot CAM Services</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/spot_cam/README.html#spot-cam-video-core-io-extension-example">Spot Cam Video Core IO Extension Example</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/stitch_front_images/README.html">Stitch Front Images</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/get_depth_plus_visual_image/README.html">Project Depth Data on Visual Images</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/service_customization/custom_parameter_image_server/README.html">Custom Parameter Image Server</a></li>
@@ -249,6 +250,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/graph_nav_command_line/README.html">GraphNav and Recording Service Command Line Interfaces</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/graph_nav_command_line/README.html#example-programs">Example Programs</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/graph_nav_extract_point_cloud/README.html">Graph Nav Extract Point Cloud</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/graph_nav_map_to_usd/README.html">Graph Nav Map to USD</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/graph_nav_view_map/README.html">Graph Nav View Map</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/graph_nav_view_gps/README.html">Graph Nav View GPS Data</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/get_mission_state/README.html">Get Mission State</a></li>
@@ -269,7 +271,8 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../examples/docs/joint_control_examples.html">Joint Control API Examples</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../examples/docs/orbit.html">Orbit</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../../../examples/orbit/hello_orbit/README.html">Hello Orbit</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/orbit/hello_orbit/README.html">Hello Orbit (v0, OrbitClient)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/orbit/orbit_v1_api/README.html">Orbit v1 API (v1, raw HTTP)</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/orbit/export_run_archives/README.html">Export Run Archives</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/orbit/export_site_walk_archives/README.html">Export Sitewalk Archives</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/orbit/anomalies/README.html">Anomalies</a></li>
@@ -324,6 +327,8 @@
 <li class="toctree-l4"><a class="reference internal" href="fault.html">Fault</a></li>
 <li class="toctree-l4"><a class="reference internal" href="frame_helpers.html">Frame Helpers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="graph_nav.html">Graph Nav</a></li>
+<li class="toctree-l4"><a class="reference internal" href="graph_nav_download.html">Graph Nav Download</a></li>
+<li class="toctree-l4"><a class="reference internal" href="graph_nav_upload.html">Graph Nav Upload</a></li>
 <li class="toctree-l4"><a class="reference internal" href="gripper_camera_param.html">Gripper Camera Params</a></li>
 <li class="toctree-l4"><a class="reference internal" href="gps/README.html">GPS</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="gps/aggregator_client.html">Aggregator Client</a></li>
@@ -522,7 +527,7 @@
              
   <section id="module-bosdyn.client.world_object">
 <span id="world-object"></span><h1>World Object<a class="headerlink" href="#module-bosdyn.client.world_object" title="Permalink to this heading"></a></h1>
-<p>For clients to use the world object service</p>
+<p>For clients to use the world object service.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="bosdyn.client.world_object.WorldObjectClient">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bosdyn.client.world_object.</span></span><span class="sig-name descname"><span class="pre">WorldObjectClient</span></span><a class="reference internal" href="../../../../../_modules/bosdyn/client/world_object.html#WorldObjectClient"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.world_object.WorldObjectClient" title="Permalink to this definition"></a></dt>
@@ -621,8 +626,8 @@ type of mutation.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="bosdyn.client.world_object.WorldObjectClient.draw_sphere">
 <span class="sig-name descname"><span class="pre">draw_sphere</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_rt_frame_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_rt_frame_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z_rt_frame_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frame_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rgba</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(255,</span> <span class="pre">0,</span> <span class="pre">0,</span> <span class="pre">1)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">list_objects_now</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/world_object.html#WorldObjectClient.draw_sphere"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.world_object.WorldObjectClient.draw_sphere" title="Permalink to this definition"></a></dt>
-<dd><p>Create a drawable sphere world object that will be sent to the world object service
-with a mutation request.</p>
+<dd><p>Create a drawable sphere world object that will be sent to the world object service with
+a mutation request.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -649,8 +654,8 @@ the sphere world object.</p></li>
 <dl class="py method">
 <dt class="sig sig-object py" id="bosdyn.client.world_object.WorldObjectClient.draw_oriented_bounding_box">
 <span class="sig-name descname"><span class="pre">draw_oriented_bounding_box</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">drawable_box_frame_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frame_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frame_name_tform_drawable_box</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size_ewrt_box_vec3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rgba</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(255,</span> <span class="pre">0,</span> <span class="pre">0,</span> <span class="pre">1)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wireframe</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">list_objects_now</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/world_object.html#WorldObjectClient.draw_oriented_bounding_box"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.world_object.WorldObjectClient.draw_oriented_bounding_box" title="Permalink to this definition"></a></dt>
-<dd><p>Create a drawable 3D box world object that will be sent to the world object service
-with a mutation request.</p>
+<dd><p>Create a drawable 3D box world object that will be sent to the world object service with
+a mutation request.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -723,9 +728,9 @@ id returned by the service after adding the object.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="bosdyn.client.world_object.send_add_mutation_requests">
 <span class="sig-prename descclassname"><span class="pre">bosdyn.client.world_object.</span></span><span class="sig-name descname"><span class="pre">send_add_mutation_requests</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">world_object_client</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">world_object_array</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/world_object.html#send_add_mutation_requests"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.world_object.send_add_mutation_requests" title="Permalink to this definition"></a></dt>
-<dd><p>Create and send an “add” mutation request for each world object in an array.  Return a matching
-array of the object id’s that are assigned when the object is created, so that each object we add
-can be identified and removed individually (if desired) later.</p>
+<dd><p>Create and send an “add” mutation request for each world object in an array.  Return a
+matching array of the object id’s that are assigned when the object is created, so that each
+object we add can be identified and removed individually (if desired) later.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -742,8 +747,8 @@ can be identified and removed individually (if desired) later.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="bosdyn.client.world_object.send_delete_mutation_requests">
 <span class="sig-prename descclassname"><span class="pre">bosdyn.client.world_object.</span></span><span class="sig-name descname"><span class="pre">send_delete_mutation_requests</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">world_object_client</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delete_object_id_array</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/world_object.html#send_delete_mutation_requests"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.world_object.send_delete_mutation_requests" title="Permalink to this definition"></a></dt>
-<dd><p>Create and send a “delete” mutation request for each world object successfully identified from a
-given list of object id’s.</p>
+<dd><p>Create and send a “delete” mutation request for each world object successfully identified
+from a given list of object id’s.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">

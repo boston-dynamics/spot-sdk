@@ -4,7 +4,7 @@
 # is subject to the terms and conditions of the Boston Dynamics Software
 # Development Kit License (20191101-BDSDK-SL).
 
-"""For clients to use the world object service"""
+"""For clients to use the world object service."""
 
 from bosdyn.api import geometry_pb2 as geom
 from bosdyn.api import world_object_pb2
@@ -120,8 +120,8 @@ class WorldObjectClient(BaseClient):
 
     def draw_sphere(self, name, x_rt_frame_name, y_rt_frame_name, z_rt_frame_name, frame_name,
                     radius=0.05, rgba=(255, 0, 0, 1), list_objects_now=True):
-        """Create a drawable sphere world object that will be sent to the world object service
-        with a mutation request.
+        """Create a drawable sphere world object that will be sent to the world object service with
+        a mutation request.
 
         Args:
             name (string): The human-readable name of the world object.
@@ -174,8 +174,8 @@ class WorldObjectClient(BaseClient):
     def draw_oriented_bounding_box(self, name, drawable_box_frame_name, frame_name,
                                    frame_name_tform_drawable_box, size_ewrt_box_vec3,
                                    rgba=(255, 0, 0, 1), wireframe=True, list_objects_now=False):
-        """Create a drawable 3D box world object that will be sent to the world object service
-        with a mutation request.
+        """Create a drawable 3D box world object that will be sent to the world object service with
+        a mutation request.
 
         Args:
             name (string): The human-readable name of the world object.
@@ -297,10 +297,9 @@ def make_change_world_object_req(world_obj):
 
 
 def send_add_mutation_requests(world_object_client, world_object_array):
-    """
-    Create and send an "add" mutation request for each world object in an array.  Return a matching
-    array of the object id's that are assigned when the object is created, so that each object we add
-    can be identified and removed individually (if desired) later.
+    """Create and send an "add" mutation request for each world object in an array.  Return a
+    matching array of the object id's that are assigned when the object is created, so that each
+    object we add can be identified and removed individually (if desired) later.
 
     Args:
         world_object_client (WorldObjectClient): Client for World Object service.
@@ -318,9 +317,8 @@ def send_add_mutation_requests(world_object_client, world_object_array):
 
 
 def send_delete_mutation_requests(world_object_client, delete_object_id_array):
-    """
-    Create and send a "delete" mutation request for each world object successfully identified from a
-    given list of object id's.
+    """Create and send a "delete" mutation request for each world object successfully identified
+    from a given list of object id's.
 
     Args:
         world_object_client (WorldObjectClient): Client for World Object service.

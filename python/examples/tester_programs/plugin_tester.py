@@ -211,7 +211,7 @@ def monitor_status_until_complete_or_failed(request_id, client, capability_name,
 
         if get_status_response.status in kAcquisitionSucceededStatuses:
             return True
-        elif get_status_response.status in kAcquisitionFailedStatuses:
+        if get_status_response.status in kAcquisitionFailedStatuses:
             _LOGGER.error(
                 'Request %s for data \'%s\' with action_name \'%s\' failed the GetStatus RPC with status %s.',
                 request_id, capability_name, action_name,
@@ -219,7 +219,7 @@ def monitor_status_until_complete_or_failed(request_id, client, capability_name,
             if verbose:
                 _LOGGER.info('The full GetStatus response: %s', get_status_response)
             return False
-        elif get_status_response.status in kAcquisitionContinuesStatuses:
+        if get_status_response.status in kAcquisitionContinuesStatuses:
             # Sleep briefly, then re-attempt to make a GetStatus RPC to see if the acquisition has completed.
             time.sleep(0.2)
             should_continue = time.time() - start_time < kMonitorStatusTimeoutSecs
@@ -402,7 +402,7 @@ def cancel_request_and_monitor_status(request_id, client, capability_name, actio
 
         if get_status_response.status in kAcquisitionCancellationSucceededStatuses:
             return True
-        elif get_status_response.status in kAcquisitionCancellationContinuesStatuses:
+        if get_status_response.status in kAcquisitionCancellationContinuesStatuses:
             # Sleep briefly, then re-attempt to make a GetStatus RPC to see if the acquisition has cancelled.
             time.sleep(0.2)
         elif get_status_response.status in kAcquisitionContinuesStatuses:

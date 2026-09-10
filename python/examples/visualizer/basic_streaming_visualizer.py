@@ -506,18 +506,17 @@ def get_numpy_data_type(local_grid_proto):
     """Convert the cell format of the local grid proto to a numpy data type."""
     if local_grid_proto.cell_format == local_grid_pb2.LocalGrid.CELL_FORMAT_UINT16:
         return np.uint16
-    elif local_grid_proto.cell_format == local_grid_pb2.LocalGrid.CELL_FORMAT_INT16:
+    if local_grid_proto.cell_format == local_grid_pb2.LocalGrid.CELL_FORMAT_INT16:
         return np.int16
-    elif local_grid_proto.cell_format == local_grid_pb2.LocalGrid.CELL_FORMAT_UINT8:
+    if local_grid_proto.cell_format == local_grid_pb2.LocalGrid.CELL_FORMAT_UINT8:
         return np.uint8
-    elif local_grid_proto.cell_format == local_grid_pb2.LocalGrid.CELL_FORMAT_INT8:
+    if local_grid_proto.cell_format == local_grid_pb2.LocalGrid.CELL_FORMAT_INT8:
         return np.int8
-    elif local_grid_proto.cell_format == local_grid_pb2.LocalGrid.CELL_FORMAT_FLOAT64:
+    if local_grid_proto.cell_format == local_grid_pb2.LocalGrid.CELL_FORMAT_FLOAT64:
         return np.float64
-    elif local_grid_proto.cell_format == local_grid_pb2.LocalGrid.CELL_FORMAT_FLOAT32:
+    if local_grid_proto.cell_format == local_grid_pb2.LocalGrid.CELL_FORMAT_FLOAT32:
         return np.float32
-    else:
-        return None
+    return None
 
 
 def get_vtk_from_local_grid_proto(proto, robot_state_client):

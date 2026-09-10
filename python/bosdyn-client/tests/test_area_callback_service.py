@@ -96,7 +96,7 @@ class MockRobot:
     def ensure_client(self, service_name):
         if service_name == LeaseClient.default_service_name:
             return self.lease_client
-        elif service_name == DataBufferClient.default_service_name:
+        if service_name == DataBufferClient.default_service_name:
             return mock.Mock()
 
     def time_sec(self):

@@ -74,7 +74,7 @@ class RetryableRpcError(RpcError):
 
 
 class PersistentRpcError(RpcError):
-    """An RpcError that will almost certainly continue to keep failing if retried"""
+    """An RpcError that will almost certainly continue to keep failing if retried."""
 
 
 class ClientCancelledOperationError(PersistentRpcError):
@@ -122,7 +122,17 @@ class UnableToConnectToRobotError(RetryableRpcError):
 
 
 class RetryableUnavailableError(UnableToConnectToRobotError):
-    """Service unavailable or channel reset. Likely transient and can be resolved by retrying."""
+    """Service unavailable or channel reset.
+
+    Likely transient and can be resolved by retrying.
+    """
+
+
+class ConnectionResetError(RetryableUnavailableError):
+    """The connection was reset by the remote host.
+
+    Likely transient and can be resolved by retrying.
+    """
 
 
 class UnauthenticatedError(PersistentRpcError):
@@ -145,12 +155,19 @@ class TransientFailureError(RetryableRpcError):
     """The channel is in state TRANSIENT_FAILURE, often caused by a connection failure."""
 
 
+class InternalDeserializationError(RetryableUnavailableError):
+    """GRPC deserialization failed, indicating corrupted channel state.
+
+    The channel has been reset automatically; retrying the RPC should succeed.
+    """
+
+
 class TimeSyncRequired(Error):
     """Time synchronization is required but none seems to be established."""
 
 
 class CustomParamError(ResponseError):
-    """A custom parameter that was provided did not match the specification"""
+    """A custom parameter that was provided did not match the specification."""
 
     def __init__(self, response, custom_param_error):
         super().__init__(response)

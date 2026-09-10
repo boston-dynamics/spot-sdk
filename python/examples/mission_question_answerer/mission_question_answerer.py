@@ -110,8 +110,7 @@ def query_bool_yes_no(question):
         choice = input(f'{question} [y/n]\n').lower()
         if choice in valid_answers:
             return valid_answers[choice]
-        else:
-            print("Please respond with '[y]es' or '[n]o'.\n")
+        print("Please respond with '[y]es' or '[n]o'.\n")
 
 
 def main():

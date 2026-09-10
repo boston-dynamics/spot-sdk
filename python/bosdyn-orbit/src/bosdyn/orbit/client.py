@@ -887,8 +887,11 @@ class Client():
             f'calendar/mission/dispatch/{robot_nickname}?currentDriverId={driver_id}', json=payload,
             **kwargs)
 
-    def post_backup_task(self, include_missions: bool, include_captures: bool,
-                         **kwargs) -> requests.Response:
+    def post_backup_task(
+            self,
+            include_missions: bool,
+            include_captures: bool,
+            **kwargs) -> requests.Response:
         """Starts creating a backup zip file.
 
         Args:
@@ -1022,13 +1025,14 @@ def create_client(options: 'argparse.Namespace') -> 'bosdyn.orbit.client.Client'
         client: 'bosdyn.orbit.client.Client' object
     """
     # Determine the value for the argument "verify"
-    if options.verify in ["True", "False"]:
-        verify = options.verify == "True"
-    else:
-        print(
-            "The provided value for the argument verify [{}] is not either 'True' or 'False'. Assuming verify is set to 'path/to/CA bundle'"
-            .format(options.verify))
-        verify = options.verify
+    verify = options.verify
+    if isinstance(verify, str):
+        if verify.strip().lower() in ("true", "false"):
+            verify = verify.strip().lower() == "true"
+        else:
+            print(
+                "The provided value for the argument verify [{}] is not either 'True' or 'False'. Assuming verify is set to 'path/to/CA bundle'"
+                .format(verify))
 
     # Sanitize the format of the cert option. Requests handles None, a single pathname,
     # or a sequence of pathnames with two or more elements.

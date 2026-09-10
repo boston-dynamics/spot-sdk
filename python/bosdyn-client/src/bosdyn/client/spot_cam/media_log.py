@@ -17,8 +17,7 @@ from bosdyn.client.common import BaseClient, handle_common_header_errors
 
 
 class MediaLogClient(BaseClient):
-    """A client calling Spot CAM MediaLog service.
-    """
+    """A client calling Spot CAM MediaLog service."""
     default_service_name = 'spot-cam-media-log'
     service_type = 'bosdyn.api.spot_cam.MediaLogService'
 
@@ -29,7 +28,8 @@ class MediaLogClient(BaseClient):
         """Removes the Logpoint from the Spot CAM system.
 
         Args:
-          logpoint: spot_cam.Logpoint.name must be filled out."""
+          logpoint: spot_cam.Logpoint.name must be filled out.
+        """
         request = logging_pb2.DeleteRequest(point=logpoint)
         return self.call(self._stub.Delete, request, self._delete_from_response,
                          self._media_log_error_from_response, copy_request=False, **kwargs)
@@ -49,7 +49,8 @@ class MediaLogClient(BaseClient):
           humidity: Enable logging of humidity data.
           bit: Enable logging of BIT events coming from the Health service.
           shock: Enable logging of Shock data.
-          system_stats: Enable logging of cpu, gpu, memory, and network utilization."""
+          system_stats: Enable logging of cpu, gpu, memory, and network utilization.
+        """
         request = logging_pb2.DebugRequest(enable_temperature=temp, enable_humidity=humidity,
                                            enable_BIT=bit, enable_shock=shock,
                                            enable_system_stat=system_stats)
@@ -71,7 +72,8 @@ class MediaLogClient(BaseClient):
         Args:
           logpoint: spot_cam.Logpoint.name must be filled out.
         Returns:
-          A spot_cam.Logpoint with the status filled out."""
+          A spot_cam.Logpoint with the status filled out.
+        """
         request = logging_pb2.GetStatusRequest(point=logpoint)
         return self.call(self._stub.GetStatus, request, self._get_status_from_response,
                          self._media_log_error_from_response, copy_request=False, **kwargs)
@@ -83,7 +85,7 @@ class MediaLogClient(BaseClient):
                                self._media_log_error_from_response, copy_request=False, **kwargs)
 
     def list_cameras(self, **kwargs):
-        """List cameras on Spot CAM"""
+        """List cameras on Spot CAM."""
         request = logging_pb2.ListCamerasRequest()
         return self.call(self._stub.ListCameras, request, self._list_cameras_from_response,
                          self._media_log_error_from_response, copy_request=False, **kwargs)
@@ -95,7 +97,7 @@ class MediaLogClient(BaseClient):
                                self._media_log_error_from_response, copy_request=False, **kwargs)
 
     def list_logpoints(self, **kwargs):
-        """List Logpoints on Spot CAM"""
+        """List Logpoints on Spot CAM."""
         request = logging_pb2.ListLogpointsRequest()
         return self.call(self._stub.ListLogpoints, request, self._list_logpoints_from_response,
                          self._media_log_error_from_response, copy_request=False, **kwargs)
@@ -104,7 +106,8 @@ class MediaLogClient(BaseClient):
         """Retrieves the image associated with the Logpoint.
 
         Args:
-          logpoint: spot_cam.Logpoint.name must be filled out."""
+          logpoint: spot_cam.Logpoint.name must be filled out.
+        """
         request = logging_pb2.RetrieveRequest(point=logpoint)
         return self.call(self._stub.Retrieve, request, self._retrieve_from_response,
                          self._media_log_error_from_response, copy_request=False, **kwargs)
@@ -113,7 +116,8 @@ class MediaLogClient(BaseClient):
         """Retrieves the image associated with the Logpoint.
 
         Args:
-          logpoint: spot_cam.Logpoint.name must be filled out."""
+          logpoint: spot_cam.Logpoint.name must be filled out.
+        """
         request = logging_pb2.RetrieveRawDataRequest(point=logpoint)
         return self.call(self._stub.RetrieveRawData, request, self._retrieve_from_response,
                          self._media_log_error_from_response, copy_request=False, **kwargs)
@@ -159,7 +163,8 @@ class MediaLogClient(BaseClient):
         """Update the 'tag' field of an existing Logpoint.
 
         Args:
-          logpoint: 'tag' and 'name' in spot_cam.Logpoint must be filled out."""
+          logpoint: 'tag' and 'name' in spot_cam.Logpoint must be filled out.
+        """
         request = logging_pb2.TagRequest(point=logpoint)
         return self.call(self._stub.Tag, request, self._tag_from_response,
                          self._media_log_error_from_response, copy_request=False, **kwargs)

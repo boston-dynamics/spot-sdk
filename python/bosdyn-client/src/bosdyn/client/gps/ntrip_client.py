@@ -20,15 +20,11 @@ DEFAULT_NTRIP_TLS_PORT = 2102
 
 
 class NtripClientParams:
-    """
-    Class for storing parameters for connecting an NTRIP client to an NTRIP server.
-    """
+    """Class for storing parameters for connecting an NTRIP client to an NTRIP server."""
 
     def __init__(self, server=DEFAULT_NTRIP_SERVER, port=DEFAULT_NTRIP_PORT, user="", password="",
                  mountpoint="", tls=False, reconnect_secs=SERVER_RECONNECT_DELAY):
-        """
-        Constructor.
-        """
+        """Constructor."""
         self.server = server
         self.port = port
         self.user = user
@@ -39,15 +35,13 @@ class NtripClientParams:
 
 
 class NtripClient:
-    """
-    Client used to connect to an NTRIP server to download GPS corrections. These corrections are
-    then forwarded on to the GPS device using the given stream.
+    """Client used to connect to an NTRIP server to download GPS corrections.
+
+    These corrections are then forwarded on to the GPS device using the given stream.
     """
 
     def __init__(self, device, params: NtripClientParams, logger):
-        """
-        Constructor.
-        """
+        """Constructor."""
         self.device = device
         self.host = params.server
         self.port = params.port
@@ -64,9 +58,7 @@ class NtripClient:
         self.logger = logger
 
     def make_request(self):
-        """
-        Make a connection request to an NTRIP server.
-        """
+        """Make a connection request to an NTRIP server."""
         auth_str = base64.b64encode(f"{self.user}:{self.password}".encode()).decode()
         request = (f"GET /{self.mountpoint} HTTP/1.1\r\n"
                    f"Host: {self.host}:{self.port}\r\n"
@@ -78,33 +70,28 @@ class NtripClient:
         return request.encode()
 
     def start_stream(self):
-        """
-        Start streaming data from an NTRIP server to a GPS receiver.
-        """
+        """Start streaming data from an NTRIP server to a GPS receiver."""
         if self.streaming:
             self.stop_stream()
         self.thread = Thread(target=self.stream_data_worker, daemon=True)
         self.thread.start()
 
     def stop_stream(self):
-        """
-        Stop streaming NTRIP data.
-        """
+        """Stop streaming NTRIP data."""
         self.streaming = False
         if self.thread:
             self.thread.join()
         self.thread = None
 
     def is_streaming(self):
-        """
-        Determine if we are streaming NTRIP data.
-        """
+        """Determine if we are streaming NTRIP data."""
         return self.streaming
 
     def send_gga(self, gga):
-        """
-        Given a GPGGA message, send it to the NTRIP server. This helps the NTRIP server send
-        corrections that are applicable to the area in which the receiver is operating.
+        """Given a GPGGA message, send it to the NTRIP server.
+
+        This helps the NTRIP server send corrections that are applicable to the area in which the
+        receiver is operating.
         """
         if self.sock:
             try:
@@ -116,8 +103,9 @@ class NtripClient:
         return False
 
     def create_icy_session(self):
-        """
-        NTRIP Rev1 uses Shoutcast (ICY). Create an ICY session to stream RTCM data.
+        """NTRIP Rev1 uses Shoutcast (ICY).
+
+        Create an ICY session to stream RTCM data.
         """
         try:
             # Create a socket connection to the host and port.
@@ -172,9 +160,7 @@ class NtripClient:
             return False
 
     def stream_data(self):
-        """
-        Stream NTRIP data from a connected server and send it to a GPS receiver.
-        """
+        """Stream NTRIP data from a connected server and send it to a GPS receiver."""
 
         # NTRIP Rev1 uses Shoutcast (ICY), which looks a lot like HTTP but isn't quite the same.
         # Create an ICY session here to talk to an NTRIP Rev1 caster.
@@ -214,9 +200,7 @@ class NtripClient:
         self.logger.info("NTRIP client finished.")
 
     def stream_data_worker(self):
-        """
-        NTRIP client worker thread function.
-        """
+        """NTRIP client worker thread function."""
         self.streaming = True
         while self.streaming:
             self.stream_data()
@@ -229,16 +213,12 @@ class NtripClient:
                 time.sleep(self.reconnect_secs)
 
     def handle_ntrip_data(self, data):
-        """
-        Callback for handling NTRIP data.
-        """
+        """Callback for handling NTRIP data."""
         # Send to receiver as is.
         self.device.write(data)
 
     def handle_nmea_gga(self, sentence):
-        """
-        Process an NMEA-GGA sentence passed in as a string.
-        """
+        """Process an NMEA-GGA sentence passed in as a string."""
         fields = sentence.split(",")
         if len(fields) < 7:
             return

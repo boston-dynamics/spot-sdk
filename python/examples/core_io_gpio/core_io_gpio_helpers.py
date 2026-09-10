@@ -17,7 +17,7 @@ VERSION_PATTERN = re.compile(r"version='(\d+\.\d+\.\d+)'")
 # The function gets CORE I/O's version
 def get_version(file_path):
     try:
-        with open(file_path, 'r') as file:
+        with open(file_path) as file:
             for line in file:
                 match = VERSION_PATTERN.search(line)
                 if match:
@@ -72,7 +72,7 @@ def check_version_and_set():
 
 
 class GpioOutput:
-    """ Class for managing CORE IO GPIO pins.
+    """Class for managing CORE IO GPIO pins.
 
     Programs using this must either be run as root or in the gpio group
     """
@@ -145,24 +145,22 @@ class GpioOutput:
             self.enable_path_gpiopin.write_text("0")
 
     def toggle(self):
-        """ Toggle the GPIO state
-        """
+        """Toggle the GPIO state."""
         if self.get_value() == 1:
             self.off()
         else:
             self.on()
 
     def get_value(self):
-        """ Return the current GPIO pin state
-        """
+        """Return the current GPIO pin state."""
         if self.pin_setup_mode == 'voltage':
             return int(self.enable_path_voltage.read_text())
-        elif self.pin_setup_mode == 'gpio':
+        if self.pin_setup_mode == 'gpio':
             return int(self.enable_path_gpiopin.read_text())
 
 
 class PwmOutput:
-    """ Class for managing CORE IO PWM pins.
+    """Class for managing CORE IO PWM pins.
 
     Programs using this must either be run as root or in the gpio group
     """
@@ -183,17 +181,15 @@ class PwmOutput:
             self.export_path()
 
     def is_ready(self):
-        """ Check if the PWM path is ready to use
-        """
+        """Check if the PWM path is ready to use."""
         return self.duty_cycle_path.exists()
 
     def export_path(self):
-        """ Export the pwm chip for use
-        """
+        """Export the pwm chip for use."""
         pathlib.Path(f"/sys/class/pwm/{self.pwmchip}/export").write_text("0")
 
     def get_period(self):
-        """ Get the PWM’s output period in nanoseconds
+        """Get the PWM’s output period in nanoseconds.
 
         Equivalent to `cat /sys/class/pwm/$PWM_PORT/pwm0/period`
         """
@@ -201,14 +197,14 @@ class PwmOutput:
         return int(period)
 
     def set_period(self, period_ns):
-        """ Set the PWM’s output period in nanoseconds
+        """Set the PWM’s output period in nanoseconds.
 
         Equivalent to `echo $period_ns > /sys/class/pwm/$PWM_PORT/pwm0/period`
         """
-        self.period_path.write_text(period_ns)
+        self.period_path.write_text(str(int(period_ns)))
 
     def get_duty_ns(self):
-        """ Get the PWM’s output duty cycle in nanoseconds
+        """Get the PWM’s output duty cycle in nanoseconds.
 
         Equivalent to `cat /sys/class/pwm/$PWM_PORT/pwm0/duty_cycle`
         """
@@ -216,44 +212,39 @@ class PwmOutput:
         return int(duty_ns)
 
     def set_duty_ns(self, duty_cycle_ns):
-        """ Set the PWM’s output duty cycle in nanoseconds
+        """Set the PWM’s output duty cycle in nanoseconds.
 
         Equivalent to `echo $duty_cycle_ns > /sys/class/pwm/$PWM_PORT/pwm0/duty_cycle`
         """
-        self.duty_cycle_path.write_text(duty_cycle_ns)
+        self.duty_cycle_path.write_text(str(int(duty_cycle_ns)))
 
     def get_duty_ratio(self):
-        """ Get the PWM’s output duty cycle as a ratio from 0.0 to 1.0
-        """
+        """Get the PWM’s output duty cycle as a ratio from 0.0 to 1.0."""
         period = self.get_period()
         if period == 0:
             return 0
         return self.get_duty_ns() / self.get_period()
 
     def set_duty_ratio(self, duty_ratio):
-        """ Set the PWM’s output duty cycle as a ratio from 0.0 to 1.0
-        """
-        self.set_duty_ns(str(self.get_period() * duty_ratio))
+        """Set the PWM’s output duty cycle as a ratio from 0.0 to 1.0."""
+        self.set_duty_ns(self.get_period() * duty_ratio)
 
     def get_enabled(self):
-        """ Check if chip is enabled
-        """
+        """Check if chip is enabled."""
         text = self.enable_path.read_text()
         if "1" in text:
             return True
-        elif "0" in text:
+        if "0" in text:
             return False
-        else:
-            return None
+        return None
 
     def enable(self):
-        """ Enable the PWM output
+        """Enable the PWM output.
 
         Equivalent to `echo $enable > /sys/class/pwm/$PWM_PORT/pwm0/enable`
         """
         self.enable_path.write_text("1")
 
     def disable(self):
-        """ Disable the PWM output.
-        """
+        """Disable the PWM output."""
         self.enable_path.write_text("0")

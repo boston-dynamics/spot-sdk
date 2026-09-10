@@ -135,8 +135,7 @@ def capture_fake_with_custom_params(custom_params=None, **kwargs):
     if custom_params:
         return custom_params.values["string"].string_value.value + str(
             custom_params.values["int"].int_value.value), 1
-    else:
-        return "noparams", 2
+    return "noparams", 2
 
 
 def capture_fake_no_kwargs():

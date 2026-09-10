@@ -147,8 +147,7 @@ class WebCam(CameraInterface):
                 pass
         if success:
             return image, capture_time
-        else:
-            raise Exception('Unsuccessful call to cv2.VideoCapture().read()')
+        raise Exception('Unsuccessful call to cv2.VideoCapture().read()')
 
     def image_decode(self, image_data, image_proto, image_req):
         pixel_format = image_req.pixel_format
@@ -220,8 +219,7 @@ class WebCam(CameraInterface):
 def device_name_to_source_name(device_name):
     if isinstance(device_name, int):
         return f'video{device_name}'
-    else:
-        return os.path.basename(device_name)
+    return os.path.basename(device_name)
 
 
 def create_dict_param_child_spec(default_val, min_val, max_val, display_name):

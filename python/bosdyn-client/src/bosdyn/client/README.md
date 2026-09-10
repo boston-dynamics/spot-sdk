@@ -48,6 +48,8 @@ Client code and interfaces for the Boston Dynamics robot API.
 - [Fault](fault.py)
 - [Frame Helpers](frame_helpers.py)
 - [Graph Nav](graph_nav.py)
+- [Graph Nav Download](graph_nav_download.py)
+- [Graph Nav Upload](graph_nav_upload.py)
 - [Gripper Camera Params](gripper_camera_param.py)
 - [GPS](gps/README.md)
 - [Hazard Avoidance](hazard_avoidance.py)

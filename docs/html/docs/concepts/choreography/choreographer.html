@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Boston Dynamics Choreographer Developer Guide &mdash; Spot 5.1.9 documentation</title>
+  <title>Boston Dynamics Choreographer Developer Guide &mdash; Spot 5.2.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
     <link rel="shortcut icon" href="../../../_static/bd-favicon.png"/>
@@ -38,7 +38,7 @@
               <img src="../../../_static/bd-official-white.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                5.1.9
+                5.2.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -205,7 +205,8 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/world_object_mutations/README.html">World Object Mutations</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/visualizer/README.html">Visualizer</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/gripper_camera_params/README.html">Gripper Camera Parameters</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_cam/README.html">Spot CAM</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_cam/README.html">Spot CAM Services</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_cam/README.html#spot-cam-video-core-io-extension-example">Spot Cam Video Core IO Extension Example</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/stitch_front_images/README.html">Stitch Front Images</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/get_depth_plus_visual_image/README.html">Project Depth Data on Visual Images</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/service_customization/custom_parameter_image_server/README.html">Custom Parameter Image Server</a></li>
@@ -249,6 +250,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/graph_nav_command_line/README.html">GraphNav and Recording Service Command Line Interfaces</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/graph_nav_command_line/README.html#example-programs">Example Programs</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/graph_nav_extract_point_cloud/README.html">Graph Nav Extract Point Cloud</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/graph_nav_map_to_usd/README.html">Graph Nav Map to USD</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/graph_nav_view_map/README.html">Graph Nav View Map</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/graph_nav_view_gps/README.html">Graph Nav View GPS Data</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/get_mission_state/README.html">Get Mission State</a></li>
@@ -269,7 +271,8 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/joint_control_examples.html">Joint Control API Examples</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/orbit.html">Orbit</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/hello_orbit/README.html">Hello Orbit</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/hello_orbit/README.html">Hello Orbit (v0, OrbitClient)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/orbit_v1_api/README.html">Orbit v1 API (v1, raw HTTP)</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/export_run_archives/README.html">Export Run Archives</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/export_site_walk_archives/README.html">Export Sitewalk Archives</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/anomalies/README.html">Anomalies</a></li>
@@ -324,6 +327,8 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/fault.html">Fault</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/frame_helpers.html">Frame Helpers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/graph_nav.html">Graph Nav</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/graph_nav_download.html">Graph Nav Download</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/graph_nav_upload.html">Graph Nav Upload</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/gripper_camera_param.html">Gripper Camera Params</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/gps/README.html">GPS</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/gps/aggregator_client.html">Aggregator Client</a></li>
@@ -561,20 +566,19 @@ Development Kit License (20191101-BDSDK-SL).
 <img src="../../../_images/UI_move_info.png"/><img src="../../../_images/UI_robot_management.png"/><p>The Choreographer interface consists of the following important key sections/buttons:</p>
 <ol class="simple">
 <li><p><strong>Moves List</strong> - List of predefined stock moves and animation moves sorted by general category such as “Body” or “Transition.”</p></li>
-<li><p><strong>Move Information</strong> - When you select a move in the Moves List its name and description will appear here.</p></li>
-<li><p><strong>Move Controls</strong> - Each move can be played on a connected Spot before adding it to a sequence using the “Run Move on Robot” button. Each move also has a button or dropdown to reset or set its parameters to the default options or a preset option. Some moves also have the option to “Get Joints from Robot”, which will read a selected robot connection’s joint values and apply them to the move’s parameter fields.</p></li>
-<li><p><strong>Move Diagram</strong> - Some moves have an additional visualization view to aid in editing parameters. There are 3 types of visualization tools that may appear here; the 3D Model view for visualizing joint and body positions, the Color Selector for editing and viewing lights move colors, and the Gait Diagram for visualizing the liftoff and touchdown points of a Custom Gait move’s swing fields.</p></li>
+<li><p><strong>Move Information</strong> - When you select a move in the Moves List its name and description will appear here. Some moves also have an additional visualization view to aid in editing parameters. There are 2 types of visualization tools that may appear here; the Color Selector for editing and viewing lights move colors, and the Gait Diagram for visualizing the liftoff and touchdown points of a Custom Gait move’s swing fields.</p></li>
+<li><p><strong>Move Controls</strong> - Each move can be played on a connected Spot before adding it to a sequence using the <strong>Run Move</strong> button. Each move also has presets dropdown to reset its parameters to the default options or a set a preset option. Some moves will also show a <strong>Get Joints from Robot</strong>, which will read a selected robot connection’s joint values and apply them to the move’s parameter fields.</p></li>
 <li><p><strong>Move Parameters</strong> - When you select a customizable move, its adjustable parameters appear in this area. Modify the parameters to adjust how the robot acts during this move. Be sure to test and make sure the robot can handle your parameters! Sometimes more extreme parameters can be too much for the robot during high or low BPM songs, so if a combination of parameters does not work, adjust them until they do for your situation. Hover over the blue question mark near the parameter name to see a description of that parameter.</p></li>
 <li><p><strong>Dance Previews</strong> - The Dance Previews view will display an estimated 3D and 2D visualization for the sequence(s) of the currently selected tab, or all open tabs. See the <a class="reference internal" href="dance_previews.html"><span class="doc">Dance Previews</span></a> documentation for details.</p></li>
-<li><p><strong>Timeline Toolbar</strong> - Contains widgets to set a sequence’s start position and entrance state and display the lowest battery level of the connected Spot(s). When options are available and set, the set entrance state will determine the state (sit, stand) that Spot will transition to before the sequence starts. The set start position of a sequence will be used for Dance Preview tools (see item 6) and can be useful for user documentation, but this data has no effect on robot playback of a sequence. The Timeline Toolbar can be hidden/shown under “Settings”-&gt;”Show Timeline Toolbar”.</p></li>
-<li><p><strong>Dance Tabs</strong> - Each open tab represents an open choreography sequence. Multiple choreography sequences can be opened at once and will appear as different tabs above the timeline.</p></li>
+<li><p><strong>Dance Tabs</strong> - Each open tab represents a choreography sequence. Multiple choreography sequences can be opened at once and will appear as different tabs above the timeline.</p></li>
+<li><p><strong>Timeline Toolbar</strong> - Contains widgets to set a sequence’s start position and entrance state and overview of the power and battery states of the connected Spot(s). When options are available and set, the entrance state will determine the state (sit, stand) that Spot will transition to before the sequence starts. The start position of a sequence will be used for Dance Preview tools (see <a class="reference internal" href="dance_previews.html"><span class="doc">Dance Previews</span></a>). The leftmost button will also open the timeline’s track visibility menu.</p></li>
 <li><p><strong>Dance Timeline</strong> - The timeline shows a representation of your dance over time. Each move is represented with a different block. Move blocks can be edited to set or change move parameters. Blocks can be relocated on the timeline by clicking and dragging or copied and pasted to a new location on the timeline. They can be stretched or shrunk if the move parameters allow it.</p></li>
 <li><p><strong>Robot Controls</strong> - The robot control buttons are used to send commands to any robots connected to Choreographer, including starting and stopping your dance and powering on or off your robot’s motors. Note: Buttons that trigger commands on robots are disabled when Choreographer is not connected to any robots, or no robots are selected in the robot management table.</p></li>
-<li><p><strong>Timeline Controls</strong> - Timeline controls allow you to load and play a song for your robot’s dance, manually adjust the BPM of your robot’s moves to match your song, and adjust the zoom level of the timeline. Note: Other music, playback, and timeline options can be found under the “Settings” Menu. Music volume, metronome, sequence start delay and timecode options, along with other playback settings, can be found under “Playback and Music Settings”. Options to change the timeline’s units can be found under “Timeline Settings”.</p></li>
+<li><p><strong>Timeline Controls</strong> - Timeline controls allow you to load and play a song for your robot’s dance, manually adjust the BPM of your robot’s moves to match your song, and adjust the zoom level of the timeline. Note: Other music, playback, and timeline options can be found under the <strong>Settings</strong> menu. Music volume, metronome, sequence start delay and timecode options, along with other playback settings, can be found in the <strong>Choreography Playback</strong> section of the <strong>Settings</strong>-&gt;<strong>Preferences</strong> menu. Options to change the timeline’s units can be found in the <strong>Timeline Units</strong> section of <strong>Settings</strong>-&gt;<strong>Preferences</strong>.</p></li>
 <li><p><strong>Move Configuration/Robot Management Tabs</strong> - Toggle between the move configuration tab, which displays tools for sequence and move editing; and the robot management tab, which displays all active robot connections and health statistics.</p></li>
-<li><p><strong>Mode Indicator</strong> - Indicates whether Choreographer is running in “Beginner” or “Advanced” mode. The title provides an indicator to help remember which mode the application is loaded in. Use the “Settings”-&gt;”Mode” submenu to switch between modes (open sequences will be closed).</p></li>
+<li><p><strong>Mode Indicator</strong> - Indicates whether Choreographer is running in “Beginner” or “Advanced” mode. The title provides an indicator to help remember which mode the application is loaded in. Use the <strong>Settings</strong>-&gt;<strong>Mode</strong> submenu to switch between modes (open sequences will be closed).</p></li>
 <li><p><strong>Add/Disconnect Buttons</strong> - Dynamically change which robots are connected and controlled by Choreographer.</p></li>
-<li><p><strong>Robot Connections</strong> - Lists the Robots connected to Choreographer by their hostname (IP address). Additional columns provide additional information and control options for each Robot’s row. A “nickname” or short user provided description can also be provided to help identify robots. This nickname can be typed directly into the table or assigned when connecting robots through the command line before Choreographer starts.</p></li>
+<li><p><strong>Robot Connections</strong> - Lists the robots connected to Choreographer by their hostname (IP address). Additional columns provide additional information and control options for each robot’s row. A “nickname” or short user provided description can also be provided to help identify robots. This nickname can be typed directly into the table or assigned when connecting robots through the command line before Choreographer starts.</p></li>
 <li><p><strong>Selected Column</strong> - Select or unselect a connection. The checkbox indicates whether or not the robot will receive commands. Example: When unchecked, pressing robot control buttons such as “Sit” will do nothing to the unselected robot.</p></li>
 <li><p><strong>Dance Selection Column</strong> - Assign a specific Choreography to a robot connection. The selected option determines which of the open choreographies the robot will execute when the Start Choreography button is clicked (or when started with a timecode cue, if timecode is in use). When “Current Open Tab” is the selected option, that robot connection will execute the sequence currently displayed in the timeline.</p></li>
 <li><p><strong>Health and Status Columns</strong> - The Power State, Dance State, Battery, Faults, and Connected Columns display information about the row’s robot connection.</p></li>
@@ -595,7 +599,7 @@ Development Kit License (20191101-BDSDK-SL).
 </section>
 <section id="slices-beats-bpm-and-measures">
 <h2>Slices, beats, BPM, and measures<a class="headerlink" href="#slices-beats-bpm-and-measures" title="Permalink to this heading"></a></h2>
-<p>Choreographer divides time into slices represented by the thin dashed vertical lines in the timeline. All moves take an integer number of slices. For convenience, we consider 4 slices a beat and adjust the pace of the dance by setting the BPM (Beats Per Minute) in the <strong>Music Controls</strong> bar. Beats are delineated by the medium-thickness vertical lines on the timeline. Every 4th beat is numbered and marked with a thick vertical line.</p>
+<p>Choreographer divides time into slices represented by the thin dashed vertical lines in the timeline. All moves take an integer number of slices. For convenience, we consider 4 slices a beat and adjust the pace of the dance by setting the beats per minute (BPM) in the <strong>Music Controls</strong> bar. Beats are delineated by the medium-thickness vertical lines on the timeline. Every 4th beat is numbered and marked with a thick vertical line.</p>
 <p>For a song with a 4/4 time signature, a slice corresponds to a 16th-note, a beat to a quarter note, and the thicker lines to a measure or whole note. For songs that are not 4/4, the thicker lines can be ignored.</p>
 <p>Some moves take a fixed number of slices. Other moves take a fixed amount of time so the number of slices will depend on the BPM. Some moves are adjustable, but of those some have maximum or minimum durations. For example, this “Running Man” move has been extended from the default number of slices. It controls the legs track for the first 16 slices (4 beats; 1 measure) of this sequence:</p>
 <img src="../../../_images/running_man.png" style="max-width:805px;"></section>
@@ -643,168 +647,55 @@ Development Kit License (20191101-BDSDK-SL).
 </section>
 <section id="loading-music">
 <h2>Loading music<a class="headerlink" href="#loading-music" title="Permalink to this heading"></a></h2>
-<p>To test a choreography with real songs, use the music player included with Choreographer to load and sync music to your dance.</p>
-<p>To use a music clip, press the <strong>Load Music</strong> button in the Music Controls section of Choreographer. This opens a music file to be played with the dance. Note that a reference to this file will be saved in your Choreographer Save File, so you will only need to do this process once per save.</p>
-<p>Once a dance is loaded, preview it by clicking <strong>Play Music</strong>. Stop previewing by clicking <strong>Stop</strong>. The <strong>Play Music</strong> button does not initiate a dance on any connected robots. Music will play from the computer running Choreographer. Music volume can be adjusted using the slider at the bottom in the music controls section.</p>
-<p>After loading a dance, you must manually set the BPM (Beats Per Minute) of your dance to synchronize with the song. Online tools are available to help you calculate the BPM of any song. Choreographer includes a metronome to calculate a song’s BMP.</p>
+<img src="../../../_images/music_waveform.png" style="max-width:1912px;"><p>Music can be loaded into a Choreographer sequence using the <strong>Load Music</strong> option in the <strong>File</strong> menu. After music is loaded it can be positioned in the timeline. When the sequence is saved the loaded music’s filepath and position are saved to the sequence, so music only needs to be loaded once. Choreographer will play the music file from the currently displayed sequence when starting sequence(s) for connected robot(s).</p>
+<p>Music can also be previewed alongside <a class="reference internal" href="dance_previews.html"><span class="doc">Dance Previews</span></a> playback.</p>
+<p>When creating sequences for a specific song, we recommend setting the sequence’s BPM value to the same value (or a multiple of 2 if using half or double time) as the music file. Matching the choreography sequence BPM value to the music BPM value is what enables the robot to “dance in time” and on beat with the music using Choreographer’s moves.</p>
+<section id="limitations-and-requirements-for-music-files">
+<h3>Limitations and Requirements for Music Files<a class="headerlink" href="#limitations-and-requirements-for-music-files" title="Permalink to this heading"></a></h3>
+<ul class="simple">
+<li><p>Complete audio parsing abilities and the display of music waveforms in Choreographer requires that FFmpeg or Gstreamer are installed separately, even if some music loading capabilities will often work without these dependencies. For additional information see <a class="reference internal" href="choreographer_setup.html"><span class="doc">Choreographer Setup</span></a>.</p></li>
+<li><p>Choreographer supports .mp3, .ogg and .wav audio file formats. However only .mp3 files and .ogg file types can be started from the middle of the song, which often makes them better for sequence development.</p></li>
+<li><p>Only one music file can be in a sequence at a time.</p></li>
+</ul>
 </section>
-<section id="red-slider">
-<h2>Red slider<a class="headerlink" href="#red-slider" title="Permalink to this heading"></a></h2>
-<p>The red slider defines where within the sequence Spot should begin execution. It also indicates when the audio begins playing. The red slider defaults to the beginning but can be moved to start from the middle. This can be useful for testing just a portion of a long sequence.</p>
-<p>Any moves that start before the slider will be skipped even if they are scheduled to complete after the slider. The line drawn at the center of the slider shows the location of the slider on the timeline, as shown in the image below. The slider can be moved by dragging it to the desired location, or double-clicking the desired location on the timeline.</p>
-<p>The red slider can also be used with the Dance Preview view to scrub through the previsualization. See <a class="reference internal" href="dance_previews.html"><span class="doc">Dance Previews</span></a>.</p>
-<img src="../../../_images/red_slider.png" style="max-width:781px;"></section>
+</section>
+<section id="red-slider-and-start-marker">
+<h2>Red Slider and Start Marker<a class="headerlink" href="#red-slider-and-start-marker" title="Permalink to this heading"></a></h2>
+<img src="../../../_images/red_slider_start_marker.png" style="max-width:926px;"><p>The Red Slider and Start Marker are draggable playback controls in the timeline.</p>
+<ol class="simple">
+<li><p>Start Marker: The start marker is the red triangle at the top of the timeline. It defines where within the sequences the robot connections will start their assigned sequences. Starting sequences in the middle can be useful for testing and developing sections of long sequences.</p></li>
+<li><p>Red Slider: The Red Slider controls the <a class="reference internal" href="dance_previews.html"><span class="doc">Dance Previews</span></a> display start time, and can be used to scrub through the previsualization. The slider can be moved by dragging it to the desired location, or double-clicking the desired location on the timeline.</p></li>
+</ol>
+<p><em>Prior to 5.2.0 The Red Slider was used for both robot start time and dance previews visualization time. In 5.2.0 these settings were split into separate display elements.</em></p>
+</section>
 <section id="running-individual-moves">
 <h2>Running individual moves<a class="headerlink" href="#running-individual-moves" title="Permalink to this heading"></a></h2>
-<p>With a robot connected to the Choreographer, you can run individual dance moves before adding them to the timeline. Select a move from the <strong>Moves List</strong> and modify the move parameters. Press <strong>Run Move on Robot</strong> to perform the single move you have selected. This is a great way to test out parameter modifications before adding a move to your timeline.</p>
-<img src="../../../_images/run_move_button.png" style="max-width:567px;"></section>
+<p>With a robot connected to the Choreographer, you can run individual dance moves before adding them to the timeline. Select a move from the <strong>Moves List</strong> and modify the move parameters. Press <strong>Run Move</strong> to perform the single move you have selected. This is a great way to test out parameter modifications before adding a move to your timeline.</p>
+<img src="../../../_images/run_move_button.png" style="max-width:501px;"></section>
 <section id="performing-choreography-sequences">
 <h2>Performing Choreography sequences<a class="headerlink" href="#performing-choreography-sequences" title="Permalink to this heading"></a></h2>
-<p>Click <strong>Start Choreography</strong> in the Robot Controls bar to upload the choreography that is currently selected in the <strong>Robot Management</strong> tab. By default, this is the currently open choreography tab. The robot starts to execute the routine with music at the same. Having a short lead-in time (default 3 seconds) is recommended to ensure that the music and all dance routine(s) begin at the same time. This start delay can be adjusted in the “Playback and Music Settings” menu under “Settings”.</p>
+<p>Click <strong>Start Choreography</strong> in the Robot Controls bar to upload the choreography that is currently selected in the <strong>Robot Management</strong> tab. By default, this is the currently open choreography tab. The robot starts to execute the routine with music at the same. Having a short lead-in time (default 3 seconds) is recommended to ensure that the music and all dance routine(s) begin at the same time. This start delay can be adjusted in the <strong>Choreography Playback</strong> section of the <strong>Settings</strong>-&gt;<strong>Preferences</strong> menu.</p>
 <p>Note: If the robot is not started in the proper position (sprawl, sit, stand), it will need a long enough start delay to transition into the correct entrance state or the timing will be out of sync with other robot(s) or the music due to a late start.</p>
 <p>To stop a choreography routine (or stop the music from playing if no robot is connected/executing a choreography) click <strong>Stop</strong> to freeze the robot with all four feet on the ground and stop the music. In an emergency, click <strong>E-Stop</strong> or <strong>Power Off</strong> instead.</p>
 </section>
 <section id="saving-and-loading-choreography-files">
 <h2>Saving and loading Choreography files<a class="headerlink" href="#saving-and-loading-choreography-files" title="Permalink to this heading"></a></h2>
-<p>To save a Choreographer routine, press Ctrl+S or go select Save from the File menu. Your routine will be saved in protobuf text format, which you can then open and easily read with your own scripts. To load a Choreographer file press Ctrl+L or select Load Choreography from the File menu.</p>
-<p>To append an existing choreography sequence to the end of your current dance, select Append Choreography from the File menu, or press Ctrl+E. Choreographer automatically adds all of the move blocks from the saved file to the end of your current routine. This is particularly useful if you want to construct a choreography sequence from smaller pre-made sequences.</p>
+<p>To save a Choreographer routine, press Ctrl+S or select <strong>Save Current Dance Tab</strong> from the <strong>File</strong> menu. Your routine will be saved in protobuf text format, which you can then open and easily read with your own scripts. To load a Choreographer file press Ctrl+O or select <strong>File</strong>-&gt;<strong>Open Choreography</strong>.</p>
+<p>To append an existing choreography sequence to the end of your current dance, select <strong>File</strong>-&gt;<strong>Append Choreography</strong> or press Ctrl+P. Choreographer automatically adds all of the move blocks from the saved file to the end of your current routine. This is particularly useful if you want to construct a choreography sequence from smaller pre-made sequences.</p>
 </section>
-<section id="keyboard-controls">
-<h2>Keyboard controls<a class="headerlink" href="#keyboard-controls" title="Permalink to this heading"></a></h2>
-<p>Choreographer has specific hotkey mappings available for common editing actions. Access the table of available hotkeys by selecting Hotkeys Documentation from the Help menu.</p>
-<section id="sequence-editing">
-<h3>Sequence editing<a class="headerlink" href="#sequence-editing" title="Permalink to this heading"></a></h3>
-<table border="1" class="docutils">
-<thead>
-<tr>
-<th>Key</th>
-<th>Function</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>i</td>
-<td>Enter insert mode</td>
-</tr>
-<tr>
-<td>Esc</td>
-<td>Exit insert mode</td>
-</tr>
-<tr>
-<td>p</td>
-<td>Play music</td>
-</tr>
-<tr>
-<td>Shift + Click</td>
-<td>Select multiple moves, adding each one to the selected group when clicked.</td>
-</tr>
-<tr>
-<td>Left/Right Arrow Keys</td>
-<td>Nudge a move (or group of selected moves) left/right by one slice in the timeline. Cannot cross other moves with nudging; this can only be done when dragging a move (or group).</td>
-</tr>
-<tr>
-<td>Shift + Left/Right Arrow Keys</td>
-<td>Expand a move on the left/right side by one slice if possible. This only works when a single move is selected (and not a group of moves).</td>
-</tr>
-<tr>
-<td>Ctrl + Left/Right Arrow Keys</td>
-<td>Shrink a move on the left/right side by one slice if possible. This only works when a single move is selected (and not a group of moves).</td>
-</tr>
-<tr>
-<td>Ctrl+C</td>
-<td>Copy the move (or group of selected moves).</td>
-</tr>
-<tr>
-<td>Ctrl+V</td>
-<td>Paste the copied move (or group of selected moves).</td>
-</tr>
-</tbody>
-</table></section>
-<section id="robot-control">
-<h3>Robot control<a class="headerlink" href="#robot-control" title="Permalink to this heading"></a></h3>
-<table border="1" class="docutils">
-<thead>
-<tr>
-<th>Key</th>
-<th>Function</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Space</td>
-<td>Stop the robot (and music, if playing)</td>
-</tr>
-<tr>
-<td>k</td>
-<td>Power on the robot.</td>
-</tr>
-<tr>
-<td>l</td>
-<td>Power off the robot.</td>
-</tr>
-<tr>
-<td>y</td>
-<td>Stand the robot up.</td>
-</tr>
-<tr>
-<td>x</td>
-<td>Start the choreography.</td>
-</tr>
-<tr>
-<td>[</td>
-<td>Sit the robot down.</td>
-</tr>
-<tr>
-<td>]</td>
-<td>Self-right the robot.</td>
-</tr>
-<tr>
-<td>v</td>
-<td>Enable WASD driving.</td>
-</tr>
-<tr>
-<td>b</td>
-<td>Enable joystick mode.</td>
-</tr>
-</tbody>
-</table></section>
-<section id="wasd-driving-mode">
-<h3>WASD driving mode<a class="headerlink" href="#wasd-driving-mode" title="Permalink to this heading"></a></h3>
-<table border="1" class="docutils">
-<thead>
-<tr>
-<th>Key</th>
-<th>Function</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>w</td>
-<td>Walk forward</td>
-</tr>
-<tr>
-<td>a</td>
-<td>Sidestep left</td>
-</tr>
-<tr>
-<td>s</td>
-<td>Walk backward</td>
-</tr>
-<tr>
-<td>d</td>
-<td>Sidestep right</td>
-</tr>
-<tr>
-<td>q</td>
-<td>Turn left</td>
-</tr>
-<tr>
-<td>e</td>
-<td>Turn right</td>
-</tr>
-</tbody>
-</table></section>
+<section id="project-folders">
+<h2>Project Folders<a class="headerlink" href="#project-folders" title="Permalink to this heading"></a></h2>
+<p>Choreographer supports organizing different choreography projects into project folders. A project folder contains subdirectories for assets including sequences, animations, music for quicker access within Choreographer and as an easy way to package and export sequences with their dependencies. Project folders can be created and selected through the “Project Preferences” menu found under <strong>File</strong> -&gt; <strong>Project Manager</strong>.</p>
+<section id="animation-preloading">
+<h3>Animation Preloading<a class="headerlink" href="#animation-preloading" title="Permalink to this heading"></a></h3>
+<p>Choreographer will preload any <a class="reference internal" href="animations_in_choreographer.html"><span class="doc">animation files</span></a> in a current project folder’s “animations” subdirectory when Choreographer is first opened, or when switching between different project folders. If no project folder is set, Choreographer will preload animations from a default “animations” directory in the same location as the Choreographer application.</p>
+<p><em>An initial project folder can also be set with a command line argument (see <a class="reference external" href="#command-line-arguments">Command-line arguments</a>).</em></p>
 </section>
+</section>
+<section id="hotkey-mapping">
+<h2>Hotkey Mapping<a class="headerlink" href="#hotkey-mapping" title="Permalink to this heading"></a></h2>
+<p>Choreographer has specific hotkey mappings available for common editing actions. Access the table of available hotkeys by selecting <strong>Hotkeys Documentation</strong> from the Help menu.</p>
+<img src="../../../_images/hot_keys.png" style="max-width:788px;"></section>
 <section id="command-line-arguments">
 <h2>Command-line arguments<a class="headerlink" href="#command-line-arguments" title="Permalink to this heading"></a></h2>
 <p>Command line options for starting Choreographer from the command line:</p>
@@ -841,10 +732,6 @@ Development Kit License (20191101-BDSDK-SL).
 <td>Connect to a robot with the given hostname, username, password, and optional nickname. Usage: <code>--connect=HOSTNAME,USERNAME,PASSWORD,NICKNAME</code></td>
 </tr>
 <tr>
-<td><code>--dance-filepath DANCE_FILEPATH</code></td>
-<td>Filepath to the dance script to load.</td>
-</tr>
-<tr>
 <td><code>--mode {beginner,advanced}</code></td>
 <td>Load Choreographer in the selected mode.</td>
 </tr>
@@ -863,6 +750,14 @@ Development Kit License (20191101-BDSDK-SL).
 <tr>
 <td><code>--estop-timeout ESTOP_TIMEOUT</code></td>
 <td>How long (in seconds) should the robot continue to move after it loses communication with Choreographer.</td>
+</tr>
+<tr>
+<td><code>--project-folder PROJECT_FOLDER</code></td>
+<td>The project folder to use for this session. If not specified, the last used project folder will be used.</td>
+</tr>
+<tr>
+<td><code>--filepaths FILEPATHS [FILEPATHS ...]</code></td>
+<td>List of initial sequence (*.chr) filenames (or directories) separated by spaces.</td>
 </tr>
 </tbody>
 </table><p>Command line hostname, username, password and (optional) nickname arguments can be especially convenient when repeatedly connecting to the same large set of robots. The following example connects to three different robots using three different sets of login credentials.</p>

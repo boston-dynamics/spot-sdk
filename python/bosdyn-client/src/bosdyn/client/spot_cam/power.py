@@ -17,8 +17,7 @@ from bosdyn.client.common import BaseClient, handle_common_header_errors
 
 
 class PowerClient(BaseClient):
-    """A client calling Spot CAM Power service.
-    """
+    """A client calling Spot CAM Power service."""
     default_service_name = 'spot-cam-power'
     service_type = 'bosdyn.api.spot_cam.PowerService'
 
@@ -40,9 +39,10 @@ class PowerClient(BaseClient):
 
     def set_power_status(self, ptz=None, aux1=None, aux2=None, external_mic=None, **kwargs):
         """Turn on/off the desire device.
-        Should not be used on PTZ for non-IR units as it can cause the stream to crash.
-        If the intent is to reset the PTZ autofocus, try PtzClient.initialize_lens instead.
-        If the intent is to recover the PTZ stream in another way, you may need to power cycle the robot.
+
+        Should not be used on PTZ for non-IR units as it can cause the stream to crash. If the
+        intent is to reset the PTZ autofocus, try PtzClient.initialize_lens instead. If the intent
+        is to recover the PTZ stream in another way, you may need to power cycle the robot.
         """
         request = self._build_SetPowerStatusRequest(ptz, aux1, aux2, external_mic)
 
@@ -59,9 +59,10 @@ class PowerClient(BaseClient):
 
     def cycle_power(self, ptz=None, aux1=None, aux2=None, external_mic=None, **kwargs):
         """Turn power off then back on for the desired devices.
-        Should not be used on PTZ for non-IR units as it can cause the stream to crash.
-        If the intent is to reset the PTZ autofocus, try PtzClient.initialize_lens instead.
-        If the intent is to recover the PTZ stream in another way, you may need to power cycle the robot.
+
+        Should not be used on PTZ for non-IR units as it can cause the stream to crash. If the
+        intent is to reset the PTZ autofocus, try PtzClient.initialize_lens instead. If the intent
+        is to recover the PTZ stream in another way, you may need to power cycle the robot.
         """
         request = self._build_CyclePowerRequest(ptz, aux1, aux2, external_mic)
 

@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Image Service Helpers &mdash; Spot 5.1.9 documentation</title>
+  <title>Image Service Helpers &mdash; Spot 5.2.0 documentation</title>
       <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../../../_static/style.css" type="text/css" />
     <link rel="shortcut icon" href="../../../../../_static/bd-favicon.png"/>
@@ -38,7 +38,7 @@
               <img src="../../../../../_static/bd-official-white.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                5.1.9
+                5.2.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
@@ -205,7 +205,8 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/world_object_mutations/README.html">World Object Mutations</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/visualizer/README.html">Visualizer</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/gripper_camera_params/README.html">Gripper Camera Parameters</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../../examples/spot_cam/README.html">Spot CAM</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/spot_cam/README.html">Spot CAM Services</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/spot_cam/README.html#spot-cam-video-core-io-extension-example">Spot Cam Video Core IO Extension Example</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/stitch_front_images/README.html">Stitch Front Images</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/get_depth_plus_visual_image/README.html">Project Depth Data on Visual Images</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/service_customization/custom_parameter_image_server/README.html">Custom Parameter Image Server</a></li>
@@ -249,6 +250,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/graph_nav_command_line/README.html">GraphNav and Recording Service Command Line Interfaces</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/graph_nav_command_line/README.html#example-programs">Example Programs</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/graph_nav_extract_point_cloud/README.html">Graph Nav Extract Point Cloud</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/graph_nav_map_to_usd/README.html">Graph Nav Map to USD</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/graph_nav_view_map/README.html">Graph Nav View Map</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/graph_nav_view_gps/README.html">Graph Nav View GPS Data</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/get_mission_state/README.html">Get Mission State</a></li>
@@ -269,7 +271,8 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../examples/docs/joint_control_examples.html">Joint Control API Examples</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../examples/docs/orbit.html">Orbit</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../../../examples/orbit/hello_orbit/README.html">Hello Orbit</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/orbit/hello_orbit/README.html">Hello Orbit (v0, OrbitClient)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/orbit/orbit_v1_api/README.html">Orbit v1 API (v1, raw HTTP)</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/orbit/export_run_archives/README.html">Export Run Archives</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/orbit/export_site_walk_archives/README.html">Export Sitewalk Archives</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/orbit/anomalies/README.html">Anomalies</a></li>
@@ -324,6 +327,8 @@
 <li class="toctree-l4"><a class="reference internal" href="fault.html">Fault</a></li>
 <li class="toctree-l4"><a class="reference internal" href="frame_helpers.html">Frame Helpers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="graph_nav.html">Graph Nav</a></li>
+<li class="toctree-l4"><a class="reference internal" href="graph_nav_download.html">Graph Nav Download</a></li>
+<li class="toctree-l4"><a class="reference internal" href="graph_nav_upload.html">Graph Nav Upload</a></li>
 <li class="toctree-l4"><a class="reference internal" href="gripper_camera_param.html">Gripper Camera Params</a></li>
 <li class="toctree-l4"><a class="reference internal" href="gps/README.html">GPS</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="gps/aggregator_client.html">Aggregator Client</a></li>
@@ -546,14 +551,14 @@
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bosdyn.client.image_service_helpers.</span></span><span class="sig-name descname"><span class="pre">CameraInterface</span></span><a class="reference internal" href="../../../../../_modules/bosdyn/client/image_service_helpers.html#CameraInterface"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.image_service_helpers.CameraInterface" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></p>
 <p>Abstract class interface for capturing and decoding images from a camera.</p>
-<p>This interface is used by the VisualImageSource to ensure that each image source
-has the expected capture and decoding methods with the right specification.</p>
+<p>This interface is used by the VisualImageSource to ensure that each image source has the
+expected capture and decoding methods with the right specification.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="bosdyn.client.image_service_helpers.CameraInterface.blocking_capture">
 <em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">blocking_capture</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">custom_params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/image_service_helpers.html#CameraInterface.blocking_capture"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.image_service_helpers.CameraInterface.blocking_capture" title="Permalink to this definition"></a></dt>
-<dd><p>Communicates with the camera payload to collect the image data. Ensure this is threadsafe as multiple
-threads/requests may try to call blocking_capture at the same time. A Lock (self.capture_lock) is provided
-as a convenience to help with this.</p>
+<dd><p>Communicates with the camera payload to collect the image data. Ensure this is threadsafe
+as multiple threads/requests may try to call blocking_capture at the same time. A Lock
+(self.capture_lock) is provided as a convenience to help with this.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -778,8 +783,8 @@ request. Should not be ‘None’, but left as an option to accommodate old call
 <dt class="sig sig-object py" id="bosdyn.client.image_service_helpers.ThreadCaptureOutput">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bosdyn.client.image_service_helpers.</span></span><span class="sig-name descname"><span class="pre">ThreadCaptureOutput</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">is_valid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">image</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timestamp</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/image_service_helpers.html#ThreadCaptureOutput"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.image_service_helpers.ThreadCaptureOutput" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Small struct to represent the output of an ImageCaptureThread’s get_latest_captured_image
-in a future-compatible way</p>
+<p>Small struct to represent the output of an ImageCaptureThread’s get_latest_captured_image in
+a future-compatible way.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -797,8 +802,8 @@ supplied in the latest request, and is therefore returned</p></li>
 <dt class="sig sig-object py" id="bosdyn.client.image_service_helpers.ImageCaptureThread">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bosdyn.client.image_service_helpers.</span></span><span class="sig-name descname"><span class="pre">ImageCaptureThread</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image_source_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">capture_func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">capture_period_secs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">custom_params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">capture_func_kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/image_service_helpers.html#ImageCaptureThread"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.image_service_helpers.ImageCaptureThread" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Continuously query and store the last successfully captured image and its
-associated timestamp for a single camera device.</p>
+<p>Continuously query and store the last successfully captured image and its associated
+timestamp for a single camera device.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -834,9 +839,10 @@ affecting the resulting capture</p></li>
 <dl class="py method">
 <dt class="sig sig-object py" id="bosdyn.client.image_service_helpers.ImageCaptureThread.get_latest_captured_image">
 <span class="sig-name descname"><span class="pre">get_latest_captured_image</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">custom_params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">capture_func_kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/image_service_helpers.html#ImageCaptureThread.get_latest_captured_image"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.image_service_helpers.ImageCaptureThread.get_latest_captured_image" title="Permalink to this definition"></a></dt>
-<dd><p>Returns the last found image and timestamp in a ThreadCaptureOutput object if that
-image uses the latest params. Otherwise returns a ThreadCaptureOutput object with
-is_valid = False and capture/timestamp as None.</p>
+<dd><p>Returns the last found image and timestamp in a ThreadCaptureOutput object if that image
+uses the latest params.</p>
+<p>Otherwise returns a ThreadCaptureOutput object with is_valid = False and capture/timestamp
+as None.</p>
 </dd></dl>
 
 <dl class="py method">

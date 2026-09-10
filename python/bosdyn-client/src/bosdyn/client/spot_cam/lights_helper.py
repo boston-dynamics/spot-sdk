@@ -54,9 +54,9 @@ class LightsHelper:
 
 
 def set_lights_with_freq_and_brightness(stop_event, lighting_client, frequency, brightness):
-    """Given the threading event, lighting client, desired light frequency and brightness,
-    this helper will blink the Spot CAM lights until threading event is set to stop. This
-    function must be used within a thread to prevent it from running forever.
+    """Given the threading event, lighting client, desired light frequency and brightness, this
+    helper will blink the Spot CAM lights until threading event is set to stop. This function must
+    be used within a thread to prevent it from running forever.
 
     Args:
         stop_event (threading.Event()): Threading event used for stopping and returning.
@@ -75,7 +75,7 @@ def set_lights_with_freq_and_brightness(stop_event, lighting_client, frequency, 
 
 
 def _set_lights_brightness(lighting_client, brightness, timeout=1):
-    """Helper to set LED brightnesses using default RPC settings"""
+    """Helper to set LED brightnesses using default RPC settings."""
     lighting_client.set_led_brightness(brightness, timeout=timeout)
 
 

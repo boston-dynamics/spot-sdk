@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>GPS Listener &mdash; Spot 5.1.9 documentation</title>
+  <title>GPS Listener &mdash; Spot 5.2.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
     <link rel="shortcut icon" href="../../../_static/bd-favicon.png"/>
@@ -38,7 +38,7 @@
               <img src="../../../_static/bd-official-white.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                5.1.9
+                5.2.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -205,7 +205,8 @@
 <li class="toctree-l4"><a class="reference internal" href="../world_object_mutations/README.html">World Object Mutations</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../visualizer/README.html">Visualizer</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../gripper_camera_params/README.html">Gripper Camera Parameters</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../spot_cam/README.html">Spot CAM</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../spot_cam/README.html">Spot CAM Services</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../spot_cam/README.html#spot-cam-video-core-io-extension-example">Spot Cam Video Core IO Extension Example</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../stitch_front_images/README.html">Stitch Front Images</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../get_depth_plus_visual_image/README.html">Project Depth Data on Visual Images</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../service_customization/custom_parameter_image_server/README.html">Custom Parameter Image Server</a></li>
@@ -249,6 +250,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../graph_nav_command_line/README.html">GraphNav and Recording Service Command Line Interfaces</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../graph_nav_command_line/README.html#example-programs">Example Programs</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../graph_nav_extract_point_cloud/README.html">Graph Nav Extract Point Cloud</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../graph_nav_map_to_usd/README.html">Graph Nav Map to USD</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../graph_nav_view_map/README.html">Graph Nav View Map</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../graph_nav_view_gps/README.html">Graph Nav View GPS Data</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../get_mission_state/README.html">Get Mission State</a></li>
@@ -269,7 +271,8 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../docs/joint_control_examples.html">Joint Control API Examples</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../docs/orbit.html">Orbit</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../orbit/hello_orbit/README.html">Hello Orbit</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../orbit/hello_orbit/README.html">Hello Orbit (v0, OrbitClient)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../orbit/orbit_v1_api/README.html">Orbit v1 API (v1, raw HTTP)</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../orbit/export_run_archives/README.html">Export Run Archives</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../orbit/export_site_walk_archives/README.html">Export Sitewalk Archives</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../orbit/anomalies/README.html">Anomalies</a></li>
@@ -324,6 +327,8 @@
 <li class="toctree-l4"><a class="reference internal" href="../../bosdyn-client/src/bosdyn/client/fault.html">Fault</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../bosdyn-client/src/bosdyn/client/frame_helpers.html">Frame Helpers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../bosdyn-client/src/bosdyn/client/graph_nav.html">Graph Nav</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../bosdyn-client/src/bosdyn/client/graph_nav_download.html">Graph Nav Download</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../bosdyn-client/src/bosdyn/client/graph_nav_upload.html">Graph Nav Upload</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../bosdyn-client/src/bosdyn/client/gripper_camera_param.html">Gripper Camera Params</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../bosdyn-client/src/bosdyn/client/gps/README.html">GPS</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../bosdyn-client/src/bosdyn/client/gps/aggregator_client.html">Aggregator Client</a></li>
@@ -565,13 +570,99 @@ Development Kit License (20191101-BDSDK-SL).
 </pre></div>
 </div>
 </section>
-<section id="building-the-core-io-extensions">
-<h2>Building the Core IO extensions<a class="headerlink" href="#building-the-core-io-extensions" title="Permalink to this heading"></a></h2>
-<p>The Trimble SPS986 and Leica GA03 examples are intended to be run as ARM architecture Core IO extensions. To build these extensions on an x86/AMD development environment, first run the commands in the section about “creating docker images on a development environment for a different architecture” <a class="reference external" href="https://dev.bostondynamics.com/docs/payload/docker_containers.html#build-docker-images">here</a>. After this one-time setup, you can use the <code class="docutils literal notranslate"><span class="pre">build_extension.py</span></code> script to create the Docker image via the command below, with further instructions <a class="reference internal" href="../extensions/README.html"><span class="doc">here</span></a>.</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>python3<span class="w"> </span>build_extension.py<span class="w"> </span>--dockerfile-paths<span class="w"> </span>../gps_service/Dockerfile<span class="w"> </span>--build-image-tags<span class="w"> </span>gps_listener_image_arm64:latest<span class="w"> </span>--image-archive<span class="w"> </span>gps_listener_image_arm64.tgz<span class="w"> </span>--package-dir<span class="w"> </span>../gps_service/extensions/trimble_sps986/<span class="w"> </span>--spx<span class="w"> </span>trimble_listener.spx
+<section id="building-the-core-i-o-extensions">
+<h2>Building the CORE I/O extensions<a class="headerlink" href="#building-the-core-i-o-extensions" title="Permalink to this heading"></a></h2>
+<p>The Trimble SPS986 and Leica GA03 examples are intended to be run as ARM architecture CORE I/O extensions. To build these extensions on an x86/AMD development environment, first run the commands in the section about “creating docker images on a development environment for a different architecture” <a class="reference external" href="../../../docs/payload/docker_containers.html#build-docker-images">here</a>. After this one-time setup, you can use the <code class="docutils literal notranslate"><span class="pre">build_extension.py</span></code> script to create the Docker image via the command below, with further instructions <a class="reference internal" href="../extensions/README.html"><span class="doc">here</span></a>.</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>python3<span class="w"> </span>../extensions/build_extension.py<span class="w"> </span>--dockerfile-paths<span class="w"> </span>Dockerfile<span class="w"> </span>--build-image-tags<span class="w"> </span>gps_listener_image_arm64:latest<span class="w"> </span>--image-archive<span class="w"> </span>gps_listener_image_arm64.tgz<span class="w"> </span>--package-dir<span class="w"> </span>extensions/trimble_sps986/<span class="w"> </span>--spx<span class="w"> </span>trimble_listener.spx
 </pre></div>
 </div>
-<p>The trimble_listener.spx file can then be uploaded to the Core IO through its webpage.</p>
+<p>The trimble_listener.spx file can then be uploaded to the CORE I/O through the Extensions tab on the CORE I/O webpage.</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>python3<span class="w"> </span>../extensions/build_extension.py<span class="w"> </span>--dockerfile-paths<span class="w"> </span>Dockerfile<span class="w"> </span>--build-image-tags<span class="w"> </span>gps_listener_image_arm64:latest<span class="w"> </span>--image-archive<span class="w"> </span>gps_listener_image_arm64.tgz<span class="w"> </span>--package-dir<span class="w"> </span>extensions/leica_ga03/<span class="w"> </span>--udev-rule<span class="w"> </span>extensions/leica_ga03/99-leica_gps_rules.rules<span class="w"> </span>--spx<span class="w"> </span>~/Downloads/leica_listener.spx
+</pre></div>
+</div>
+<p>The leica_listener.spx file can then be uploaded to the CORE I/O through the Extensions tab on the CORE I/O webpage.
+<strong>Known Issues</strong> The Leica extension will have to be restarted each time the robot reboots so the USB port mounts correctly.</p>
+</section>
+<section id="configuring-the-sensors">
+<h2>Configuring the Sensors<a class="headerlink" href="#configuring-the-sensors" title="Permalink to this heading"></a></h2>
+<section id="configuring-trimble-sps986">
+<h3>Configuring Trimble SPS986<a class="headerlink" href="#configuring-trimble-sps986" title="Permalink to this heading"></a></h3>
+<p>To configure the Trimble SPS986 Sensor to use with the CORE I/O extension.</p>
+<ol class="simple">
+<li><p>Connect to the Trimble’s WiFi</p></li>
+<li><p>Go to http://192.168.142.1 and log in</p></li>
+<li><p>Enable the NMEA message output</p>
+<ul class="simple">
+<li><p>Navigate to <code class="docutils literal notranslate"><span class="pre">I/O</span> <span class="pre">Configuration</span></code>.</p></li>
+<li><p>In the row for port <code class="docutils literal notranslate"><span class="pre">5018</span></code>, click on <code class="docutils literal notranslate"><span class="pre">TCP/IP</span></code>.</p></li>
+<li><p>Change the output type to <code class="docutils literal notranslate"><span class="pre">NMEA</span></code> and configure the following settings:</p>
+<ul>
+<li><p>GGA: 2 Hz</p></li>
+<li><p>GST: 2 Hz</p></li>
+<li><p>ZDA: 2 Hz</p></li>
+</ul>
+</li>
+<li><p>Press <code class="docutils literal notranslate"><span class="pre">OK</span></code> to apply changes</p></li>
+</ul>
+</li>
+<li><p>Disable the logging</p>
+<ul class="simple">
+<li><p>Navigate to Data Logging Menu</p></li>
+<li><p>Navigate to Summary</p></li>
+<li><p>Uncheck the Enable box</p></li>
+</ul>
+</li>
+<li><p>Set <code class="docutils literal notranslate"><span class="pre">Positioning</span> <span class="pre">Mode</span></code> to <code class="docutils literal notranslate"><span class="pre">Least</span> <span class="pre">Squares</span></code></p></li>
+<li><p>Enable all satellites</p></li>
+<li><p>Configure the MSS Service to <code class="docutils literal notranslate"><span class="pre">Auto/RTXNA</span></code></p>
+<ul class="simple">
+<li><p>Note: if the GPS is located in a different continent than North America it will be set to a different MSS Service but will still start with <code class="docutils literal notranslate"><span class="pre">Auto</span></code></p></li>
+</ul>
+</li>
+</ol>
+</section>
+<section id="configuring-leica-ga03-sensor">
+<h3>Configuring Leica GA03 Sensor<a class="headerlink" href="#configuring-leica-ga03-sensor" title="Permalink to this heading"></a></h3>
+<p>To configure the Leica GA03 Sensor to use with the CORE I/O extension.</p>
+<ol class="simple">
+<li><p>Download the Novatel configuration application from Novatel’s website.</p></li>
+<li><p>Plug the leica sensor into a computer</p></li>
+<li><p>Start the Novatel application</p></li>
+<li><p>Add a new mounting device as USB 0</p></li>
+<li><p>Set the positioning to <code class="docutils literal notranslate"><span class="pre">Receive</span> <span class="pre">(Rover)</span></code></p></li>
+<li><p>Set the ports</p>
+<ul class="simple">
+<li><p>Set USB1</p>
+<ul>
+<li><p>Input: <code class="docutils literal notranslate"><span class="pre">Novatel</span></code></p></li>
+<li><p>Output: <code class="docutils literal notranslate"><span class="pre">Novatel</span></code></p></li>
+</ul>
+</li>
+<li><p>Set USB2</p>
+<ul>
+<li><p>Input: <code class="docutils literal notranslate"><span class="pre">None</span></code></p></li>
+<li><p>Output: <code class="docutils literal notranslate"><span class="pre">NMEA</span></code></p></li>
+<li><p>Logging: <code class="docutils literal notranslate"><span class="pre">GGA</span></code> <code class="docutils literal notranslate"><span class="pre">GST</span></code> <code class="docutils literal notranslate"><span class="pre">ZDA</span></code></p>
+<ul>
+<li><p>Select the gear symbol</p></li>
+<li><p>Set trigger to <code class="docutils literal notranslate"><span class="pre">ONTIME</span></code> and Period to <code class="docutils literal notranslate"><span class="pre">.5</span></code> for <code class="docutils literal notranslate"><span class="pre">GGA</span></code> <code class="docutils literal notranslate"><span class="pre">GST</span></code> <code class="docutils literal notranslate"><span class="pre">ZDA</span></code></p></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>(OPTIONAL) Add a correction service subscription</p>
+<ul class="simple">
+<li><p>Get an authorization code from Leica that matches the serial of your device</p></li>
+<li><p>Navigate to Device</p></li>
+<li><p>Navigate to Details</p></li>
+<li><p>Paste the authorization code under Apply Auth Code</p></li>
+<li><p>Press <code class="docutils literal notranslate"><span class="pre">apply</span></code></p></li>
+</ul>
+</li>
+</ol>
+</section>
 </section>
 <section id="understanding-the-example">
 <h2>Understanding the Example<a class="headerlink" href="#understanding-the-example" title="Permalink to this heading"></a></h2>

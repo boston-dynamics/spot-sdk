@@ -8,11 +8,13 @@ Development Kit License (20191101-BDSDK-SL).
 
 # Hello Orbit
 
-This example program is the introductory programming example for the Orbit client, which uses the Orbit web API. It demonstrates how to initialize the Orbit client, authenticate with an API token, and finally list the names of the robots connected to Orbit.
+This example program is the introductory programming example for the Orbit client, which uses the Orbit **v0** web API via `OrbitClient`. It demonstrates how to initialize the Orbit client, authenticate with an API token, and finally list the names of the robots connected to Orbit.
+
+For an equivalent walkthrough against the new **v1** API (introduced in Orbit v5.2), see the [`orbit_v1_api`](../orbit_v1_api/README.md) example, which uses raw HTTP because `OrbitClient` targets v0.
 
 ## Understanding Orbit Web API
 
-Please begin with the [Quickstart Guide](../../../../docs/python/quickstart.md) to get your Python programming environment set up properly. Then, specifically for this example, look at the [Orbit API Docs](../../../../docs/concepts/orbit/orbit_api.md). For a complete list of resources and their methods, see the <a href="../../../../docs/orbit/docs.html">Orbit API Reference</a>.
+Please begin with the [Quickstart Guide](../../../../docs/python/quickstart.md) to get your Python programming environment set up properly. Then, specifically for this example, look at the [Orbit API Docs](../../../../docs/concepts/orbit/orbit_api.md).
 
 ## Setup Dependencies
 

@@ -20,8 +20,17 @@ from bosdyn.deprecated import moved_to
 
 from .channel import TransportError, translate_exception
 from .data_chunk import chunk_message, parse_from_chunks
-from .exceptions import (CustomParamError, Error, InternalServerError, InvalidRequestError,
-                         LeaseUseError, LicenseError, ResponseError, UnsetStatusError)
+from .exceptions import (
+    CustomParamError,
+    Error,
+    InternalDeserializationError,
+    InternalServerError,
+    InvalidRequestError,
+    LeaseUseError,
+    LicenseError,
+    ResponseError,
+    UnsetStatusError,
+)
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -31,7 +40,10 @@ DEFAULT_RPC_TIMEOUT = 30  # seconds
 
 
 def common_header_errors(response):
-    """Return an exception based on common response header. None if no error."""
+    """Return an exception based on common response header.
+
+    None if no error.
+    """
     if response.header.error.code == CommonError.CODE_OK:
         return None
     if response.header.error.code == CommonError.CODE_UNSPECIFIED:
@@ -44,8 +56,10 @@ def common_header_errors(response):
 
 
 def streaming_common_header_errors(response_iterator):
-    """Return an exception based on common response header for a streaming
-       response iterator. None if no error."""
+    """Return an exception based on common response header for a streaming response iterator.
+
+    None if no error.
+    """
     for response in response_iterator:
         error = common_header_errors(response)
         if error is not None:
@@ -55,7 +69,10 @@ def streaming_common_header_errors(response_iterator):
 
 
 def common_lease_errors(response):
-    """Return an exception based on lease use result. None if no error."""
+    """Return an exception based on lease use result.
+
+    None if no error.
+    """
     if hasattr(response, 'lease_use_result'):
         # On the off chance the protobuf message has a lease_use_result field but the instance does
         # not have it filled out...
@@ -76,8 +93,10 @@ def common_lease_errors(response):
 
 
 def streaming_common_lease_errors(response_iterator):
-    """Return an exception based on lease use result for a streaming
-       response iterator. None if no error."""
+    """Return an exception based on lease use result for a streaming response iterator.
+
+    None if no error.
+    """
     for response in response_iterator:
         error = common_lease_errors(response)
         if error is not None:
@@ -89,7 +108,9 @@ def streaming_common_lease_errors(response_iterator):
 def custom_params_error(response, status_value=None, status_field_name='status',
                         error_field_name='custom_param_error', total_response=None):
     """Return an exception based on having a custom parameter status and message.
-    None if no error."""
+
+    None if no error.
+    """
     if status_value is None:
         status_value = response.STATUS_CUSTOM_PARAMS_ERROR
     if getattr(response, status_field_name) == status_value:
@@ -98,8 +119,8 @@ def custom_params_error(response, status_value=None, status_field_name='status',
 
 
 def error_pair(error_message):
-    """Creates a pair of an error class and the associated docstring as the error message
-    which can be used by the error_factory.
+    """Creates a pair of an error class and the associated docstring as the error message which can
+    be used by the error_factory.
 
     Args:
         error_message: A class that inherits from the python Error class.
@@ -153,8 +174,7 @@ def error_factory(response, status, status_to_string, status_to_error):
             if err is not None:
                 return err
         return None
-    else:
-        return error_type(response=response, error_message=message)
+    return error_type(response=response, error_message=message)
 
 
 def handle_unset_status_error(unset, field='status', statustype=None):
@@ -190,8 +210,7 @@ def handle_common_header_errors(func):
         # pylint: disable=no-value-for-parameter
         if isinstance(args[0], list):
             return streaming_common_header_errors(*args) or func(*args, **kwargs)
-        else:
-            return common_header_errors(*args) or func(*args, **kwargs)
+        return common_header_errors(*args) or func(*args, **kwargs)
 
     return wrapper
 
@@ -204,8 +223,7 @@ def handle_lease_use_result_errors(func):
         # pylint: disable=no-value-for-parameter
         if isinstance(args[0], list):
             return streaming_common_lease_errors(*args) or func(*args, **kwargs)
-        else:
-            return common_lease_errors(*args) or func(*args, **kwargs)
+        return common_lease_errors(*args) or func(*args, **kwargs)
 
     return wrapper
 
@@ -244,8 +262,10 @@ def handle_license_errors(func):
 
 def handle_license_errors_if_present(func):
     """Decorate "error from response" functions to handle typical license errors.
-    Does not raise an error for STATUS_UNKNOWN.
-    Use for responses that may only sometimes fill out the license status."""
+
+    Does not raise an error for STATUS_UNKNOWN. Use for responses that may only sometimes fill out
+    the license status.
+    """
 
     @functools.wraps(func)
     def wrapper(*args, **kwargs):
@@ -258,13 +278,13 @@ def common_license_errors(response, allow_unset=False):
     license_status = response.license_status
     if allow_unset and license_status == license_pb2.LicenseInfo.STATUS_UNKNOWN:
         return None
-    elif license_status != license_pb2.LicenseInfo.STATUS_VALID:
+    if license_status != license_pb2.LicenseInfo.STATUS_VALID:
         return LicenseError(response)
     return None
 
 
 def maybe_raise(exc):
-    """raise the provided exception if it is not None"""
+    """Raise the provided exception if it is not None."""
     if exc is not None:
         raise exc
 
@@ -332,6 +352,7 @@ class BaseClient(object):
         self.lease_wallet = None
         self.client_name = None
         self.executor = None
+        self._channel_reset_fn = None
 
     @staticmethod
     @deprecated(reason='Forces serialization even if the logging is not happening.  Do not use.',
@@ -399,8 +420,8 @@ class BaseClient(object):
         """Returns result of calling rpc_method(request, kwargs) after running processors.
 
         value_from_response and error_from_response should not raise their own exceptions!
-        Additionally, value_from_response and error_from_response that are not common handlers
-        must accept streaming responses if it is a grpc streaming response.
+        Additionally, value_from_response and error_from_response that are not common handlers must
+        accept streaming responses if it is a grpc streaming response.
         """
         logger = self._get_logger(rpc_method)
         if isinstance(rpc_method, grpc.StreamUnaryMultiCallable) or isinstance(
@@ -416,9 +437,13 @@ class BaseClient(object):
             timeout = kwargs.pop('timeout', DEFAULT_RPC_TIMEOUT)
             response = rpc_method(request, timeout=timeout, **kwargs)
         except TransportError as e:
+            translated = translate_exception(e)
+            if (isinstance(translated, InternalDeserializationError) and
+                    self._channel_reset_fn is not None):
+                self.channel = self._channel_reset_fn()
             # Use the "raise from None" pattern to reset the exception's context, which produces
             # confusing stack traces.
-            raise translate_exception(e) from None
+            raise translated from None
 
         if isinstance(rpc_method, grpc.UnaryStreamMultiCallable) or isinstance(
                 rpc_method, grpc.StreamStreamMultiCallable):
@@ -438,15 +463,13 @@ class BaseClient(object):
                 msg = self._apply_response_processors(msg)
                 logger.debug('response: %s\n%s', rpc_method._method, msg)
                 return self.handle_response(msg, error_from_response, value_from_response)
-            else:
-                responses = self.update_response_iterator(response, logger, rpc_method,
-                                                          is_blocking=True)
-                return self.handle_response_streaming(list(responses), error_from_response,
-                                                      value_from_response)
-        else:
-            response = self._apply_response_processors(response)
-            logger.debug('response: %s\n%s', rpc_method._method, response)
-            return self.handle_response(response, error_from_response, value_from_response)
+            responses = self.update_response_iterator(response, logger, rpc_method,
+                                                      is_blocking=True)
+            return self.handle_response_streaming(list(responses), error_from_response,
+                                                  value_from_response)
+        response = self._apply_response_processors(response)
+        logger.debug('response: %s\n%s', rpc_method._method, response)
+        return self.handle_response(response, error_from_response, value_from_response)
 
     def handle_response(self, response, error_from_response, value_from_response):
         if error_from_response is not None:
@@ -488,6 +511,12 @@ class BaseClient(object):
         def on_finish(fut):
             try:
                 result = fut.result()
+            except TransportError as exc:
+                translated = translate_exception(exc)
+                if (isinstance(translated, InternalDeserializationError) and
+                        self._channel_reset_fn is not None):
+                    self.channel = self._channel_reset_fn()
+                logger.debug('async exception: %s\n%s\n', rpc_method._method, exc)
             except Exception as exc:  # pylint: disable=broad-except
                 logger.debug('async exception: %s\n%s\n', rpc_method._method, exc)
             else:
@@ -509,8 +538,9 @@ class BaseClient(object):
 
         value_from_response and error_from_response should not raise their own exceptions.
 
-        A version of 'call_async' for streaming rpcs. True async streaming calls are not supported by
-        python grpc. Instead, this call creates a thread that runs the synchronous 'call' function.
+        A version of 'call_async' for streaming rpcs. True async streaming calls are not supported
+        by python grpc. Instead, this call creates a thread that runs the synchronous 'call'
+        function.
         """
         request = self._apply_request_processors(request, copy_request=copy_request)
         if self.executor is None:
@@ -608,7 +638,7 @@ class FutureWrapper():
 
 
 def get_self_ip(robot_hostname):
-    """ Get the IP address of the ethernet or WiFi interface used to talk to the robot."""
+    """Get the IP address of the ethernet or WiFi interface used to talk to the robot."""
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     try:
         # doesn't even have to be reachable

@@ -64,5 +64,5 @@ Aborted (core dumped)
 If so, execute the following command:
 
 ```
-sudo apt-get install python3-pyqt5
+sudo apt-get install python3-pyqt6
 ```

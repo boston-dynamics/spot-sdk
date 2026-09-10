@@ -8,7 +8,7 @@ Development Kit License (20191101-BDSDK-SL).
 
 # Mission Service
 
-The Mission Service is a way for API clients to specify high level autonomous behaviors for Spot using behavior trees.
+The Mission Service is a way for API clients to specify high-level autonomous behaviors for Spot using behavior trees.
 
 ## Behavior trees
 

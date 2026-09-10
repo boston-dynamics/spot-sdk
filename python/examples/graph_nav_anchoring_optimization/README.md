@@ -18,7 +18,7 @@ These examples require the bosdyn API and client to be installed, and must be ru
 python3 -m pip install -r requirements.txt
 ```
 
-The example also requires matplotlib. Depending on your system you may need to set up a [backend](https://matplotlib.org/stable/tutorials/introductory/usage.html#what-is-a-backend) for it to display properly. One possible backend to use is Qt5: `python3 -m pip install pyqt5` and set the environment variable `MPLBACKEND` to `qt5agg`.
+The example also requires matplotlib. Depending on your system you may need to set up a [backend](https://matplotlib.org/stable/tutorials/introductory/usage.html#what-is-a-backend) for it to display properly. One possible backend to use is Qt5: `python3 -m pip install pyqt6` and set the environment variable `MPLBACKEND` to `qtAgg`.
 
 ## Running the Example
 

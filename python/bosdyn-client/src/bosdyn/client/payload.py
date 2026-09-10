@@ -33,7 +33,7 @@ class PayloadClient(BaseClient):
         super(PayloadClient, self).__init__(payload_service.PayloadServiceStub)
 
     def list_payloads(self, **kw_args):
-        """List all payloads registered on the robot
+        """List all payloads registered on the robot.
 
         Args:
           kw_args:              Extra arguments to pass to grpc call invocation.
@@ -49,7 +49,7 @@ class PayloadClient(BaseClient):
                          error_from_response=common_header_errors, **kw_args)
 
     def list_payloads_async(self, **kw_args):
-        """List all payloads registered on the robot
+        """List all payloads registered on the robot.
 
         Args:
           kw_args:              Extra arguments to pass to grpc call invocation.

@@ -15,8 +15,7 @@ from bosdyn.client.common import BaseClient, handle_common_header_errors
 
 
 class HealthClient(BaseClient):
-    """A client calling Spot CAM Health service.
-    """
+    """A client calling Spot CAM Health service."""
     default_service_name = 'spot-cam-health'
     service_type = 'bosdyn.api.spot_cam.HealthService'
 
@@ -49,7 +48,8 @@ class HealthClient(BaseClient):
                                self._health_error_from_response, copy_request=False, **kwargs)
 
     def get_temperature(self, **kwargs):
-        """Retrieve a list of thermometers measuring the temperature (mC) of corresponding on-board devices."""
+        """Retrieve a list of thermometers measuring the temperature (mC) of corresponding on-board
+        devices."""
         request = health_pb2.GetTemperatureRequest()
         return self.call(self._stub.GetTemperature, request, self._get_temperature_from_response,
                          self._health_error_from_response, copy_request=False, **kwargs)
@@ -62,7 +62,8 @@ class HealthClient(BaseClient):
                                self._health_error_from_response, copy_request=False, **kwargs)
 
     def get_system_log(self, **kwargs):
-        """Retrieve a list of thermometers measuring the temperature (mC) of corresponding on-board devices."""
+        """Retrieve a list of thermometers measuring the temperature (mC) of corresponding on-board
+        devices."""
         request = health_pb2.GetSystemLogRequest()
         return self.call(self._stub.GetSystemLog, request, self._get_system_log_from_response,
                          self._health_error_from_response, copy_request=False, **kwargs)

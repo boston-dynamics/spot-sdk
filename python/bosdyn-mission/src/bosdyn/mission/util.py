@@ -18,6 +18,7 @@ import google.protobuf.struct_pb2
 import google.protobuf.text_format
 from deprecated.sphinx import deprecated
 from google.protobuf import message_factory
+from google.protobuf.timestamp_pb2 import Timestamp
 
 from bosdyn.api import alerts_pb2, data_acquisition_pb2, geometry_pb2, gripper_camera_param_pb2
 from bosdyn.api.autowalk import walks_pb2
@@ -197,6 +198,8 @@ def python_var_to_value(var) -> util_pb2.ConstantValue:
         value.float_value = var
     elif isinstance(var, str):
         value.string_value = var
+    elif isinstance(var, Timestamp):
+        value.timestamp_value.CopyFrom(var)
     elif isinstance(var, util_pb2.ConstantValue):
         value.CopyFrom(var)
     elif isinstance(var, google.protobuf.message.Message):
@@ -212,27 +215,28 @@ def python_var_to_value(var) -> util_pb2.ConstantValue:
 
 
 def python_type_to_pb_type(var) -> util_pb2.VariableDeclaration.Type.ValueType:
-    """Returns the protobuf-schema variable type that corresponds to the given
-    variable."""
+    """Returns the protobuf-schema variable type that corresponds to the given variable."""
     if isinstance(var, bool):
         return util_pb2.VariableDeclaration.TYPE_BOOL
-    elif isinstance(var, int):
+    if isinstance(var, int):
         return util_pb2.VariableDeclaration.TYPE_INT
-    elif isinstance(var, float):
+    if isinstance(var, float):
         return util_pb2.VariableDeclaration.TYPE_FLOAT
-    elif isinstance(var, str):
+    if isinstance(var, str):
         return util_pb2.VariableDeclaration.TYPE_STRING
+    if isinstance(var, Timestamp):
+        return util_pb2.VariableDeclaration.TYPE_TIMESTAMP
     # Special case for List and Dict value to allow using this function
     # with ConstantValue.WhichOneof() to return the correct pb type.
-    elif isinstance(var, util_pb2.ConstantValue.ListValue):
+    if isinstance(var, util_pb2.ConstantValue.ListValue):
         return util_pb2.VariableDeclaration.TYPE_LIST
-    elif isinstance(var, util_pb2.ConstantValue.DictValue):
+    if isinstance(var, util_pb2.ConstantValue.DictValue):
         return util_pb2.VariableDeclaration.TYPE_DICT
-    elif isinstance(var, google.protobuf.message.Message):
+    if isinstance(var, google.protobuf.message.Message):
         return util_pb2.VariableDeclaration.TYPE_MESSAGE
-    elif isinstance(var, collections.abc.Mapping):
+    if isinstance(var, collections.abc.Mapping):
         return util_pb2.VariableDeclaration.TYPE_DICT
-    elif isinstance(var, collections.abc.Iterable):
+    if isinstance(var, collections.abc.Iterable):
         return util_pb2.VariableDeclaration.TYPE_LIST
     raise InvalidConversion(var, util_pb2.VariableDeclaration.Type.DESCRIPTOR.full_name)
 
@@ -271,23 +275,21 @@ def is_string_identifier(string):
 
 
 def field_desc_to_pb_type(field_desc):
-    """Returns the protobuf-schema variable type that corresponds to the given
-    descriptor."""
+    """Returns the protobuf-schema variable type that corresponds to the given descriptor."""
     if field.label == FieldDescriptor.LABEL_REPEATED:
         return util_pb2.VariableDeclaration.TYPE_LIST
-    elif field_desc.type in (field_desc.TYPE_UINT32, field_desc.TYPE_UINT64,
-                             field_desc.TYPE_FIXED32, field_desc.TYPE_FIXED64,
-                             field_desc.TYPE_INT32, field_desc.TYPE_INT64, field_desc.TYPE_SFIXED64,
-                             field_desc.TYPE_SINT32, field_desc.TYPE_SINT64,
-                             field_desc.TYPE_SFIXED32):
+    if field_desc.type in (field_desc.TYPE_UINT32, field_desc.TYPE_UINT64, field_desc.TYPE_FIXED32,
+                           field_desc.TYPE_FIXED64, field_desc.TYPE_INT32, field_desc.TYPE_INT64,
+                           field_desc.TYPE_SFIXED64, field_desc.TYPE_SINT32, field_desc.TYPE_SINT64,
+                           field_desc.TYPE_SFIXED32):
         return util_pb2.VariableDeclaration.TYPE_INT
-    elif field_desc.type in (field_desc.TYPE_DOUBLE, field_desc.TYPE_FLOAT):
+    if field_desc.type in (field_desc.TYPE_DOUBLE, field_desc.TYPE_FLOAT):
         return util_pb2.VariableDeclaration.TYPE_FLOAT
-    elif field_desc.type == field_desc.TYPE_BOOL:
+    if field_desc.type == field_desc.TYPE_BOOL:
         return util_pb2.VariableDeclaration.TYPE_BOOL
-    elif field_desc.type == field_desc.TYPE_STRING:
+    if field_desc.type == field_desc.TYPE_STRING:
         return util_pb2.VariableDeclaration.TYPE_STRING
-    elif field_desc.type == field_desc.TYPE_MESSAGE:
+    if field_desc.type == field_desc.TYPE_MESSAGE:
         if field.message_type.GetOptions().map_entry:
             return util_pb2.VariableDeclaration.TYPE_DICT
         return util_pb2.VariableDeclaration.TYPE_MESSAGE
@@ -295,8 +297,7 @@ def field_desc_to_pb_type(field_desc):
 
 
 def safe_pb_type_to_string(pb_type):
-    """Return the stringified VariableDeclaration.Type, or "<unknown>" if the
-    type is invalid."""
+    """Return the stringified VariableDeclaration.Type, or "<unknown>" if the type is invalid."""
     try:
         return util_pb2.VariableDeclaration.Type.Name(pb_type)
     except ValueError:
@@ -329,8 +330,7 @@ class ResultFromProto:
 
 
 def proto_enum_to_result_constant(proto_msg):
-    """Returns a Result enum from a util_pb2.Result, or throws
-    InvalidConversion error."""
+    """Returns a Result enum from a util_pb2.Result, or throws InvalidConversion error."""
     try:
         return ResultFromProto.results_from_proto[proto_msg]
     except KeyError:
@@ -338,8 +338,7 @@ def proto_enum_to_result_constant(proto_msg):
 
 
 def result_constant_to_proto_enum(result):
-    """Returns a protobuf version of the Result enum, RESULT_UNKNOWN on
-    error."""
+    """Returns a protobuf version of the Result enum, RESULT_UNKNOWN on error."""
     if not isinstance(result, constants.Result):
         raise InvalidConversion(result, util_pb2.Result.DESCRIPTOR.full_name)
     try:
@@ -408,10 +407,9 @@ def get_value_from_value_message(node, blackboard, value_msg, is_validation=Fals
     if value_msg.HasField(str("constant")):
         constant = value_msg.constant
         return get_value_from_constant_value_message(constant)
-    elif value_msg.HasField(str("runtime_var")):
+    if value_msg.HasField(str("runtime_var")):
         return blackboard.read(node, value_msg.runtime_var.name)
-    else:
-        raise AttributeError("Value must be a runtime variable or constant.")
+    raise AttributeError("Value must be a runtime variable or constant.")
 
 
 safe_pb_enum_to_string = moved_to(_bosdyn_client_safe_pb_enum_to_string, version='4.0.0')
@@ -420,14 +418,12 @@ safe_pb_enum_to_string = moved_to(_bosdyn_client_safe_pb_enum_to_string, version
 def create_value(
     var: Union[bool, int, float, str, google.protobuf.message.Message, list,
                dict]) -> util_pb2.Value:
-    """Returns a Value message containing a ConstantValue with the appropriate
-    oneof set."""
+    """Returns a Value message containing a ConstantValue with the appropriate oneof set."""
     return util_pb2.Value(constant=python_var_to_value(var))
 
 
 def define_blackboard(dict_values: Dict[str, util_pb2.Value]) -> nodes_pb2.DefineBlackboard:
-    """Returns a DefineBlackboard protobuf message for the key-value pairs in
-    `dict_values`."""
+    """Returns a DefineBlackboard protobuf message for the key-value pairs in `dict_values`."""
     node_to_return = nodes_pb2.DefineBlackboard()
     for (key, value) in dict_values.items():
         node_to_return.blackboard_variables.add().CopyFrom(util_pb2.KeyValue(key=key, value=value))
@@ -436,8 +432,7 @@ def define_blackboard(dict_values: Dict[str, util_pb2.Value]) -> nodes_pb2.Defin
 
 def set_blackboard(dict_values: Dict[str, util_pb2.Value],
                    subfield_values: Dict[str, util_pb2.Value] = {}) -> nodes_pb2.SetBlackboard:
-    """Returns a SetBlackboard protobuf message for the key-value pairs in
-    `dict_values`."""
+    """Returns a SetBlackboard protobuf message for the key-value pairs in `dict_values`."""
     node_to_return = nodes_pb2.SetBlackboard()
     for (key, value) in dict_values.items():
         node_to_return.blackboard_variables.add().CopyFrom(util_pb2.KeyValue(key=key, value=value))
@@ -464,8 +459,7 @@ _SEVERITY_TO_LOG_LEVEL = {
 
 
 def severity_to_log_level(text_level):
-    """Converts alert data severity enum to a logger level for printing
-    purposes."""
+    """Converts alert data severity enum to a logger level for printing purposes."""
     return _SEVERITY_TO_LOG_LEVEL.get(text_level, logging.INFO)
 
 

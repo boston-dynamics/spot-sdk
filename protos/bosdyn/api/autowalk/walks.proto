@@ -682,14 +682,9 @@ message WalkInterrupt {
 // to the dock if the battery gets too low.  Use this message to control
 // when this behavior happens.
 message BatteryMonitor {
-    // Once charging, the robot will continue to charge until the battery
-    // level is greater than or equal to this threshold, at which point in
-    // time, the mission will start.
-    float battery_start_threshold = 2;
 
-    // If the battery level is less than or equal to this threshold, the
-    // robot will stop what it is currently doing and return to the dock.
-    // Once the battery level is greater than or equal to the battery start
-    // threshold, the mission will resume.
+    // Resume mission once battery reaches or exceeds this percent.
+    float battery_start_threshold = 2;
+    // Return to dock when battery drops to or below this percent.
     float battery_stop_threshold = 3;
 }

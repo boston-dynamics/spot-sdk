@@ -29,7 +29,7 @@ We will be using two sources of data for our processing script: the map and the 
 
 The [map data](../../concepts/autonomy/graphnav_map_structure.md) is made up of a collection of waypoints, and the edges that connect them. The downloaded data will contain the images we recorded, and a json file that includes all other data and metadata stored during the mission.
 
-For displaying the data, we are going to use the [anchoring](../../concepts/autonomy/graphnav_map_structure.md#anchorings-and-anchoring-optimization) defined in them map. This will define a global "seed" frame, and all of the waypoint and data locations will be provided in that "seed" frame. For the map, there is an `Anchoring` message defined in the map, which will have a list of anchors that provide the `seed_tform_waypoint` transforms. For the downloaded data, we will use the `basic-position-data` metadata, which stores a `seed_tform_body` transform for each capture action.
+For displaying the data, we are going to use the [anchoring](../../concepts/autonomy/graphnav_map_structure.md#anchorings-and-anchoring-optimization) defined in the map. This will define a global "seed" frame, and all of the waypoint and data locations will be provided in that "seed" frame. For the map, there is an `Anchoring` message defined in the map, which will have a list of anchors that provide the `seed_tform_waypoint` transforms. For the downloaded data, we will use the `basic-position-data` metadata, which stores a `seed_tform_body` transform for each capture action.
 
 ## Writing the processing script
 

@@ -282,9 +282,9 @@ def stitch(robot, options):
     pygame.display.set_mode(display, pygame.DOUBLEBUF | pygame.OPENGL)
     clock = pygame.time.Clock()
 
-    with open('shader_vert.glsl', 'r') as file:
+    with open('shader_vert.glsl') as file:
         vert_shader = file.read()
-    with open('shader_frag.glsl', 'r') as file:
+    with open('shader_frag.glsl') as file:
         frag_shader = file.read()
 
     program = CompiledShader(vert_shader, frag_shader)

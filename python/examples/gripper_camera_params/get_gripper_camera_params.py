@@ -135,15 +135,15 @@ def print_line(label, value):
 def mode_to_resolution_str(mode):
     if mode == gripper_camera_param_pb2.GripperCameraParams.MODE_640_480:
         return '640x480'
-    elif mode == gripper_camera_param_pb2.GripperCameraParams.MODE_1280_720:
+    if mode == gripper_camera_param_pb2.GripperCameraParams.MODE_1280_720:
         return '1280x720'
-    elif mode == gripper_camera_param_pb2.GripperCameraParams.MODE_1920_1080:
+    if mode == gripper_camera_param_pb2.GripperCameraParams.MODE_1920_1080:
         return '1920x1080'
-    elif mode == gripper_camera_param_pb2.GripperCameraParams.MODE_3840_2160:
+    if mode == gripper_camera_param_pb2.GripperCameraParams.MODE_3840_2160:
         return '3840x2160'
-    elif mode == gripper_camera_param_pb2.GripperCameraParams.MODE_4096_2160:
+    if mode == gripper_camera_param_pb2.GripperCameraParams.MODE_4096_2160:
         return '4096x2160'
-    elif mode == gripper_camera_param_pb2.GripperCameraParams.MODE_4208_3120:
+    if mode == gripper_camera_param_pb2.GripperCameraParams.MODE_4208_3120:
         return '4208x3120'
     return str(mode)
 

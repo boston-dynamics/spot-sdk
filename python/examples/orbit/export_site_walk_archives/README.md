@@ -16,7 +16,7 @@ A SiteWalk archive contains a compressed filepath to an Autowalk .walk folder th
 
 ## Understanding Orbit Web API
 
-Please begin with the [Quickstart Guide](../../../../docs/python/quickstart.md) to get your Python programming environment set up properly. Then, specifically for this example, look at the [Orbit API Docs](../../../../docs/concepts/orbit/orbit_api.md). For a complete list of resources and their methods, see the <a href="../../../../docs/orbit/docs.html">Orbit API Reference</a>.
+Please begin with the [Quickstart Guide](../../../../docs/python/quickstart.md) to get your Python programming environment set up properly. Then, specifically for this example, look at the [Orbit API Docs](../../../../docs/concepts/orbit/orbit_api.md).
 
 ## Setup Dependencies
 
@@ -34,4 +34,10 @@ To run the example for local development and testing, run the following command 
 python3 export_site_walk_archive.py --hostname ORBIT_IP --verify False
 ```
 
-The above command prompts you to provide the API token obtained from the Orbit admin settings page. Alternatively, you can set the environment variable `BOSDYN_ORBIT_CLIENT_API_TOKEN` to the API token obtained from Orbit admin settings page.
+The `--verify` flag is case-insensitive: `True`, `true`, `TRUE`, `False`, `false`, and `FALSE` are all accepted. You may also pass a path to a CA bundle file instead of a boolean.
+
+The above command prompts you to provide the API token obtained from the Orbit admin settings page. Alternatively, set the `BOSDYN_ORBIT_CLIENT_API_TOKEN` environment variable to your API token to skip the interactive prompt:
+
+```
+BOSDYN_ORBIT_CLIENT_API_TOKEN=your_token python3 export_site_walk_archive.py --hostname ORBIT_IP --verify False
+```

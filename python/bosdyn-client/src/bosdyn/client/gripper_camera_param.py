@@ -56,7 +56,7 @@ class GripperCameraParamClient(BaseClient):
                                error_from_response=common_header_errors, **kwargs)
 
     def set_camera_calib(self, set_gripper_camera_calib_request, **kwargs):
-        """Issue gripper camera calibration
+        """Issue gripper camera calibration.
 
         Args:
             set_gripper_camera_calib_request (gripper_camera_params_pb2.GripperCameraCalibrationRequest) : The command request to set gripper camera calibration
@@ -73,7 +73,7 @@ class GripperCameraParamClient(BaseClient):
                                error_from_response=common_header_errors, **kwargs)
 
     def get_camera_calib(self, get_gripper_camera_calib_request, **kwargs):
-        """Issue gripper camera get calibration
+        """Issue gripper camera get calibration.
 
         Arge:
             get_gripper_camera_calib_request (gripper_camera_params_pb2.GripperCameraGetCalibrationRequest) : The command reqeust to get gripper camera calibration

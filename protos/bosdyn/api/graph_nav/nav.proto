@@ -52,6 +52,11 @@ message Localization {
     SE3Pose waypoint_tform_body = 2;
     // Pose of body in a common reference frame. The common reference frame defaults to the starting
     // fiducial frame, but can be changed. See Anchoring for more info.
+    //
+    // This frame is guaranteed to be consistent across time (runs).  So if you're localized to the
+    // same map, and physically in the same location, this frame will be the same.
+    //
+    // This frame is not guaranteed to be geometrically consistent, but often is.
     SE3Pose seed_tform_body = 5;
     // Time (in robot time basis) that this localization was valid.
     google.protobuf.Timestamp timestamp = 3;

@@ -9,8 +9,13 @@
 import collections
 
 from bosdyn.api import geometry_pb2, ray_cast_pb2, ray_cast_service_pb2_grpc
-from bosdyn.client.common import (BaseClient, error_factory, error_pair,
-                                  handle_common_header_errors, handle_unset_status_error)
+from bosdyn.client.common import (
+    BaseClient,
+    error_factory,
+    error_pair,
+    handle_common_header_errors,
+    handle_unset_status_error,
+)
 from bosdyn.client.exceptions import ResponseError
 
 

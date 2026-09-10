@@ -49,6 +49,7 @@
     - [GazeCommand.Feedback.Status](#bosdyn-api-GazeCommand-Feedback-Status)
     - [NamedArmPositionsCommand.Feedback.Status](#bosdyn-api-NamedArmPositionsCommand-Feedback-Status)
     - [NamedArmPositionsCommand.Positions](#bosdyn-api-NamedArmPositionsCommand-Positions)
+    - [TrackingMode](#bosdyn-api-TrackingMode)
   
 - [bosdyn/api/arm_surface_contact.proto](#bosdyn_api_arm_surface_contact-proto)
     - [ArmSurfaceContact](#bosdyn-api-ArmSurfaceContact)
@@ -955,6 +956,8 @@
     - [ActionAfter](#bosdyn-api-keepalive-ActionAfter)
     - [ActionAfter.AutoReturn](#bosdyn-api-keepalive-ActionAfter-AutoReturn)
     - [ActionAfter.ControlledMotorsOff](#bosdyn-api-keepalive-ActionAfter-ControlledMotorsOff)
+    - [ActionAfter.HaltRobot](#bosdyn-api-keepalive-ActionAfter-HaltRobot)
+    - [ActionAfter.ImmediateMotorsOff](#bosdyn-api-keepalive-ActionAfter-ImmediateMotorsOff)
     - [ActionAfter.ImmediateRobotOff](#bosdyn-api-keepalive-ActionAfter-ImmediateRobotOff)
     - [ActionAfter.LeaseStale](#bosdyn-api-keepalive-ActionAfter-LeaseStale)
     - [ActionAfter.RecordEvent](#bosdyn-api-keepalive-ActionAfter-RecordEvent)
@@ -1161,6 +1164,19 @@
     - [BosdynQueryStoredCaptures.CaptureActionIdFormat](#bosdyn-api-mission-BosdynQueryStoredCaptures-CaptureActionIdFormat)
     - [BosdynRecordEvent](#bosdyn-api-mission-BosdynRecordEvent)
     - [BosdynRecordEvent.AdditionalParametersEntry](#bosdyn-api-mission-BosdynRecordEvent-AdditionalParametersEntry)
+    - [BosdynRecordEventOnInterruption](#bosdyn-api-mission-BosdynRecordEventOnInterruption)
+    - [BosdynRecordEventOnInterruption.ChildNodeErrorParametersEntry](#bosdyn-api-mission-BosdynRecordEventOnInterruption-ChildNodeErrorParametersEntry)
+    - [BosdynRecordEventOnInterruption.ChildNodeExceptionParametersEntry](#bosdyn-api-mission-BosdynRecordEventOnInterruption-ChildNodeExceptionParametersEntry)
+    - [BosdynRecordEventOnInterruption.ChildNodeFailureParametersEntry](#bosdyn-api-mission-BosdynRecordEventOnInterruption-ChildNodeFailureParametersEntry)
+    - [BosdynRecordEventOnInterruption.DefaultParametersEntry](#bosdyn-api-mission-BosdynRecordEventOnInterruption-DefaultParametersEntry)
+    - [BosdynRecordEventOnInterruption.ExecutorSetupFailureParametersEntry](#bosdyn-api-mission-BosdynRecordEventOnInterruption-ExecutorSetupFailureParametersEntry)
+    - [BosdynRecordEventOnInterruption.LeaseUseErrorParametersEntry](#bosdyn-api-mission-BosdynRecordEventOnInterruption-LeaseUseErrorParametersEntry)
+    - [BosdynRecordEventOnInterruption.LoadMissionParametersEntry](#bosdyn-api-mission-BosdynRecordEventOnInterruption-LoadMissionParametersEntry)
+    - [BosdynRecordEventOnInterruption.PauseMissionParametersEntry](#bosdyn-api-mission-BosdynRecordEventOnInterruption-PauseMissionParametersEntry)
+    - [BosdynRecordEventOnInterruption.PlayMissionTimeoutParametersEntry](#bosdyn-api-mission-BosdynRecordEventOnInterruption-PlayMissionTimeoutParametersEntry)
+    - [BosdynRecordEventOnInterruption.RestartMissionParametersEntry](#bosdyn-api-mission-BosdynRecordEventOnInterruption-RestartMissionParametersEntry)
+    - [BosdynRecordEventOnInterruption.StopMissionParametersEntry](#bosdyn-api-mission-BosdynRecordEventOnInterruption-StopMissionParametersEntry)
+    - [BosdynRecordEventOnInterruption.SystemShutdownParametersEntry](#bosdyn-api-mission-BosdynRecordEventOnInterruption-SystemShutdownParametersEntry)
     - [BosdynRobotCommand](#bosdyn-api-mission-BosdynRobotCommand)
     - [BosdynRobotState](#bosdyn-api-mission-BosdynRobotState)
     - [ClearBehaviorFaults](#bosdyn-api-mission-ClearBehaviorFaults)
@@ -2396,6 +2412,7 @@ Specify a set of joint angles to move the arm.
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | trajectory | [ArmJointTrajectory](#bosdyn-api-ArmJointTrajectory) |  | Note: Sending a single point empty trajectory will cause the arm to freeze in place. This<br>is an easy way to lock the arm in its current configuration. |
+| tracking_mode | [TrackingMode](#bosdyn-api-TrackingMode) |  | Optional mode for joint trajectory tracking. |
 
 
 
@@ -2828,6 +2845,19 @@ the same task_frame as the trajectories.
 | POSITIONS_STOW | 3 | Stow the arm, safely. If the robot is holding something, it will freeze the arm instead<br>of stowing. Overriding the carry_state to CARRY_STATE_CARRIABLE_AND_STOWABLE, will allow<br>the robot to stow the arm while grasping an item. |
 
 
+
+<a name="bosdyn-api-TrackingMode"></a>
+
+### TrackingMode
+Optional mode for command tracking.
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| TRACKING_MODE_UNKNOWN | 0 |  |
+| TRACKING_MODE_DEFAULT | 1 |  |
+| TRACKING_MODE_SLOW_PRECISE | 2 | Uses an integral gain to help reduce steady state error.<br>Note: This should be used with caution as it can lead to instability.<br>This is designed for slow trajectories that require very high precision. |
+
+
  <!-- end enums -->
 
  <!-- end HasExtensions -->
@@ -3120,9 +3150,12 @@ These values will persist across robot reboots.
 | enabled | [bool](#bool) |  | True if the system is currently enabled. |
 | max_brightness | [float](#float) |  | The current max brightness [0, 1]. |
 | buzzer_max_volume | [float](#float) |  | The buzzer's current max volume [0, 1]. |
+| speaker_max_volume | [float](#float) |  | The speaker's current max volume [0, 1]. |
 | normal_color_association | [PresetColorAssociation](#bosdyn-api-PresetColorAssociation) |  |  |
 | warning_color_association | [PresetColorAssociation](#bosdyn-api-PresetColorAssociation) |  |  |
 | danger_color_association | [PresetColorAssociation](#bosdyn-api-PresetColorAssociation) |  |  |
+| speaker_disable_agc | [bool](#bool) |  | Disable automatic gain control applied to incoming speaker audio. AGC is on<br>by default; set true to turn it off. |
+| speaker_disable_nr | [bool](#bool) |  | Disable noise reduction applied to incoming speaker audio. Noise reduction is<br>on by default; set true to turn it off. |
 
 
 
@@ -3644,9 +3677,12 @@ SYSTEM PARAMS
 | enabled | [google.protobuf.BoolValue](#google-protobuf-BoolValue) |  | True if the system is currently enabled. |
 | max_brightness | [google.protobuf.FloatValue](#google-protobuf-FloatValue) |  | The new max brightness value [0, 1]. |
 | buzzer_max_volume | [google.protobuf.FloatValue](#google-protobuf-FloatValue) |  | The new buzzer max volume value [0, 1]. |
+| speaker_max_volume | [google.protobuf.FloatValue](#google-protobuf-FloatValue) |  | The new speaker max volume value [0, 1]. |
 | normal_color_association | [PresetColorAssociation](#bosdyn-api-PresetColorAssociation) |  |  |
 | warning_color_association | [PresetColorAssociation](#bosdyn-api-PresetColorAssociation) |  |  |
 | danger_color_association | [PresetColorAssociation](#bosdyn-api-PresetColorAssociation) |  |  |
+| speaker_disable_agc | [google.protobuf.BoolValue](#google-protobuf-BoolValue) |  | Disable automatic gain control applied to incoming speaker audio. AGC is on<br>by default; set true to turn it off. Unset leaves the current setting unchanged. |
+| speaker_disable_nr | [google.protobuf.BoolValue](#google-protobuf-BoolValue) |  | Disable noise reduction applied to incoming speaker audio. Noise reduction is<br>on by default; set true to turn it off. Unset leaves the current setting unchanged. |
 
 
 
@@ -4684,8 +4720,8 @@ when this behavior happens.
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| battery_start_threshold | [float](#float) |  | Once charging, the robot will continue to charge until the battery<br>level is greater than or equal to this threshold, at which point in<br>time, the mission will start. |
-| battery_stop_threshold | [float](#float) |  | If the battery level is less than or equal to this threshold, the<br>robot will stop what it is currently doing and return to the dock.<br>Once the battery level is greater than or equal to the battery start<br>threshold, the mission will resume. |
+| battery_start_threshold | [float](#float) |  | Resume mission once battery reaches or exceeds this percent. |
+| battery_stop_threshold | [float](#float) |  | Return to dock when battery drops to or below this percent. |
 
 
 
@@ -6570,6 +6606,7 @@ metadata that is associated with previously stored data.
 | ----- | ---- | ----- | ----------- |
 | reference_id | [DataIdentifier](#bosdyn-api-DataIdentifier) |  | The data that this metadata refers to.<br>The timestamp field is ignored.<br>If only the action_id is filled out, this metadata is associated with the entire capture<br>action. |
 | metadata | [Metadata](#bosdyn-api-Metadata) |  | Metadata message to be stored. |
+| is_autowalk_report_entry | [bool](#bool) |  | True if this metadata has an AutowalkReportEntry embedded in metadata.data at the top-level<br>key "autowalk_report" (see AutowalkReportEntry in autowalk.proto). This field is populated<br>by the DataAcquisitionStoreService when the metadata is returned from a query -- it is<br>ignored if set on a StoreMetadataRequest. |
 
 
 
@@ -14345,7 +14382,7 @@ Parameters affecting the underlying optimizer.
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | max_iters | [google.protobuf.Int32Value](#google-protobuf-Int32Value) |  | Maximum iterations of the optimizer to run. |
-| max_time_seconds | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  | Maximum time the optimizer is allowed to run before giving up. |
+| max_time_seconds | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  | Maximum time the optimizer is allowed to run before giving up. If not set, the RPC<br>time-out (with some buffer) will be used. If the value specified here is longer<br>than the RPC time-out, it will be ignored and the RPC time-out (with some buffer)<br>will be used instead. On timeout, ProcessAnchoringResponse.status will be set to<br>STATUS_MAX_TIME with whatever anchoring was found so far. |
 
 
 
@@ -14556,7 +14593,7 @@ will be replaced by reasonable defaults.
 | do_fiducial_loop_closure | [google.protobuf.BoolValue](#google-protobuf-BoolValue) |  | True by default -- generate loop closure candidates using fiducials. |
 | fiducial_loop_closure_params | [ProcessTopologyRequest.FiducialLoopClosureParams](#bosdyn-api-graph_nav-ProcessTopologyRequest-FiducialLoopClosureParams) |  | Parameters for generating loop closure candidates using fiducials. |
 | collision_check_params | [ProcessTopologyRequest.CollisionCheckingParams](#bosdyn-api-graph_nav-ProcessTopologyRequest-CollisionCheckingParams) |  | Parameters which control rejecting loop closure candidates which<br>collide with obstacles. |
-| timeout_seconds | [double](#double) |  | Causes the processing to time out after this many seconds. If not set, a default of 45<br>seconds will be used. If this timeout occurs before the overall RPC timeout, a partial<br>result will be returned with ProcessTopologyResponse.timed_out set to true. Processing<br>can be continued by calling ProcessTopology again. |
+| timeout_seconds | [double](#double) |  | Causes the processing to time out after this many seconds. If not set, the RPC time-out<br>(with some buffer) will be used. If the timeout specified here is longer than the RPC<br>time-out, it will be ignored and the RPC time-out (with some buffer) will be used<br>On timeout, a partial result will be returned with ProcessTopologyResponse.timed_out<br>set to true. Processing an be continued by calling ProcessTopology again. |
 | feature_matching_params | [ProcessTopologyRequest.FeatureMatchingParams](#bosdyn-api-graph_nav-ProcessTopologyRequest-FeatureMatchingParams) |  | Controls whether and how the service performs sparse feature matching. |
 
 
@@ -14785,7 +14822,7 @@ to a particular waypoint on the graph nav map.
 | ----- | ---- | ----- | ----------- |
 | waypoint_id | [string](#string) |  | Waypoint this localization is relative to. |
 | waypoint_tform_body | [bosdyn.api.SE3Pose](#bosdyn-api-SE3Pose) |  | Pose of body in waypoint frame. |
-| seed_tform_body | [bosdyn.api.SE3Pose](#bosdyn-api-SE3Pose) |  | Pose of body in a common reference frame. The common reference frame defaults to the starting<br>fiducial frame, but can be changed. See Anchoring for more info. |
+| seed_tform_body | [bosdyn.api.SE3Pose](#bosdyn-api-SE3Pose) |  | Pose of body in a common reference frame. The common reference frame defaults to the starting<br>fiducial frame, but can be changed. See Anchoring for more info.<br><br>This frame is guaranteed to be consistent across time (runs). So if you're localized to the<br>same map, and physically in the same location, this frame will be the same.<br><br>This frame is not guaranteed to be geometrically consistent, but often is. |
 | timestamp | [google.protobuf.Timestamp](#google-protobuf-Timestamp) |  | Time (in robot time basis) that this localization was valid. |
 
 
@@ -16620,8 +16657,10 @@ supports requesting a latest given image by source name.
 | record_event | [ActionAfter.RecordEvent](#bosdyn-api-keepalive-ActionAfter-RecordEvent) |  |  |
 | auto_return | [ActionAfter.AutoReturn](#bosdyn-api-keepalive-ActionAfter-AutoReturn) |  |  |
 | controlled_motors_off | [ActionAfter.ControlledMotorsOff](#bosdyn-api-keepalive-ActionAfter-ControlledMotorsOff) |  |  |
+| immediate_motors_off | [ActionAfter.ImmediateMotorsOff](#bosdyn-api-keepalive-ActionAfter-ImmediateMotorsOff) |  |  |
 | immediate_robot_off | [ActionAfter.ImmediateRobotOff](#bosdyn-api-keepalive-ActionAfter-ImmediateRobotOff) |  |  |
 | lease_stale | [ActionAfter.LeaseStale](#bosdyn-api-keepalive-ActionAfter-LeaseStale) |  |  |
+| halt_robot | [ActionAfter.HaltRobot](#bosdyn-api-keepalive-ActionAfter-HaltRobot) |  |  |
 | after | [google.protobuf.Duration](#google-protobuf-Duration) |  | Take the specified action after not hearing from the associated policy_id in this long. |
 
 
@@ -16650,6 +16689,27 @@ Robot triggers AutoReturn.
 ### ActionAfter.ControlledMotorsOff
 After coming to a halt, robot sits and powers off its motors.
 Takes priority over AutoReturn and HaltRobot actions.
+
+
+
+
+
+
+<a name="bosdyn-api-keepalive-ActionAfter-HaltRobot"></a>
+
+### ActionAfter.HaltRobot
+Robot comes to a halt, then maintains its position.
+
+
+
+
+
+
+<a name="bosdyn-api-keepalive-ActionAfter-ImmediateMotorsOff"></a>
+
+### ActionAfter.ImmediateMotorsOff
+Robot powers off its motors immediately.
+WARNING: If the robot is not prone, this may cause damage to the robot or its payloads.
 
 
 
@@ -16860,7 +16920,9 @@ Record an event.
 | POLICY_CONTROL_ACTION_UNKNOWN | 0 |  |
 | POLICY_CONTROL_ACTION_AUTO_RETURN | 1 |  |
 | POLICY_CONTROL_ACTION_MOTORS_OFF | 2 |  |
+| POLICY_CONTROL_ACTION_IMMEDIATE_MOTORS_OFF | 5 |  |
 | POLICY_CONTROL_ACTION_ROBOT_OFF | 3 |  |
+| POLICY_CONTROL_ACTION_HALT | 4 |  |
 
 
 
@@ -17805,6 +17867,7 @@ and supports requesting a set of the latest local grids by map type name.
 | start_time | [google.protobuf.Timestamp](#google-protobuf-Timestamp) |  | Timestamp of the start of an experiment log, in robot time. |
 | end_time | [google.protobuf.Timestamp](#google-protobuf-Timestamp) |  | Timestamp of the end of an experiment log, in robot time. |
 | run_time | [google.protobuf.Duration](#google-protobuf-Duration) |  | Current duration of an experiment log, in robot time. This is not the total runtime, but<br>rather how long it has run as of now. |
+| event_key | [string](#string) |  | Associated event, if any. Will be an empty string for retro logs. |
 
 
 
@@ -18023,6 +18086,7 @@ that if a status >= DONE, it can be concluded that the request is no longer acti
 | STATUS_RECEIVED | 1 | Request received, thread is not created for bundling the logs. |
 | STATUS_IN_PROGRESS | 2 | Request in progress, thread is actively creating the bundle. |
 | STATUS_SYNCING | 3 | Log end_time has passed, server post processing taking place. |
+| STATUS_STOPPING | 4 | Log stop requested, stopping in progress. |
 | STATUS_DONE | 100 | Bundling process is complete with no failures and was terminated by API. |
 | STATUS_FAILED | 101 | Failure encountered while generating bundle. |
 | STATUS_TERMINATED | 102 | Bundle creation was terminated by API prior to completion. |
@@ -19772,6 +19836,230 @@ Record an APIEvent
 
 
 
+<a name="bosdyn-api-mission-BosdynRecordEventOnInterruption"></a>
+
+### BosdynRecordEventOnInterruption
+Record an event when the mission is interrupted.
+Interruptions are anything that causes the mission to stop ticking automatically.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| service_name | [string](#string) |  | Name of the service to use. |
+| host | [string](#string) |  | Host machine the service is running on. |
+| child | [Node](#bosdyn-api-mission-Node) |  | Child to run when node starts. If mission is interrupted while the child is still running,<br>the mission service will record the event described by the fields below. The child will<br>resume when the mission resumes. The BosdynRecordEventOnInterruption node will always<br>return the status of this child node. |
+| event | [bosdyn.api.Event](#bosdyn-api-Event) |  | The event to be logged if the mission is interrupted. Note that everything should be<br>populated except the id, start_time, and end_time, and severity. These will be populated<br>by the mission, using the time of the interruption and the type of interruption. |
+| pause_mission_parameters | [BosdynRecordEventOnInterruption.PauseMissionParametersEntry](#bosdyn-api-mission-BosdynRecordEventOnInterruption-PauseMissionParametersEntry) | repeated | Interruption reason: PauseMission RPC called. |
+| restart_mission_parameters | [BosdynRecordEventOnInterruption.RestartMissionParametersEntry](#bosdyn-api-mission-BosdynRecordEventOnInterruption-RestartMissionParametersEntry) | repeated | Interruption reason: RestartMission RPC called. |
+| load_mission_parameters | [BosdynRecordEventOnInterruption.LoadMissionParametersEntry](#bosdyn-api-mission-BosdynRecordEventOnInterruption-LoadMissionParametersEntry) | repeated | Interruption reason: LoadMission RPC called. |
+| stop_mission_parameters | [BosdynRecordEventOnInterruption.StopMissionParametersEntry](#bosdyn-api-mission-BosdynRecordEventOnInterruption-StopMissionParametersEntry) | repeated | Interruption reason: StopMission RPC called. |
+| lease_use_error_parameters | [BosdynRecordEventOnInterruption.LeaseUseErrorParametersEntry](#bosdyn-api-mission-BosdynRecordEventOnInterruption-LeaseUseErrorParametersEntry) | repeated | Interruption reason: Lease use error occurred. |
+| play_mission_timeout_parameters | [BosdynRecordEventOnInterruption.PlayMissionTimeoutParametersEntry](#bosdyn-api-mission-BosdynRecordEventOnInterruption-PlayMissionTimeoutParametersEntry) | repeated | Interruption reason: Play mission timeout exceeded. |
+| child_node_error_parameters | [BosdynRecordEventOnInterruption.ChildNodeErrorParametersEntry](#bosdyn-api-mission-BosdynRecordEventOnInterruption-ChildNodeErrorParametersEntry) | repeated | Interruption reason: Child node returned an error result. |
+| child_node_exception_parameters | [BosdynRecordEventOnInterruption.ChildNodeExceptionParametersEntry](#bosdyn-api-mission-BosdynRecordEventOnInterruption-ChildNodeExceptionParametersEntry) | repeated | Interruption reason: Child node threw an exception. |
+| default_parameters | [BosdynRecordEventOnInterruption.DefaultParametersEntry](#bosdyn-api-mission-BosdynRecordEventOnInterruption-DefaultParametersEntry) | repeated | This is used if any of the above are empty or if an unexpected interruption occurs. |
+| executor_setup_failure_parameters | [BosdynRecordEventOnInterruption.ExecutorSetupFailureParametersEntry](#bosdyn-api-mission-BosdynRecordEventOnInterruption-ExecutorSetupFailureParametersEntry) | repeated | Interruption reason: the mission executor failed to set up. |
+| system_shutdown_parameters | [BosdynRecordEventOnInterruption.SystemShutdownParametersEntry](#bosdyn-api-mission-BosdynRecordEventOnInterruption-SystemShutdownParametersEntry) | repeated | Interruption reason: the mission service is shutting down. |
+| keys_for_lease_use_error_message | [string](#string) | repeated | If key(s) are specified, the additional information about the lease use error will be<br>stored as an event parameter. All given key(s) must be used in order to access the error<br>message reason from the JSON metadata. The last key holds error message. |
+| child_node_failure_parameters | [BosdynRecordEventOnInterruption.ChildNodeFailureParametersEntry](#bosdyn-api-mission-BosdynRecordEventOnInterruption-ChildNodeFailureParametersEntry) | repeated | If populated, the child returning Result.FAILURE (a normal, non-exceptional failure) will<br>also be treated as an interruption, using these parameters. By default, only Result.ERROR /<br>exceptions from the child count as interruptions. |
+
+
+
+
+
+
+<a name="bosdyn-api-mission-BosdynRecordEventOnInterruption-ChildNodeErrorParametersEntry"></a>
+
+### BosdynRecordEventOnInterruption.ChildNodeErrorParametersEntry
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| key | [string](#string) |  |  |
+| value | [Value](#bosdyn-api-mission-Value) |  |  |
+
+
+
+
+
+
+<a name="bosdyn-api-mission-BosdynRecordEventOnInterruption-ChildNodeExceptionParametersEntry"></a>
+
+### BosdynRecordEventOnInterruption.ChildNodeExceptionParametersEntry
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| key | [string](#string) |  |  |
+| value | [Value](#bosdyn-api-mission-Value) |  |  |
+
+
+
+
+
+
+<a name="bosdyn-api-mission-BosdynRecordEventOnInterruption-ChildNodeFailureParametersEntry"></a>
+
+### BosdynRecordEventOnInterruption.ChildNodeFailureParametersEntry
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| key | [string](#string) |  |  |
+| value | [Value](#bosdyn-api-mission-Value) |  |  |
+
+
+
+
+
+
+<a name="bosdyn-api-mission-BosdynRecordEventOnInterruption-DefaultParametersEntry"></a>
+
+### BosdynRecordEventOnInterruption.DefaultParametersEntry
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| key | [string](#string) |  |  |
+| value | [Value](#bosdyn-api-mission-Value) |  |  |
+
+
+
+
+
+
+<a name="bosdyn-api-mission-BosdynRecordEventOnInterruption-ExecutorSetupFailureParametersEntry"></a>
+
+### BosdynRecordEventOnInterruption.ExecutorSetupFailureParametersEntry
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| key | [string](#string) |  |  |
+| value | [Value](#bosdyn-api-mission-Value) |  |  |
+
+
+
+
+
+
+<a name="bosdyn-api-mission-BosdynRecordEventOnInterruption-LeaseUseErrorParametersEntry"></a>
+
+### BosdynRecordEventOnInterruption.LeaseUseErrorParametersEntry
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| key | [string](#string) |  |  |
+| value | [Value](#bosdyn-api-mission-Value) |  |  |
+
+
+
+
+
+
+<a name="bosdyn-api-mission-BosdynRecordEventOnInterruption-LoadMissionParametersEntry"></a>
+
+### BosdynRecordEventOnInterruption.LoadMissionParametersEntry
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| key | [string](#string) |  |  |
+| value | [Value](#bosdyn-api-mission-Value) |  |  |
+
+
+
+
+
+
+<a name="bosdyn-api-mission-BosdynRecordEventOnInterruption-PauseMissionParametersEntry"></a>
+
+### BosdynRecordEventOnInterruption.PauseMissionParametersEntry
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| key | [string](#string) |  |  |
+| value | [Value](#bosdyn-api-mission-Value) |  |  |
+
+
+
+
+
+
+<a name="bosdyn-api-mission-BosdynRecordEventOnInterruption-PlayMissionTimeoutParametersEntry"></a>
+
+### BosdynRecordEventOnInterruption.PlayMissionTimeoutParametersEntry
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| key | [string](#string) |  |  |
+| value | [Value](#bosdyn-api-mission-Value) |  |  |
+
+
+
+
+
+
+<a name="bosdyn-api-mission-BosdynRecordEventOnInterruption-RestartMissionParametersEntry"></a>
+
+### BosdynRecordEventOnInterruption.RestartMissionParametersEntry
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| key | [string](#string) |  |  |
+| value | [Value](#bosdyn-api-mission-Value) |  |  |
+
+
+
+
+
+
+<a name="bosdyn-api-mission-BosdynRecordEventOnInterruption-StopMissionParametersEntry"></a>
+
+### BosdynRecordEventOnInterruption.StopMissionParametersEntry
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| key | [string](#string) |  |  |
+| value | [Value](#bosdyn-api-mission-Value) |  |  |
+
+
+
+
+
+
+<a name="bosdyn-api-mission-BosdynRecordEventOnInterruption-SystemShutdownParametersEntry"></a>
+
+### BosdynRecordEventOnInterruption.SystemShutdownParametersEntry
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| key | [string](#string) |  |  |
+| value | [Value](#bosdyn-api-mission-Value) |  |  |
+
+
+
+
+
+
 <a name="bosdyn-api-mission-BosdynRobotCommand"></a>
 
 ### BosdynRobotCommand
@@ -19979,6 +20267,7 @@ Interruptions are anything that causes the mission to stop ticking automatically
 | child_node_exception_metadata | [bosdyn.api.Metadata](#bosdyn-api-Metadata) |  | Interruption reason: Child node threw an exception. |
 | default_metadata | [bosdyn.api.Metadata](#bosdyn-api-Metadata) |  | This is used if any of the above are empty or if an unexpected interruption occurs. |
 | keys_for_lease_use_error_message | [string](#string) | repeated | If key(s) are specified, the additional information about the lease use error will be stored<br>in the AcquireDataRequest metadata. All given key(s) must be used in order to access the<br>error message reason from the JSON metadata. The last key holds error message. |
+| child_node_failure_metadata | [bosdyn.api.Metadata](#bosdyn-api-Metadata) |  | If populated, the child returning Result.FAILURE (a normal, non-exceptional failure) will<br>also be treated as an interruption, using this metadata. By default, only Result.ERROR /<br>exceptions from the child count as interruptions. |
 
 
 
@@ -19994,6 +20283,7 @@ Record a datetime string into the blackboard. Writes the date according to ISO86
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | key | [string](#string) |  | The key of the variable that will be written. |
+| write_as_timestamp | [bool](#bool) |  | If true, write the current time as a google.protobuf.Timestamp instead of a formatted<br>date/time string. |
 
 
 
@@ -20179,6 +20469,7 @@ Specifics of what the node does are contained in the "impl" field.
 | create_mission_text | [CreateMissionText](#bosdyn-api-mission-CreateMissionText) |  |  |
 | bosdyn_query_stored_captures | [BosdynQueryStoredCaptures](#bosdyn-api-mission-BosdynQueryStoredCaptures) |  |  |
 | data_acquisition_live_data | [DataAcquisitionLiveData](#bosdyn-api-mission-DataAcquisitionLiveData) |  |  |
+| bosdyn_record_event_on_interruption | [BosdynRecordEventOnInterruption](#bosdyn-api-mission-BosdynRecordEventOnInterruption) |  |  |
 | parameter_values | [KeyValue](#bosdyn-api-mission-KeyValue) | repeated | Defines parameters, used by this node or its children.<br>The "key" in KeyValue is the name of the parameter being defined.<br>The value can be a constant or another parameter value. |
 | overrides | [KeyValue](#bosdyn-api-mission-KeyValue) | repeated | Overwrites a protobuf field in this node's implementation.<br>The "key" in KeyValue is the name of the field to override.<br>The value to write can be sourced from a constant, or a parameter value. |
 | parameters | [VariableDeclaration](#bosdyn-api-mission-VariableDeclaration) | repeated | Declares parameters needed at compile time by this node, or children of this node.<br>This is a way for a node to communicate what parameters its implementation and/or children<br>require, without unpacking the entire subtree. |
@@ -20449,6 +20740,7 @@ Run two child nodes together, returning the primary child's result when it compl
 | primary | [Node](#bosdyn-api-mission-Node) |  | Primary node, whose completion will end the execution of SimpleParallel.<br>The secondary node will be ticked at least once. |
 | secondary | [Node](#bosdyn-api-mission-Node) |  | Secondary node, which will be ticked as long as the primary is still running. |
 | run_secondary_node_once | [bool](#bool) |  | By default, if the secondary node finishes before the primary node, the secondary node<br>will be restarted. If this flag is set to true, and the secondary node completes before<br>the primary node, it will never be restarted. |
+| tick_secondary_node_first | [bool](#bool) |  | By default, the primary will be ticked first, then the secondary.<br>Use this flag to tick the secondary node first. |
 
 
 
@@ -21037,6 +21329,7 @@ A constant value. Corresponds to the VariableDeclaration Type enum.
 | msg_value | [google.protobuf.Any](#google-protobuf-Any) |  |  |
 | list_value | [ConstantValue.ListValue](#bosdyn-api-mission-ConstantValue-ListValue) |  |  |
 | dict_value | [ConstantValue.DictValue](#bosdyn-api-mission-ConstantValue-DictValue) |  |  |
+| timestamp_value | [google.protobuf.Timestamp](#google-protobuf-Timestamp) |  |  |
 
 
 
@@ -21222,6 +21515,7 @@ Supported types for blackboard or parameter values.
 | TYPE_MESSAGE | 5 |  |
 | TYPE_LIST | 6 |  |
 | TYPE_DICT | 7 |  |
+| TYPE_TIMESTAMP | 8 |  |
 
 
  <!-- end enums -->
@@ -24746,6 +25040,7 @@ Relevant terrain data beneath and around the robot
 | CAUSE_FALL | 1 | Error caused by mobility failure or fall |
 | CAUSE_HARDWARE | 2 | Error caused by robot hardware malfunction |
 | CAUSE_LEASE_TIMEOUT | 3 | A lease has timed out |
+| CAUSE_COMMAND_FAILURE | 4 | A command failed in a way that it cannot autonomously recover from. |
 
 
 
@@ -27638,7 +27933,10 @@ Describes metadata for the Choreography sequence that can be used for a number o
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| labels | [string](#string) | repeated | the list of user assigned categories that the sequence belongs to |
+| description | [string](#string) |  | Description of sequence behavior. |
+| start_position | [bosdyn.api.SE2Pose](#bosdyn-api-SE2Pose) |  | Start position metadata (used for multi-robot dance visualization to display relative<br>placement, does not affect robot playback). |
+| color | [ChoreographerDisplayInfo.Color](#bosdyn-api-spot-ChoreographerDisplayInfo-Color) |  | Color associated with a sequence (used for visual identification). |
+| labels | [string](#string) | repeated | The list of user assigned categories that the sequence belongs to. |
 
 
 
@@ -27711,6 +28009,7 @@ Represents a particular choreography sequence, made up of MoveParams.
 | sequence_slices_per_minute | [double](#double) |  | Cadence of the current sequence. |
 | validity_time | [google.protobuf.Timestamp](#google-protobuf-Timestamp) |  | When this was true in robot time. |
 | sequence_name | [string](#string) |  | Name of the active sequence, None if the robot is not in a dance state. |
+| sequence_start_time | [google.protobuf.Timestamp](#google-protobuf-Timestamp) |  | When the sequence was commanded to start, in robot time. |
 
 
 
@@ -28573,16 +28872,16 @@ displayed with.
 
 | Name | Number | Description |
 | ---- | ------ | ----------- |
-| STATUS_UNKNOWN | 0 |  |
-| STATUS_DANCING | 1 |  |
-| STATUS_COMPLETED_SEQUENCE | 2 |  |
-| STATUS_PREPPING | 3 |  |
-| STATUS_WAITING_FOR_START_TIME | 4 |  |
-| STATUS_VALIDATING | 5 |  |
-| STATUS_INTERRUPTED | 6 |  |
+| STATUS_UNKNOWN | 0 | Status unknown. Do not use. |
+| STATUS_DANCING | 1 | Robot is actively performing a choreography sequence. |
+| STATUS_COMPLETED_SEQUENCE | 2 | Robot recently completely a choreography sequence and is no longer dancing. |
+| STATUS_PREPPING | 3 | Robot is getting ready to start a sequence by getting into the correct<br>entrance state (sit, stand, ...) for the first move. |
+| STATUS_WAITING_FOR_START_TIME | 4 | Robot is ready to perform the requested choreography sequence and waiting<br>for the requested start time. |
+| STATUS_VALIDATING | 5 | The sequence has been recieved, but is still being processed and checked<br>for validity. |
+| STATUS_INTERRUPTED | 6 | An active choreography sequence was recently interrupted by another command. |
 | STATUS_FALLEN | 7 |  |
 | STATUS_POWERED_OFF | 8 |  |
-| STATUS_OTHER | 9 |  |
+| STATUS_OTHER | 9 | The robot is powered on but not actively preparing to perform, performing,<br>or has recently completed a choreography sequence. |
 
 
 
@@ -28795,6 +29094,7 @@ The status for the start recording request.
 | STATUS_OK | 1 | Uploading + parsing the animated move succeeded. |
 | STATUS_ANIMATION_VALIDATION_FAILED | 2 | The animated move is considered invalid, see the warnings. |
 | STATUS_PING_RESPONSE | 3 | Treated this message as a ping. Responding to demonstrate connectivity. |
+| STATUS_REJECTED_DANCE_ACTIVE | 4 | Animations cannot be uploaded while the robot is dancing. |
 
 
  <!-- end enums -->
@@ -33820,6 +34120,8 @@ World object properties describing a fiducial object.
 | detection_covariance | [SE3Covariance](#bosdyn-api-SE3Covariance) |  | A 6 x 6 Covariance matrix representing the marginal uncertainty of the last detection.<br>The rows/columns are:<br>rx, ry, rz, tx, ty, tz<br>which represent incremental rotation and translation along the x, y, and z axes of the<br>given frame, respectively.<br>This is computed using the Jacobian of the pose estimation algorithm. |
 | detection_covariance_reference_frame | [string](#string) |  | The frame that the detection covariance is expressed in. |
 | purpose | [FiducialPurpose](#bosdyn-api-FiducialPurpose) |  | Purpose of the fiducial. |
+| hamming_distance | [int32](#int32) |  | Hamming distance of the detected tag. |
+| num_observations | [int32](#int32) |  | Number of times this tag has been observed. |
 
 
 

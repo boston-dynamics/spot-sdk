@@ -67,7 +67,7 @@ class GcodeReader:
     def __init__(self, file_path, tool_length, scale, logger, below_z_is_admittance, travel_z,
                  draw_on_wall, gcode_start_x=0, gcode_start_y=0):
         # open the file
-        self.file = open(file_path, 'r')
+        self.file = open(file_path)
         self.tool_length = tool_length
         self.scale = scale
         self.logger = logger
@@ -127,15 +127,14 @@ class GcodeReader:
             origin_Q_goal = Quat.from_matrix(mat)
 
             return origin_Q_goal
-        else:
-            xhat = [0, 0, -1]
-            yhat = [-1, 0, 0]
-            zhat = [0, 1, 0]
+        xhat = [0, 0, -1]
+        yhat = [-1, 0, 0]
+        zhat = [0, 1, 0]
 
-            mat = np.array([xhat, yhat, zhat]).transpose()
-            origin_Q_goal = Quat.from_matrix(mat)
+        mat = np.array([xhat, yhat, zhat]).transpose()
+        origin_Q_goal = Quat.from_matrix(mat)
 
-            return origin_Q_goal
+        return origin_Q_goal
 
     def convert_gcode_to_origin_T_goals(self, line):
         raw_line = line
@@ -179,7 +178,7 @@ class GcodeReader:
 
             return [origin_T_goal]
 
-        elif array[0] in ('G02', 'G03', 'G2', 'G3'):
+        if array[0] in ('G02', 'G03', 'G2', 'G3'):
             # Circles
             x = self.last_x
             y = self.last_y
@@ -332,9 +331,8 @@ class GcodeReader:
                 tool_T_goals.append(SE3Pose(x_out[i], y_out[i], z_out[i], self.get_origin_Q_goal()))
 
             return tool_T_goals
-        else:
-            self.logger.info('Unsupported gcode action: %s skipping.', line[0:2])
-            return None
+        self.logger.info('Unsupported gcode action: %s skipping.', line[0:2])
+        return None
 
     def get_vision_T_goal(self, origin_T_goal, ground_plane_rt_vision):
         if not self.draw_on_wall:
@@ -361,8 +359,7 @@ class GcodeReader:
         # If we are below the z height in the gcode file, we are in admittance mode
         if self.current_origin_T_goals[0].z < self.below_z_is_admittance:
             return True
-        else:
-            return False
+        return False
 
     def get_next_vision_T_goals(self, ground_plane_rt_vision, read_new_line=True):
         origin_T_goals = None
@@ -372,7 +369,7 @@ class GcodeReader:
                 self.logger.info('Gcode: %s', self.last_line.strip())
             if not self.last_line:
                 return (False, None, False)
-            elif self.last_line.strip() == 'M0':
+            if self.last_line.strip() == 'M0':
                 return (False, None, True)
             origin_T_goals = self.convert_gcode_to_origin_T_goals(self.last_line)
 
@@ -613,8 +610,7 @@ def run_gcode_program(config):
     # control it. Note that the lease is returned as the "finally" condition in this
     # try-catch-finally block.
     lease_client = robot.ensure_client(bosdyn.client.lease.LeaseClient.default_service_name)
-    with ((bosdyn.client.lease.LeaseKeepAlive(lease_client, must_acquire=True,
-                                              return_at_exit=True))):
+    with (bosdyn.client.lease.LeaseKeepAlive(lease_client, must_acquire=True, return_at_exit=True)):
         # Now, we are ready to power on the robot. This call will block until the power
         # is on. Commands would fail if this did not happen. We can also check that the robot is
         # powered at any point.

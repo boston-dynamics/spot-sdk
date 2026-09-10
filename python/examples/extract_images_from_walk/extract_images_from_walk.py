@@ -46,7 +46,7 @@ def save_image(mission_image, image_location):
         image_location.write_bytes(mission_image.data)
         return True
     # Handling for thermal and depth images see https://dev.bostondynamics.com/docs/concepts/data_acquisition_thermal_raw.html for details
-    elif (mission_image.format == image_pb2.Image.FORMAT_RAW):
+    if (mission_image.format == image_pb2.Image.FORMAT_RAW):
         if mission_image.pixel_format not in (image_pb2.Image.PIXEL_FORMAT_DEPTH_U16,
                                               image_pb2.Image.PIXEL_FORMAT_GREYSCALE_U16):
             print('Warning, unsupported RAW format')
@@ -58,10 +58,10 @@ def save_image(mission_image, image_location):
         # Plot and save the thermal data
         plt.imsave(image_location, image_array, cmap=plt.cm.inferno)
         return True
-    elif mission_image.format == image_pb2.Image.FORMAT_RLE:
+    if mission_image.format == image_pb2.Image.FORMAT_RLE:
         print('Warning, RLE format not supported.')
         return False
-    elif mission_image.format == image_pb2.Image.FORMAT_UNKNOWN:
+    if mission_image.format == image_pb2.Image.FORMAT_UNKNOWN:
         print('Warning image with unknown format')
         return False
 

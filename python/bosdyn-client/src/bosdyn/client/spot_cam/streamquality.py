@@ -10,13 +10,14 @@ import logging
 
 _LOGGER = logging.getLogger(__name__)
 
+from google.protobuf.wrappers_pb2 import Int32Value
+
 from bosdyn.api.spot_cam import service_pb2_grpc, streamquality_pb2
 from bosdyn.client.common import BaseClient, handle_common_header_errors
 
 
 class StreamQualityClient(BaseClient):
-    """A client calling Spot CAM StreamQuality service.
-    """
+    """A client calling Spot CAM StreamQuality service."""
     default_service_name = 'spot-cam-stream-quality'
     service_type = 'bosdyn.api.spot_cam.StreamQualityService'
 
@@ -28,8 +29,8 @@ class StreamQualityClient(BaseClient):
                           manual_exposure=None, **kwargs):
         """Change image compression and postprocessing.
 
-        At most one of auto_exposure, sync_auto_exposure, and manual_exposure can be specified.
-        The others should be set to None if one is specified. Otherwise, they should all be None.
+        At most one of exposure settings can be specified. The others should be set to None if
+        one is specified. Otherwise, they should all be None.
 
         Args:
             target_bitrate (int): The compression level in target BPS
@@ -41,9 +42,15 @@ class StreamQualityClient(BaseClient):
                 into account data from all ring cameras
             manual_exposure (ManualExposure): Manual exposure sets an exposure for all ring cameras
         """
-        request = self._build_SetStreamParamsRequest(target_bitrate, refresh_interval, idr_interval,
-                                                     awb_mode, auto_exposure, sync_auto_exposure,
-                                                     manual_exposure)
+        request = self._build_SetStreamParamsRequest(
+            target_bitrate,
+            refresh_interval,
+            idr_interval,
+            awb_mode,
+            auto_exposure,
+            sync_auto_exposure,
+            manual_exposure,
+        )
 
         return self.call(self._stub.SetStreamParams, request, self._params_from_response,
                          self._streamquality_error_from_response, copy_request=False, **kwargs)
@@ -52,9 +59,15 @@ class StreamQualityClient(BaseClient):
                                 awb_mode=None, auto_exposure=None, sync_auto_exposure=None,
                                 manual_exposure=None, **kwargs):
         """Async version of set_stream_params()."""
-        request = self._build_SetStreamParamsRequest(target_bitrate, refresh_interval, idr_interval,
-                                                     awb_mode, auto_exposure, sync_auto_exposure,
-                                                     manual_exposure)
+        request = self._build_SetStreamParamsRequest(
+            target_bitrate,
+            refresh_interval,
+            idr_interval,
+            awb_mode,
+            auto_exposure,
+            sync_auto_exposure,
+            manual_exposure,
+        )
 
         return self.call_async(self._stub.SetStreamParams, request, self._params_from_response,
                                self._streamquality_error_from_response, copy_request=False,
@@ -86,10 +99,22 @@ class StreamQualityClient(BaseClient):
                                self._streamquality_error_from_response, copy_request=False,
                                **kwargs)
 
+
     @staticmethod
-    def _build_SetStreamParamsRequest(target_bitrate, refresh_interval, idr_interval, awb_mode,
-                                      auto_exposure, sync_auto_exposure, manual_exposure):
-        exposure_args = [auto_exposure, sync_auto_exposure, manual_exposure]
+    def _build_SetStreamParamsRequest(
+        target_bitrate,
+        refresh_interval,
+        idr_interval,
+        awb_mode,
+        auto_exposure,
+        sync_auto_exposure,
+        manual_exposure,
+    ):
+        exposure_args = [
+            auto_exposure,
+            sync_auto_exposure,
+            manual_exposure,
+        ]
         if sum([arg is not None for arg in exposure_args]) > 1:
             raise ValueError("Only one exposure argument can be specified at a time.")
 
@@ -120,6 +145,7 @@ class StreamQualityClient(BaseClient):
     @staticmethod
     def _params_from_response(response):
         return response.params
+
 
     @staticmethod
     @handle_common_header_errors

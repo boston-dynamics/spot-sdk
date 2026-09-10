@@ -14,10 +14,18 @@ import logging
 import threading
 import time
 
-from bosdyn.api import (directory_pb2, directory_registration_pb2,
-                        directory_registration_service_pb2_grpc)
-from bosdyn.client.common import (BaseClient, error_factory, error_pair,
-                                  handle_common_header_errors, handle_unset_status_error)
+from bosdyn.api import (
+    directory_pb2,
+    directory_registration_pb2,
+    directory_registration_service_pb2_grpc,
+)
+from bosdyn.client.common import (
+    BaseClient,
+    error_factory,
+    error_pair,
+    handle_common_header_errors,
+    handle_unset_status_error,
+)
 from bosdyn.util import now_sec
 
 from .error_callback_result import ErrorCallbackResult
@@ -261,11 +269,10 @@ def reset_service_registration(
         liveness_timeout_secs=0):
     """Reset a service registration by unregistering the service and then re-registering it.
 
-    This is useful when a program wants to register a new service but there may be an old entry
-    in the robot directory from a previous instance of the program. If the service
-    does not already exist, the exception will be suppressed and a new registration will
-    still be performed. Unregistering the service has the advantage of clearing all service
-    faults, if any existed.
+    This is useful when a program wants to register a new service but there may be an old entry in
+    the robot directory from a previous instance of the program. If the service does not already
+    exist, the exception will be suppressed and a new registration will still be performed.
+    Unregistering the service has the advantage of clearing all service faults, if any existed.
     """
     try:
         directory_registration_client.unregister(name)

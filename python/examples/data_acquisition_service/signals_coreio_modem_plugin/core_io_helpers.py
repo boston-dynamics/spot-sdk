@@ -37,10 +37,9 @@ class CoreIOHelper:
             self._is_authenticated = False
             self.logger.error(login_response_json['error'])
             return False
-        else:
-            self._is_authenticated = True
-            self.logger.info("CORE I/O login success")
-            return True
+        self._is_authenticated = True
+        self.logger.info("CORE I/O login success")
+        return True
 
     def get_modem_stats(self):
         if self._is_authenticated is False:

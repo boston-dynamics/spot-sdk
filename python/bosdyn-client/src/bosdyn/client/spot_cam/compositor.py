@@ -13,8 +13,7 @@ from bosdyn.client.common import BaseClient, handle_common_header_errors
 
 
 class CompositorClient(BaseClient):
-    """A client calling Spot CAM Compositor services.
-    """
+    """A client calling Spot CAM Compositor services."""
     default_service_name = 'spot-cam-compositor'
     service_type = 'bosdyn.api.spot_cam.CompositorService'
 
@@ -22,7 +21,7 @@ class CompositorClient(BaseClient):
         super(CompositorClient, self).__init__(service_pb2_grpc.CompositorServiceStub)
 
     def set_screen(self, name, **kwargs):
-        """Change the current view that is being streamed over the network"""
+        """Change the current view that is being streamed over the network."""
         request = compositor_pb2.SetScreenRequest(name=name)
         return self.call(self._stub.SetScreen, request, self._name_from_response,
                          self._compositor_error_from_response, copy_request=False, **kwargs)
@@ -34,7 +33,7 @@ class CompositorClient(BaseClient):
                                self._compositor_error_from_response, copy_request=False, **kwargs)
 
     def get_screen(self, **kwargs):
-        """Get the currently selected screen"""
+        """Get the currently selected screen."""
         request = compositor_pb2.GetScreenRequest()
         return self.call(self._stub.GetScreen, request, self._name_from_response,
                          self._compositor_error_from_response, copy_request=False, **kwargs)
@@ -46,7 +45,7 @@ class CompositorClient(BaseClient):
                                self._compositor_error_from_response, copy_request=False, **kwargs)
 
     def list_screens(self, **kwargs):
-        """List available screens"""
+        """List available screens."""
         request = compositor_pb2.ListScreensRequest()
         return self.call(self._stub.ListScreens, request, self._screens_from_response,
                          self._compositor_error_from_response, copy_request=False, **kwargs)
@@ -58,7 +57,7 @@ class CompositorClient(BaseClient):
                                self._compositor_error_from_response, copy_request=False, **kwargs)
 
     def get_visible_cameras(self, **kwargs):
-        """List cameras on Spot CAM"""
+        """List cameras on Spot CAM."""
         request = compositor_pb2.GetVisibleCamerasRequest()
         return self.call(self._stub.GetVisibleCameras, request, self._streams_from_response,
                          self._compositor_error_from_response, copy_request=False, **kwargs)
@@ -70,7 +69,7 @@ class CompositorClient(BaseClient):
                                self._compositor_error_from_response, copy_request=False, **kwargs)
 
     def set_ir_colormap(self, colormap, min_temp, max_temp, auto_scale, **kwargs):
-        """Set IR colormap to use on Spot CAM
+        """Set IR colormap to use on Spot CAM.
 
         Args:
             colormap (bosdyn.api.spot_cam.compositor_pb2.IrColorMap.ColorMap): IR display colormap
@@ -97,7 +96,7 @@ class CompositorClient(BaseClient):
                                self._compositor_error_from_response, copy_request=False, **kwargs)
 
     def get_ir_colormap(self, **kwargs):
-        """Get currently selected IR colormap on Spot CAM"""
+        """Get currently selected IR colormap on Spot CAM."""
         request = compositor_pb2.GetIrColormapRequest()
         return self.call(self._stub.GetIrColormap, request, self._colormap_from_response,
                          self._compositor_error_from_response, copy_request=False, **kwargs)
@@ -109,7 +108,7 @@ class CompositorClient(BaseClient):
                                self._compositor_error_from_response, copy_request=False, **kwargs)
 
     def set_ir_meter_overlay(self, x, y, enable, unit, **kwargs):
-        """Set IR reticle position to use on Spot CAM IR
+        """Set IR reticle position to use on Spot CAM IR.
 
         Args:
             x (Float): (0,1) horizontal coordinate of reticle
@@ -137,7 +136,7 @@ class CompositorClient(BaseClient):
                                self._compositor_error_from_response, copy_request=False, **kwargs)
 
     def set_multi_ir_meter_overlay(self, coords, enable, unit, **kwargs):
-        """Set multiple IR reticle positions to use on Spot CAM IR
+        """Set multiple IR reticle positions to use on Spot CAM IR.
 
         Args:
             coords (List[Tuple(Float, Float)]): List of (x, y) reticle coordinates in range (0,1)
@@ -165,7 +164,7 @@ class CompositorClient(BaseClient):
                                self._compositor_error_from_response, copy_request=False, **kwargs)
 
     def get_ir_meter_overlay(self, **kwargs):
-        """Get current IR reticle positions"""
+        """Get current IR reticle positions."""
         request = compositor_pb2.GetIrMeterOverlayRequest()
         return self.call(self._stub.GetIrMeterOverlay, request, self._return_response,
                          self._compositor_error_from_response, copy_request=False, **kwargs)

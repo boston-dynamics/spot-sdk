@@ -41,11 +41,10 @@ def find_unique_waypoint_id(short_code, graph, name_to_id):
             if name_to_id[short_code] is not None:
                 # Has an associated waypoint id!
                 return name_to_id[short_code]
-            else:
-                print(
-                    f'The waypoint name {short_code} is used for multiple different unique waypoints. Please use '
-                    f'the waypoint id.')
-                return None
+            print(
+                f'The waypoint name {short_code} is used for multiple different unique waypoints. Please use '
+                f'the waypoint id.')
+            return None
         # Also not a waypoint annotation name, so we will operate under the assumption that it is a
         # unique waypoint id.
         return short_code

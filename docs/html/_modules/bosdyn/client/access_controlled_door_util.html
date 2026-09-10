@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>bosdyn.client.access_controlled_door_util &mdash; Spot 5.1.9 documentation</title>
+  <title>bosdyn.client.access_controlled_door_util &mdash; Spot 5.2.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
     <link rel="shortcut icon" href="../../../_static/bd-favicon.png"/>
@@ -35,7 +35,7 @@
               <img src="../../../_static/bd-official-white.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                5.1.9
+                5.2.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -202,7 +202,8 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/world_object_mutations/README.html">World Object Mutations</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/visualizer/README.html">Visualizer</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/gripper_camera_params/README.html">Gripper Camera Parameters</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_cam/README.html">Spot CAM</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_cam/README.html">Spot CAM Services</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_cam/README.html#spot-cam-video-core-io-extension-example">Spot Cam Video Core IO Extension Example</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/stitch_front_images/README.html">Stitch Front Images</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/get_depth_plus_visual_image/README.html">Project Depth Data on Visual Images</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/service_customization/custom_parameter_image_server/README.html">Custom Parameter Image Server</a></li>
@@ -246,6 +247,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/graph_nav_command_line/README.html">GraphNav and Recording Service Command Line Interfaces</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/graph_nav_command_line/README.html#example-programs">Example Programs</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/graph_nav_extract_point_cloud/README.html">Graph Nav Extract Point Cloud</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/graph_nav_map_to_usd/README.html">Graph Nav Map to USD</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/graph_nav_view_map/README.html">Graph Nav View Map</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/graph_nav_view_gps/README.html">Graph Nav View GPS Data</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/get_mission_state/README.html">Get Mission State</a></li>
@@ -266,7 +268,8 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/joint_control_examples.html">Joint Control API Examples</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/orbit.html">Orbit</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/hello_orbit/README.html">Hello Orbit</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/hello_orbit/README.html">Hello Orbit (v0, OrbitClient)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/orbit_v1_api/README.html">Orbit v1 API (v1, raw HTTP)</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/export_run_archives/README.html">Export Run Archives</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/export_site_walk_archives/README.html">Export Sitewalk Archives</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/anomalies/README.html">Anomalies</a></li>
@@ -321,6 +324,8 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/fault.html">Fault</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/frame_helpers.html">Frame Helpers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/graph_nav.html">Graph Nav</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/graph_nav_download.html">Graph Nav Download</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/graph_nav_upload.html">Graph Nav Upload</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/gripper_camera_param.html">Gripper Camera Params</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/gps/README.html">GPS</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/gps/aggregator_client.html">Aggregator Client</a></li>
@@ -534,8 +539,8 @@
 
 
 <div class="viewcode-block" id="file_to_json"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/access_controlled_door_util.html#bosdyn.client.access_controlled_door_util.file_to_json">[docs]</a><span class="k">def</span> <span class="nf">file_to_json</span><span class="p">(</span><span class="n">file_path</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Helper to read and parse JSON files.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Helper to read and parse JSON files.</span>
+
 <span class="sd">    Args:</span>
 <span class="sd">        file_path (Path): Path to JSON file.</span>
 <span class="sd">    Returns:</span>
@@ -548,8 +553,8 @@
 
 <span class="c1"># Functions to handle api calls to access control systems</span>
 <div class="viewcode-block" id="door_action"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/access_controlled_door_util.html#bosdyn.client.access_controlled_door_util.door_action">[docs]</a><span class="k">def</span> <span class="nf">door_action</span><span class="p">(</span><span class="n">api_calls</span><span class="p">,</span> <span class="n">door_id</span><span class="p">,</span> <span class="n">action</span><span class="p">,</span> <span class="n">path_to_cert</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">is_robot</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Executes a sequence of API calls required to perform an action (e.g., open or close) on a specified door,</span>
-<span class="sd">    handling data substitutions and certificate verification as needed.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Executes a sequence of API calls required to perform an action (e.g., open or close) on a</span>
+<span class="sd">    specified door, handling data substitutions and certificate verification as needed.</span>
 
 <span class="sd">        api_calls (list of dict): List of API call specifications, where each dict contains information</span>
 <span class="sd">            such as &#39;method&#39;, &#39;url&#39;, &#39;action&#39;, &#39;sni_hostname&#39;, &#39;route&#39;, &#39;request_data&#39;, and &#39;responses&#39;.</span>
@@ -625,7 +630,7 @@
                     <span class="n">cross_call_substitutions</span><span class="p">[</span><span class="n">tag</span><span class="p">]</span> <span class="o">=</span> <span class="n">content</span>
             <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
                 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;API call error: couldn&#39;t read data, got exception </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-                <span class="n">error_msg</span><span class="p">[</span><span class="s2">&quot;extra_message&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;API call error: couldn&#39;t read data, got exception&quot;</span>
+                <span class="n">error_msg</span><span class="p">[</span><span class="s2">&quot;extra_message&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;API call error: couldn&#39;t read data, got exception&quot;</span>
                 <span class="k">break</span>
     <span class="k">return</span> <span class="n">error_msg</span></div>
 
@@ -635,7 +640,7 @@
 <div class="viewcode-block" id="make_access_control_system_api_call"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/access_controlled_door_util.html#bosdyn.client.access_controlled_door_util.make_access_control_system_api_call">[docs]</a><span class="k">def</span> <span class="nf">make_access_control_system_api_call</span><span class="p">(</span><span class="n">method</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">request_data</span><span class="p">,</span> <span class="n">store_responses</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                                         <span class="n">sni_hostname</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">is_robot</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">route</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Makes an HTTP request and optionally extracts specific fields from the JSON response.</span>
-<span class="sd">    </span>
+
 <span class="sd">    Args:</span>
 <span class="sd">        method (str): HTTP method to use (e.g., &#39;GET&#39;, &#39;POST&#39;)</span>
 <span class="sd">        url (str): The endpoint URL for the API call</span>
@@ -710,8 +715,10 @@
 
 
 <div class="viewcode-block" id="get_value_by_path"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/access_controlled_door_util.html#bosdyn.client.access_controlled_door_util.get_value_by_path">[docs]</a><span class="k">def</span> <span class="nf">get_value_by_path</span><span class="p">(</span><span class="n">data_json</span><span class="p">,</span> <span class="n">path_to_info</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Takes in a json representing the data of a call response, and a string representing the </span>
-<span class="sd">        path through the json to the desired data. Traverses the json and returns the data.      </span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Takes in a json representing the data of a call response, and a string representing the path</span>
+<span class="sd">    through the json to the desired data.</span>
+
+<span class="sd">    Traverses the json and returns the data.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">keys</span> <span class="o">=</span> <span class="n">path_to_info</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span>
     <span class="n">result</span> <span class="o">=</span> <span class="n">data_json</span>
@@ -720,8 +727,7 @@
         <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">result</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">result</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">return</span> <span class="kc">False</span></div>
+    <span class="k">return</span> <span class="kc">False</span></div>
 </pre></div>
 
            </div>

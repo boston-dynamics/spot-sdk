@@ -37,9 +37,9 @@ class MissingLeases(ResponseError):
 def tree_status_from_tick_status(tick_status):
     if tick_status == remote_pb2.TickResponse.STATUS_FAILURE:
         return constants.Result.FAILURE
-    elif tick_status == remote_pb2.TickResponse.STATUS_RUNNING:
+    if tick_status == remote_pb2.TickResponse.STATUS_RUNNING:
         return constants.Result.RUNNING
-    elif tick_status == remote_pb2.TickResponse.STATUS_SUCCESS:
+    if tick_status == remote_pb2.TickResponse.STATUS_SUCCESS:
         return constants.Result.SUCCESS
     raise Error('No corresponding tree status for tick status "{}"'.format(tick_status))
 

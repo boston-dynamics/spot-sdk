@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Dance Previews &mdash; Spot 5.1.9 documentation</title>
+  <title>Dance Previews &mdash; Spot 5.2.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
     <link rel="shortcut icon" href="../../../_static/bd-favicon.png"/>
@@ -38,7 +38,7 @@
               <img src="../../../_static/bd-official-white.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                5.1.9
+                5.2.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -205,7 +205,8 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/world_object_mutations/README.html">World Object Mutations</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/visualizer/README.html">Visualizer</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/gripper_camera_params/README.html">Gripper Camera Parameters</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_cam/README.html">Spot CAM</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_cam/README.html">Spot CAM Services</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_cam/README.html#spot-cam-video-core-io-extension-example">Spot Cam Video Core IO Extension Example</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/stitch_front_images/README.html">Stitch Front Images</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/get_depth_plus_visual_image/README.html">Project Depth Data on Visual Images</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/service_customization/custom_parameter_image_server/README.html">Custom Parameter Image Server</a></li>
@@ -249,6 +250,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/graph_nav_command_line/README.html">GraphNav and Recording Service Command Line Interfaces</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/graph_nav_command_line/README.html#example-programs">Example Programs</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/graph_nav_extract_point_cloud/README.html">Graph Nav Extract Point Cloud</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/graph_nav_map_to_usd/README.html">Graph Nav Map to USD</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/graph_nav_view_map/README.html">Graph Nav View Map</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/graph_nav_view_gps/README.html">Graph Nav View GPS Data</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/get_mission_state/README.html">Get Mission State</a></li>
@@ -269,7 +271,8 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/joint_control_examples.html">Joint Control API Examples</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/orbit.html">Orbit</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/hello_orbit/README.html">Hello Orbit</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/hello_orbit/README.html">Hello Orbit (v0, OrbitClient)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/orbit_v1_api/README.html">Orbit v1 API (v1, raw HTTP)</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/export_run_archives/README.html">Export Run Archives</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/export_site_walk_archives/README.html">Export Sitewalk Archives</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/anomalies/README.html">Anomalies</a></li>
@@ -324,6 +327,8 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/fault.html">Fault</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/frame_helpers.html">Frame Helpers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/graph_nav.html">Graph Nav</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/graph_nav_download.html">Graph Nav Download</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/graph_nav_upload.html">Graph Nav Upload</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/gripper_camera_param.html">Gripper Camera Params</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/gps/README.html">GPS</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/gps/aggregator_client.html">Aggregator Client</a></li>
@@ -545,15 +550,14 @@ Development Kit License (20191101-BDSDK-SL).
 <li><p><strong>Preview Button</strong> - Start 2D and 3D visualization. Music in the timeline will also play.</p></li>
 <li><p><strong>2D Model</strong> - 2D model representation of the sequences position (x, y, yaw) in space.</p></li>
 <li><p><strong>2D Model Label</strong> - Label for a 2D model with the represented sequence and current position.</p></li>
-<li><p><strong>Frame Calculator</strong> - Quick-access tool for converting a position in the world frame to the current open tab’s dance frame.</p></li>
+<li><p><strong>2D Tools Menu</strong> - Contains tools for the Graph View, including the <a class="reference external" href="#frame-calculator-tool">Frame Calculator</a> and <a class="reference external" href="#stage-planner">Stage Planner</a>.</p></li>
 </ol>
 <p><em>Note: To hide the Dance Previews view and revert to the previous Choreographer layout, select <strong>Legacy Mode</strong> from the “Workspaces” menu.</em></p>
 </section>
 <section id="scrubbing">
 <h2>Scrubbing<a class="headerlink" href="#scrubbing" title="Permalink to this heading"></a></h2>
-<p>Use the Red Slider to scrub through a sequence. If a sequence’s move(s) are updated, you will need to either preview the sequence or move the slider to see updates.</p>
-<img src="../../../_images/scrub_slider.png" style="max-width:300px"><p><em>Note: Make sure to remember that when executing sequences on connected robots, the red slider position will be used for the robots’ start time.</em></p>
-</section>
+<p>The Red Slider’s position in the timeline controls the timestamp displayed in the Preview window. Drag it or use the <code class="docutils literal notranslate"><span class="pre">&lt;</span></code> <code class="docutils literal notranslate"><span class="pre">&gt;</span></code> keyboard shortcuts to move it across the open sequence.</p>
+<img src="../../../_images/scrubbing.gif" style="max-width:480px"></section>
 <section id="preview-tools">
 <h2>Preview Tools<a class="headerlink" href="#preview-tools" title="Permalink to this heading"></a></h2>
 <section id="start-position-data">
@@ -562,6 +566,15 @@ Development Kit License (20191101-BDSDK-SL).
 <p>When using multiple robots, this does not provide enough information for the overall behavior of the group. You’re going to want to place the robots in a formation where each robot is some distance apart from the others and possibly oriented in different directions.</p>
 <p>To support this each choreography sequence can be given a start position, which can be set in the <a class="reference external" href="choreographer.html#user-interface-overview">Timeline Toolbar</a>. (Right-click the yaw entry field to switch between radians and degrees).</p>
 <img src="../../../_images/start_position_widget.png" style="max-width:300px;"><p><em>Start Position data does not affect a sequence’s behavior when executed on Spot, but it is a useful documentation tool to help the user remember where to place each robot before it starts a sequence.</em></p>
+</section>
+<section id="stage-planner">
+<h3>Stage Planner<a class="headerlink" href="#stage-planner" title="Permalink to this heading"></a></h3>
+<img src="../../../_images/stage_planner.gif" style="max-width:640px;"><p>The stage planner tool can be used to visualize stage dimensions relative to Spot(s) expected motion. To create a new stage diagram:</p>
+<ol class="simple">
+<li><p>Start by going to the Graph View previews tab. Right-click to place vertices for the stage polygon.</p></li>
+<li><p>After creating a closed region, save the new stage using the <strong>Save Stage</strong> button in the 2D tools menu under <strong>Edit Stage</strong>.</p></li>
+</ol>
+<p>Loaded stage data will persist through Choreographer sessions. Stages can also be loaded from a saved .stg file using the <strong>Load Stage</strong> button, and cleared using the <strong>Clear Stage</strong> button. Stage planner regions are for visualization only and will not affect sequence(s) behavior when executed on Spot.</p>
 </section>
 <section id="frame-calculator-tool">
 <h3>Frame Calculator tool<a class="headerlink" href="#frame-calculator-tool" title="Permalink to this heading"></a></h3>
@@ -588,14 +601,14 @@ Development Kit License (20191101-BDSDK-SL).
 <p>The replace start position tool seeks to cover the specific case where a sequence for a multi-robot dance, containing absolute moves, should now start from a new location in the world but still maintain the same spacing to other robots in the group once the dance starts.</p>
 <p>Ex. Imagine you’ve created a sequence you like that’s part of a set, but now one robot should actually start with a 90-degree rotation instead of facing forwards. If you simply change the start position alone, the sequence will no longer maintain the same spacing with the other sequences whose start positions were not modified.</p>
 <p>The replace start position tool addresses this issue by automatically updating your sequence to the new start position, and going through your sequence to adjust each absolute parameter to a new value that maintains the original world position in the new dance frame. When everything works correctly, it will look like your sequence has a new start position, but nothing else has changed after the first translation.</p>
-<p><em>Since the Replace Start Position tool only modifies absolute moves, it only works to address the above case when absolute moves are used for at least one large position change at the beginning of the sequence, and has no affect on sequences that don’t use absolute parameters.</em></p>
+<p><em>Since the Replace Start Position tool only modifies absolute moves, it only works to address the above case when absolute moves are used for at least one large position change at the beginning of the sequence, and has no effect on sequences that don’t use absolute parameters.</em></p>
 <p>Note: If you just want to change a sequence’s start position without changing anything about the sequence, you do not need to use the replace start position tool, you can simply enter the new start position into the Timeline Toolbar.</p>
 </section>
 <section id="using-the-replace-start-position-tool">
 <h4>Using the Replace Start Position tool:<a class="headerlink" href="#using-the-replace-start-position-tool" title="Permalink to this heading"></a></h4>
 <img src="../../../_images/replace_start_position.png" style="max-width:400px;"><p><em>Note: Using the replace start position tool has the potential to make many edits to your sequence. It’s highly recommended to save (or save a version) of your sequence prior to this action.</em></p>
 <ol class="simple">
-<li><p>Start by making sure the sequence you want to modify is the current open tab displayed in the timeline. Then open the Replace Start Position tool menu from “Tools”-&gt;”Replace Start Position”.</p></li>
+<li><p>Start by making sure the sequence you want to modify is the current open tab displayed in the timeline. Then open the Replace Start Position tool menu from <strong>Tools</strong>-&gt;<strong>Replace Start Position</strong>.</p></li>
 <li><p>Enter the new start position.</p></li>
 <li><p>Verify that the motion looks correct by previewing the sequence.</p></li>
 </ol>
@@ -604,8 +617,8 @@ Development Kit License (20191101-BDSDK-SL).
 <section id="exporting-preview-cache-data">
 <h3>Exporting preview cache data<a class="headerlink" href="#exporting-preview-cache-data" title="Permalink to this heading"></a></h3>
 <p>Choreographer provides a way to export the joint data from the 3D Dance Previews model as a cha file, which provides a human-readable list of the joint values for the data (see: <a class="reference internal" href="animation_file_specification.html"><span class="doc">Animation File Format</span></a>). Preview cache data is exported at 30 FPS.</p>
-<p>To export preview data, select the tab you wish to export data from, then go to “Tools”-&gt;”Export Preview Cache”. Data will be exported to a “previews” directory in the same location as your Choreographer application.</p>
-<p><strong>Warning</strong>: Exported preview cache data is not meant for direct playback on a robot. It is exported as a .cha to provide a human-readable format so the joint data can more easily be used for additional processing by the user. It is not exported in this format to try to facilitate direct playback on the robot. Trying to load and play exported preview cache data as an animation directly may either fail immeditiately or result in falls.</p>
+<p>To export preview data, select the tab you wish to export data from, then go to <strong>Tools</strong>-&gt;<strong>Export Preview Cache</strong>. Data will be exported to the <code class="docutils literal notranslate"><span class="pre">preview_exports</span></code> directory in the currently set Project Folder (or the <code class="docutils literal notranslate"><span class="pre">/Documents/Choreographer/Projects/</span></code> directory if no project folder is set).</p>
+<p><strong>Warning</strong>: Exported preview cache data is not meant for direct playback on a robot. It is exported as a .cha to provide a human-readable format so the joint data can more easily be used for additional processing by the user. It is not exported in this format to try to facilitate direct playback on the robot. Trying to load and play exported preview cache data as an animation directly may either fail immediately or result in falls.</p>
 </section>
 </section>
 <section id="known-limitations">
@@ -647,7 +660,7 @@ Development Kit License (20191101-BDSDK-SL).
 <h3>Body motion/moves<a class="headerlink" href="#body-motion-moves" title="Permalink to this heading"></a></h3>
 <ul class="simple">
 <li><p>The robot will likely limit, or be slower to react to, different body position values which results in smoother and/or more muted motion during real playback.</p></li>
-<li><p>When performing legs moves with wider stances, Spot will often lower it’s body to better perform these movements. This behavior may not be fully captured, or will not be represented as smoothly, in Preview playback.</p></li>
+<li><p>When performing legs moves with wider stances, Spot will often lower its body to better perform these movements. This behavior may not be fully captured, or will not be represented as smoothly, in Preview playback.</p></li>
 </ul>
 </section>
 <section id="arm-motion-moves">

@@ -4,7 +4,7 @@
 # is subject to the terms and conditions of the Boston Dynamics Software
 # Development Kit License (20191101-BDSDK-SL).
 
-"""Lease clients"""
+"""Lease clients."""
 
 import collections
 import enum
@@ -15,9 +15,15 @@ import time
 from bosdyn.api import lease_pb2
 from bosdyn.api.lease_pb2 import AcquireLeaseRequest, AcquireLeaseResponse
 from bosdyn.api.lease_pb2 import Lease as LeaseProto
-from bosdyn.api.lease_pb2 import (LeaseUseResult, ListLeasesRequest, RetainLeaseRequest,
-                                  ReturnLeaseRequest, ReturnLeaseResponse, TakeLeaseRequest,
-                                  TakeLeaseResponse)
+from bosdyn.api.lease_pb2 import (
+    LeaseUseResult,
+    ListLeasesRequest,
+    RetainLeaseRequest,
+    ReturnLeaseRequest,
+    ReturnLeaseResponse,
+    TakeLeaseRequest,
+    TakeLeaseResponse,
+)
 from bosdyn.api.lease_service_pb2_grpc import LeaseServiceStub
 from bosdyn.util import now_sec
 
@@ -194,7 +200,7 @@ class Lease(object):
             other_sequence_num = other_lease.lease_proto.sequence[i]
             if sequence_num < other_sequence_num:
                 return self.CompareResult.OLDER
-            elif sequence_num > other_sequence_num:
+            if sequence_num > other_sequence_num:
                 return self.CompareResult.NEWER
 
         # At this point, the sequence numbers are different within the common subset. If one Lease has
@@ -202,7 +208,7 @@ class Lease(object):
         # newer.
         if sequence_size < other_sequence_size:
             return self.CompareResult.SUPER_LEASE
-        elif sequence_size > other_sequence_size:
+        if sequence_size > other_sequence_size:
             return self.CompareResult.SUB_LEASE
 
         # Lease are the same
@@ -250,7 +256,8 @@ class Lease(object):
 
     @staticmethod
     def compare_result_to_lease_use_result_status(compare_result, allow_super_leases):
-        """Determines the comparable LeaseUseResult.Status enum value based on the CompareResult enum.
+        """Determines the comparable LeaseUseResult.Status enum value based on the CompareResult
+        enum.
 
         Args:
             allow_super_leases(boolean): If true, a super lease will still be considered as "ok"/
@@ -264,26 +271,25 @@ class Lease(object):
         """
         if compare_result == Lease.CompareResult.DIFFERENT_EPOCHS:
             return LeaseUseResult.STATUS_WRONG_EPOCH
-        elif compare_result == Lease.CompareResult.DIFFERENT_RESOURCES:
+        if compare_result == Lease.CompareResult.DIFFERENT_RESOURCES:
             # if the incoming lease's resource doesn't match the active lease resource,
             # then mark it as unmanaged.
             return LeaseUseResult.STATUS_UNMANAGED
-        elif compare_result == Lease.CompareResult.SUPER_LEASE:
+        if compare_result == Lease.CompareResult.SUPER_LEASE:
             # In some cases we may want to allow a super lease, so check an optional boolean
             # to see if that is the case.
             if allow_super_leases:
                 return LeaseUseResult.STATUS_OK
             # In the normal case, a super lease is considered older.
             return LeaseUseResult.STATUS_OLDER
-        elif compare_result == Lease.CompareResult.OLDER:
+        if compare_result == Lease.CompareResult.OLDER:
             return LeaseUseResult.STATUS_OLDER
-        elif (compare_result == Lease.CompareResult.SAME or
-              compare_result == Lease.CompareResult.SUB_LEASE or
-              compare_result == Lease.CompareResult.NEWER):
+        if (compare_result == Lease.CompareResult.SAME or
+                compare_result == Lease.CompareResult.SUB_LEASE or
+                compare_result == Lease.CompareResult.NEWER):
             return LeaseUseResult.STATUS_OK
-        else:
-            # Shouldn't hit here. The above set of checks should be exhaustive.
-            raise Error("The comparison result of the leases is unknown/unaccounted for.")
+        # Shouldn't hit here. The above set of checks should be exhaustive.
+        raise Error("The comparison result of the leases is unknown/unaccounted for.")
 
 
 class LeaseState(object):
@@ -453,8 +459,8 @@ class LeaseWallet(object):
             return self._get_lease_state_locked(resource)
 
     def _get_lease_state_locked(self, resource):
-        """Get the lease state for a specific resource or raise an NoSuchLease exception if lease
-        is not found.
+        """Get the lease state for a specific resource or raise an NoSuchLease exception if lease is
+        not found.
 
         Args:
             resource: The resource that the Lease is for.
@@ -929,8 +935,8 @@ class LeaseKeepAlive(object):
     def shutdown(self):
         """Shut the background thread down and stop the liveness checks.
 
-        Can be called multiple times, but subsequent calls are no-ops.
-        Blocks until the background thread completes.
+        Can be called multiple times, but subsequent calls are no-ops. Blocks until the background
+        thread completes.
         """
         self.logger.debug('Shutting down')
         self._end_periodic_check_in()
@@ -954,8 +960,8 @@ class LeaseKeepAlive(object):
     def wait_until_done(self):
         """Waits until the background thread exits.
 
-        Most client code should exit the background thread by using shutdown
-        or by passing in a keep_running_cb callback in the constructor.
+        Most client code should exit the background thread by using shutdown or by passing in a
+        keep_running_cb callback in the constructor.
 
         However, this can be useful in unit tests for ensuring exits.
         """

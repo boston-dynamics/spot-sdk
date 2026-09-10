@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>bosdyn.client.robot &mdash; Spot 5.1.9 documentation</title>
+  <title>bosdyn.client.robot &mdash; Spot 5.2.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
     <link rel="shortcut icon" href="../../../_static/bd-favicon.png"/>
@@ -35,7 +35,7 @@
               <img src="../../../_static/bd-official-white.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                5.1.9
+                5.2.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -202,7 +202,8 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/world_object_mutations/README.html">World Object Mutations</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/visualizer/README.html">Visualizer</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/gripper_camera_params/README.html">Gripper Camera Parameters</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_cam/README.html">Spot CAM</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_cam/README.html">Spot CAM Services</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_cam/README.html#spot-cam-video-core-io-extension-example">Spot Cam Video Core IO Extension Example</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/stitch_front_images/README.html">Stitch Front Images</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/get_depth_plus_visual_image/README.html">Project Depth Data on Visual Images</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/service_customization/custom_parameter_image_server/README.html">Custom Parameter Image Server</a></li>
@@ -246,6 +247,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/graph_nav_command_line/README.html">GraphNav and Recording Service Command Line Interfaces</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/graph_nav_command_line/README.html#example-programs">Example Programs</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/graph_nav_extract_point_cloud/README.html">Graph Nav Extract Point Cloud</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/graph_nav_map_to_usd/README.html">Graph Nav Map to USD</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/graph_nav_view_map/README.html">Graph Nav View Map</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/graph_nav_view_gps/README.html">Graph Nav View GPS Data</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/get_mission_state/README.html">Get Mission State</a></li>
@@ -266,7 +268,8 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/joint_control_examples.html">Joint Control API Examples</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/orbit.html">Orbit</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/hello_orbit/README.html">Hello Orbit</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/hello_orbit/README.html">Hello Orbit (v0, OrbitClient)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/orbit_v1_api/README.html">Orbit v1 API (v1, raw HTTP)</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/export_run_archives/README.html">Export Run Archives</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/export_site_walk_archives/README.html">Export Sitewalk Archives</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/anomalies/README.html">Anomalies</a></li>
@@ -321,6 +324,8 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/fault.html">Fault</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/frame_helpers.html">Frame Helpers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/graph_nav.html">Graph Nav</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/graph_nav_download.html">Graph Nav Download</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/graph_nav_upload.html">Graph Nav Upload</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/gripper_camera_param.html">Gripper Camera Params</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/gps/README.html">GPS</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/gps/aggregator_client.html">Aggregator Client</a></li>
@@ -542,8 +547,11 @@
 <span class="kn">from</span> <span class="nn">.estop</span> <span class="kn">import</span> <span class="n">is_estopped</span> <span class="k">as</span> <span class="n">pkg_is_estopped</span>
 <span class="kn">from</span> <span class="nn">.exceptions</span> <span class="kn">import</span> <span class="n">Error</span>
 <span class="kn">from</span> <span class="nn">.lease</span> <span class="kn">import</span> <span class="n">LeaseWallet</span>
-<span class="kn">from</span> <span class="nn">.payload_registration</span> <span class="kn">import</span> <span class="p">(</span><span class="n">PayloadAlreadyExistsError</span><span class="p">,</span> <span class="n">PayloadNotAuthorizedError</span><span class="p">,</span>
-                                   <span class="n">PayloadRegistrationClient</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">.payload_registration</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">PayloadAlreadyExistsError</span><span class="p">,</span>
+    <span class="n">PayloadNotAuthorizedError</span><span class="p">,</span>
+    <span class="n">PayloadRegistrationClient</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">from</span> <span class="nn">.power</span> <span class="kn">import</span> <span class="n">PowerClient</span>
 <span class="kn">from</span> <span class="nn">.power</span> <span class="kn">import</span> <span class="n">is_powered_on</span> <span class="k">as</span> <span class="n">pkg_is_powered_on</span>
 <span class="kn">from</span> <span class="nn">.power</span> <span class="kn">import</span> <span class="n">power_off_motors</span> <span class="k">as</span> <span class="n">pkg_power_off</span>
@@ -602,8 +610,8 @@
 <span class="sd">    Note that any rpc call made to the robot can raise an RpcError subclass if there are errors</span>
 <span class="sd">    communicating with the robot.  Additionally, ResponseErrors will be raised if there was an error</span>
 <span class="sd">    acting on the request itself.  An InvalidRequestError indicates a programming error, where the</span>
-<span class="sd">    request was malformed in some way.  InvalidRequestErrors will never be thrown except in the</span>
-<span class="sd">    case of client bugs.</span>
+<span class="sd">    request was malformed in some way.  InvalidRequestErrors will never be thrown except in the case</span>
+<span class="sd">    of client bugs.</span>
 
 <span class="sd">    See also Sdk and BaseClient</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -704,12 +712,13 @@
 <div class="viewcode-block" id="Robot.setup_token_cache"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot.html#bosdyn.client.robot.Robot.setup_token_cache">[docs]</a>    <span class="k">def</span> <span class="nf">setup_token_cache</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">token_cache</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">unique_id</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Instantiates a token cache to persist the user token.</span>
 
-<span class="sd">           If the user provides a cache, it will be saved in the robot object for convenience.&quot;&quot;&quot;</span>
+<span class="sd">        If the user provides a cache, it will be saved in the robot object for convenience.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">serial_number</span> <span class="o">=</span> <span class="n">unique_id</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">serial_number</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_id</span><span class="p">()</span><span class="o">.</span><span class="n">serial_number</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">token_cache</span> <span class="o">=</span> <span class="n">token_cache</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">token_cache</span></div>
 
 <div class="viewcode-block" id="Robot.update_from"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot.html#bosdyn.client.robot.Robot.update_from">[docs]</a>    <span class="k">def</span> <span class="nf">update_from</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Adds to this object&#39;s processors, etc. based on other&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Adds to this object&#39;s processors, etc. based on other.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">request_processors</span> <span class="o">=</span> <span class="n">other</span><span class="o">.</span><span class="n">request_processors</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">request_processors</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">response_processors</span> <span class="o">=</span> <span class="n">other</span><span class="o">.</span><span class="n">response_processors</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">response_processors</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">service_client_factories_by_type</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">service_client_factories_by_type</span><span class="p">)</span>
@@ -762,10 +771,50 @@
                                           <span class="n">service_endpoint</span><span class="o">=</span><span class="n">service_endpoint</span><span class="p">)</span>
 
         <span class="n">client</span><span class="o">.</span><span class="n">channel</span> <span class="o">=</span> <span class="n">channel</span>
+        <span class="n">client</span><span class="o">.</span><span class="n">_channel_reset_fn</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_make_channel_reset_fn</span><span class="p">(</span><span class="n">service_name</span><span class="p">)</span>
         <span class="n">client</span><span class="o">.</span><span class="n">update_from</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="c1"># Track service clients that have been created to avoid duplicate clients</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">service_clients_by_name</span><span class="p">[</span><span class="n">service_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">client</span>
         <span class="k">return</span> <span class="n">client</span></div>
+
+    <span class="k">def</span> <span class="nf">_make_channel_reset_fn</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">service_name</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a callback that resets and returns a fresh channel for *service_name*.</span>
+
+<span class="sd">        The returned callable is stored on BaseClient instances so they can recover from corrupted</span>
+<span class="sd">        gRPC channel state without holding a direct reference back to the Robot.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">def</span> <span class="nf">_reset_and_ensure</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_reset_channel</span><span class="p">(</span><span class="n">service_name</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">ensure_channel</span><span class="p">(</span><span class="n">service_name</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">_reset_and_ensure</span>
+
+    <span class="k">def</span> <span class="nf">_reset_channel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">service_name</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Close and remove the cached channel for the given service, so it is recreated on next</span>
+<span class="sd">        use.</span>
+
+<span class="sd">        This is useful when a channel enters a bad state (e.g. after a deserialization error</span>
+<span class="sd">        corrupts gRPC internal state). The next call to ensure_client() or ensure_channel()</span>
+<span class="sd">        for this service will create a fresh channel.</span>
+
+<span class="sd">        Also removes the cached service client so it picks up the new channel.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            service_name: Name of the service whose channel should be reset.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Don&#39;t call channel.close() — on-robot, multiple services may share the same</span>
+        <span class="c1"># channel (keyed by endpoint or authority). Closing it would break other services</span>
+        <span class="c1"># still using it. Instead, just evict from cache so the next ensure_channel() creates</span>
+        <span class="c1"># a fresh one. The old channel will be GC&#39;d once no references remain.</span>
+        <span class="n">authority</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">authorities_by_name</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">service_name</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">authority</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">channels_by_authority</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">authority</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Evicted secure channel for service </span><span class="si">%s</span><span class="s1"> (authority=</span><span class="si">%s</span><span class="s1">)&#39;</span><span class="p">,</span>
+                                 <span class="n">service_name</span><span class="p">,</span> <span class="n">authority</span><span class="p">)</span>
+
+        <span class="c1"># Remove cached client so it picks up the new channel on next ensure_client() call.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">service_clients_by_name</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">service_name</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
 <div class="viewcode-block" id="Robot.shutdown"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot.html#bosdyn.client.robot.Robot.shutdown">[docs]</a>    <span class="k">def</span> <span class="nf">shutdown</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">channel_from_auth</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">channels_by_authority</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
@@ -977,8 +1026,8 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">sync_with_services_list</span><span class="p">(</span><span class="n">remote_services</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Robot.sync_with_services_list"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot.html#bosdyn.client.robot.Robot.sync_with_services_list">[docs]</a>    <span class="k">def</span> <span class="nf">sync_with_services_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">services_list</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Alternate version of sync_with_directory() that takes the list of services</span>
-<span class="sd">        directly and does not perform any rpcs.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Alternate version of sync_with_directory() that takes the list of services directly and</span>
+<span class="sd">        does not perform any rpcs.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Dict[string, string]: Mapping of service name to service type</span>
@@ -1032,7 +1081,10 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">time_sync</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Accessor for the time-sync thread.  Creates and starts thread if not already started.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Accessor for the time-sync thread.</span>
+
+<span class="sd">        Creates and starts thread if not already started.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">start_time_sync</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_time_sync_thread</span>
 
@@ -1158,7 +1210,7 @@
 
 <div class="viewcode-block" id="Robot.is_estopped"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot.html#bosdyn.client.robot.Robot.is_estopped">[docs]</a>    <span class="k">def</span> <span class="nf">is_estopped</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Check if the robot is estopped, usually indicating if an external application has not</span>
-<span class="sd">           registered and held an estop endpoint.</span>
+<span class="sd">        registered and held an estop endpoint.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            timeout: Number of seconds to wait for RPC response.</span>
@@ -1217,6 +1269,7 @@
 <span class="sd">            secure_channel_port: New port to use for creating secure channels.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_secure_channel_port</span> <span class="o">=</span> <span class="n">secure_channel_port</span></div></div>
+
 
 
 </pre></div>

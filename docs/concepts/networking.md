@@ -137,7 +137,7 @@ The networking errors are not defined in the message and happen lower in the gRP
 Common RPC errors such as invalid input are not directly shown above. A case of invalid input would be a `GetAuthTokenRequest` which includes no username or password at all, which indicates buggy client code rather than bad user input. Common RPC errors are shown in the `ResponseHeader` message below which all Spot API responses include:
 
 ```protobuf
-/// Standard header attached to all GRPC responses from services.
+/// Standard header attached to all gRPC responses from services.
 message ResponseHeader {
     /// Echo-back the RequestHeader for timing information, etc....
     RequestHeader request_header = 1;
@@ -170,7 +170,7 @@ gRPC is built on top of other networking protocols, as shown in the diagram belo
 This protocol stack has a few implications:
 
 - HTTP/2 supports multiplexing multiple gRPC calls over the same network connection. Responses can come back in a different order than received, and a low priority response can be interrupted by a higher priority response and then resumed later. gRPC requests map directly to HTTP/2 requests.
-- All communication is over a secure, encrypted TLS channel (TLS1.2 or TLS1.3 are supported). Network attackers can not read or manipulate data between the application and Spot. Client libraries should also verify that the certificate presented by a server chains up to a Boston Dynamics root certificate to prevent active MITM attacks. The Python client library automatically does this certificate verification approach.
+- All communication is over a secure, encrypted TLS channel (TLS1.2 or TLS1.3 are supported). Network attackers cannot read or manipulate data between the application and Spot. Client libraries should also verify that the certificate presented by a server chains up to a Boston Dynamics root certificate to prevent active MITM attacks. The Python client library automatically does this certificate verification approach.
 - Communication is over a reliable transport layer with TCP. Reliable transport is a good approach for non-real-time RPCs such as authenticating to Spot, and is also not problematic for real-time cases where there is a strong networking link such as through the RJ45 or DB-25 connectors. However, it can be problematic when handling real-time RPCs over a spotty network connection. There are some short-term mitigation approaches around this such as maintaining a socket pool to round-robin requests over. In the longer term, Boston Dynamics is exploring other approaches (such as gRPC over QUIC or HTTP/3) to improve communications over poor network links.
 - The protocol stack is a very common one for the Internet at large. This has two benefits. First, Spot is able to use battle-tested implementations of the protocols which can withstand adversarial attackers. Second, there is a very high likelihood that an application can reach Spot over a diverse set of networks without being blocked by intermediate firewalls.
 

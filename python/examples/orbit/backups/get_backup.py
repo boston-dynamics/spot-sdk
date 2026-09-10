@@ -42,8 +42,7 @@ def start_backup(orbit_client: Client, include_missions: bool, include_captures:
             backup_task = response_json.get("data")
             task_id = backup_task.get("taskId")
             return task_id
-        else:
-            LOGGER.error("No backup task found in the response!")
+        LOGGER.error("No backup task found in the response!")
     return None
 
 

@@ -17,7 +17,7 @@ def extract_data(filename):
     """Load a json file and extract the desired data for each action in the file:
         (seed x, seed y, action name, battery percentage, image file name)
     """
-    with open(filename, 'r') as f:
+    with open(filename) as f:
         json_data = json.load(f)
     out_data = []
 

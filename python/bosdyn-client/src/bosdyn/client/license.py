@@ -4,7 +4,7 @@
 # is subject to the terms and conditions of the Boston Dynamics Software
 # Development Kit License (20191101-BDSDK-SL).
 
-"""License client"""
+"""License client."""
 
 from bosdyn.api import license_pb2, license_service_pb2_grpc
 from bosdyn.client.common import BaseClient, common_header_errors
