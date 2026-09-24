@@ -288,9 +288,12 @@ def read_animation_params(animation):
     for param in animation.parameter_lines:
         split_line = param.split()
         param_name = str(split_line[0])
-        min_max_default_vals = [
-            float(split_line[i]) if float(split_line[i]) != 0 else 1e-6 for i in range(1, 4)
-        ]
+        if len(split_line) > 1:
+            min_max_default_vals = [
+                float(split_line[i]) if float(split_line[i]) != 0 else 1e-6 for i in range(1, 4)
+            ]
+        else:
+            min_max_default_vals = [1e-6, 1e-6, 1e-6, 1e-6]
 
         # Now create the parameter protobuf message.
         if group_field_splitter in param_name:
