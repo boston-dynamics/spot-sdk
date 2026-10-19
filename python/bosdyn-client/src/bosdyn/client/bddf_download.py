@@ -115,7 +115,7 @@ def download_data(  # pylint: disable=too-many-arguments,too-many-locals
     # Request the data.
     url = _bddf_url(hostname) + '?{}'.format(urlencode(get_params))
     request = Request(url, headers=_http_headers(robot))
-    context = ssl._create_unverified_context()  # pylint: disable=protected-access
+    context = ssl.create_default_context()
     with urlopen(request, context=context, timeout=REQUEST_TIMEOUT) as resp:
         if resp.status != 200:
             LOGGER.error("%s %s response: %d", url, get_params, resp.status)
