@@ -1496,14 +1496,12 @@ class RobotModel(Command):
         robot_state_client = robot.ensure_client(RobotStateClient.default_service_name)
         hardware = robot_state_client.get_robot_hardware_configuration()
 
-        # Write files in user-specified directory, or use default name
-        model_directory = options.outdir
-
-        # Make the directory, if it does not already exist
-        try:
-            os.makedirs(model_directory)
-        except OSError:
-            pass
+        # Write files in user-specified directory, or use default name.
+        # Resolve the root after creating it so containment checks also account for
+        # an operator-selected output directory that is itself a symlink.
+        model_directory = os.path.abspath(options.outdir)
+        os.makedirs(model_directory, exist_ok=True)
+        model_directory = os.path.realpath(model_directory)
 
         # Write each link model to its own file
         for link in hardware.skeleton.links:
@@ -1519,15 +1517,37 @@ class RobotModel(Command):
             if not obj_model_proto.file_name:
                 continue
 
-            # Write to a file, ignoring the robot path
-            sub_path = '/'.join(obj_model_proto.file_name.split('/')[:-1])  # robot defined path
-            path = os.path.join(model_directory, sub_path)  # local path + robot path
-            try:
-                os.makedirs(path)
-            except OSError:
-                pass
+            file_name = obj_model_proto.file_name
+            # File names originate on the robot. Do not permit an absolute path,
+            # alternate Windows separator, empty component, or traversal component.
+            file_parts = file_name.split('/')
+            if (os.path.isabs(file_name) or '\\' in file_name or '\x00' in file_name or
+                    any(part in ('', '.', '..') for part in file_parts)):
+                print('Ignoring unsafe robot model path: ' + file_name)
+                continue
 
-            path_and_name = os.path.join(path, obj_model_proto.file_name.split('/')[-1])
+            path_and_name = os.path.join(model_directory, *file_parts)
+            try:
+                if os.path.commonpath(
+                        (model_directory, os.path.realpath(path_and_name))) != model_directory:
+                    print('Ignoring unsafe robot model path: ' + file_name)
+                    continue
+            except ValueError:
+                print('Ignoring unsafe robot model path: ' + file_name)
+                continue
+
+            os.makedirs(os.path.dirname(path_and_name), exist_ok=True)
+            # Recheck after directory creation so a pre-existing or newly observed
+            # symlink in a robot-provided subdirectory cannot redirect the write.
+            try:
+                if os.path.commonpath(
+                        (model_directory, os.path.realpath(path_and_name))) != model_directory:
+                    print('Ignoring unsafe robot model path: ' + file_name)
+                    continue
+            except ValueError:
+                print('Ignoring unsafe robot model path: ' + file_name)
+                continue
+
             with open(path_and_name, "w") as obj_file:
                 obj_file.write(obj_model_proto.file_contents)
             print('Link file written to ' + path_and_name)
