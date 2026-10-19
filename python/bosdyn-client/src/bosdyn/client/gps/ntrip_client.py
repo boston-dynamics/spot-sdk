@@ -22,11 +22,12 @@ DEFAULT_NTRIP_TLS_PORT = 2102
 class NtripClientParams:
     """Class for storing parameters for connecting an NTRIP client to an NTRIP server."""
 
-    def __init__(self, server=DEFAULT_NTRIP_SERVER, port=DEFAULT_NTRIP_PORT, user="", password="",
-                 mountpoint="", tls=False, reconnect_secs=SERVER_RECONNECT_DELAY):
+    def __init__(self, server=DEFAULT_NTRIP_SERVER, port=None, user="", password="",
+                 mountpoint="", tls=True, reconnect_secs=SERVER_RECONNECT_DELAY):
         """Constructor."""
         self.server = server
-        self.port = port
+        self.port = port if port is not None else (
+            DEFAULT_NTRIP_TLS_PORT if tls else DEFAULT_NTRIP_PORT)
         self.user = user
         self.password = password
         self.mountpoint = mountpoint
